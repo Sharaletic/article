@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import '../../authentication.dart';
 
 part 'authentication_event.dart';
@@ -12,7 +13,7 @@ class AuthenticationBloc
        super(const .notAuthenticated(user: NotAuthenticatedUser())) {
     on<AuthenticationEvent>((event, emit) {
       event.map(login: (e) => _login(e, emit), logout: (_) => _logout(emit));
-    });
+    }, transformer: droppable());
   }
 
   final IAuthenticationRepository _authenticationRepository;
