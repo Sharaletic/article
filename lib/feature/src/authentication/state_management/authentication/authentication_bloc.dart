@@ -1,6 +1,4 @@
-import 'package:arcticle_app/core/logging/logger.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:logger/logger.dart';
 import '../../authentication.dart';
 
 part 'authentication_event.dart';
@@ -10,9 +8,7 @@ class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   AuthenticationBloc({
     required IAuthenticationRepository authenticationRepository,
-    required Logger logger,
   }) : _authenticationRepository = authenticationRepository,
-       _logger = logger,
        super(const .notAuthenticated(user: NotAuthenticatedUser())) {
     on<AuthenticationEvent>((event, emit) {
       event.map(login: (e) => _login(e, emit), logout: (_) => _logout(emit));
@@ -20,7 +16,6 @@ class AuthenticationBloc
   }
 
   final IAuthenticationRepository _authenticationRepository;
-  final Logger _logger;
 
   Future<void> _login(
     _LoginEvent event,
@@ -33,7 +28,7 @@ class AuthenticationBloc
       );
       emit(AuthenticationState.successfull(user: newUser));
     } on Object catch (error, stackTrace) {
-      _logger.error(error, error, stackTrace);
+      addError(error, stackTrace);
       emit(
         AuthenticationState.error(
           user: state.user,
@@ -64,7 +59,7 @@ class AuthenticationBloc
         ),
       );
     } on Object catch (error, stackTrace) {
-      _logger.error(error, error, stackTrace);
+      addError(error, stackTrace);
       emit(
         AuthenticationState.error(
           user: state.user,
