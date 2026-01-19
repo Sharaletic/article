@@ -6,14 +6,11 @@ class ColorPalette extends ThemeExtension<ColorPalette> {
     required this.foreground,
     required this.muted,
     required this.mutedForeground,
-    required this.border,
     required this.primary,
     required this.primaryForeground,
     required this.secondary,
     required this.secondaryForeground,
-    required this.accent,
-    required this.accentForeground,
-    required this.destructive,
+    required this.destructiveBorder,
     required this.destructiveForeground,
     required this.ring,
   });
@@ -22,14 +19,11 @@ class ColorPalette extends ThemeExtension<ColorPalette> {
   final Color foreground;
   final Color muted;
   final Color mutedForeground;
-  final Color border;
   final Color primary;
   final Color primaryForeground;
   final Color secondary;
   final Color secondaryForeground;
-  final Color accent;
-  final Color accentForeground;
-  final Color destructive;
+  final Color destructiveBorder;
   final Color destructiveForeground;
   final Color ring;
 
@@ -39,14 +33,11 @@ class ColorPalette extends ThemeExtension<ColorPalette> {
     Color? foreground,
     Color? muted,
     Color? mutedForeground,
-    Color? border,
     Color? primary,
     Color? primaryForeground,
     Color? secondary,
     Color? secondaryForeground,
-    Color? accent,
-    Color? accentForeground,
-    Color? destructive,
+    Color? destructiveBorder,
     Color? destructiveForeground,
     Color? ring,
   }) => ColorPalette(
@@ -54,14 +45,11 @@ class ColorPalette extends ThemeExtension<ColorPalette> {
     foreground: foreground ?? this.foreground,
     muted: muted ?? this.muted,
     mutedForeground: mutedForeground ?? this.mutedForeground,
-    border: border ?? this.border,
     primary: primary ?? this.primary,
     primaryForeground: primaryForeground ?? this.primaryForeground,
     secondary: secondary ?? this.secondary,
     secondaryForeground: secondaryForeground ?? this.secondaryForeground,
-    accent: accent ?? this.accent,
-    accentForeground: accentForeground ?? this.accentForeground,
-    destructive: destructive ?? this.destructive,
+    destructiveBorder: destructiveBorder ?? this.destructiveBorder,
     destructiveForeground: destructiveForeground ?? this.destructiveForeground,
     ring: ring ?? this.ring,
   );
@@ -80,7 +68,6 @@ class ColorPalette extends ThemeExtension<ColorPalette> {
       foreground: Color.lerp(foreground, other.foreground, t)!,
       muted: Color.lerp(muted, other.muted, t)!,
       mutedForeground: Color.lerp(mutedForeground, other.mutedForeground, t)!,
-      border: Color.lerp(border, other.border, t)!,
       primary: Color.lerp(primary, other.primary, t)!,
       primaryForeground: Color.lerp(
         primaryForeground,
@@ -93,13 +80,11 @@ class ColorPalette extends ThemeExtension<ColorPalette> {
         other.secondaryForeground,
         t,
       )!,
-      accent: Color.lerp(accent, other.accent, t)!,
-      accentForeground: Color.lerp(
-        accentForeground,
-        other.accentForeground,
+      destructiveBorder: Color.lerp(
+        destructiveBorder,
+        other.destructiveBorder,
         t,
       )!,
-      destructive: Color.lerp(destructive, other.destructive, t)!,
       destructiveForeground: Color.lerp(
         destructiveForeground,
         other.destructiveForeground,

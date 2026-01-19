@@ -88,7 +88,7 @@ class _FilledButtonPrimaryStyle extends _UiBaseButtonStyle {
   WidgetStateProperty<Color?>? get foregroundColor =>
       WidgetStateProperty.resolveWith((Set<WidgetState> states) {
         if (states.contains(WidgetState.disabled)) {
-          return colorPalette.primary.withValues(alpha: .38);
+          return colorPalette.mutedForeground;
         }
         return colorPalette.primaryForeground;
       });
@@ -97,7 +97,7 @@ class _FilledButtonPrimaryStyle extends _UiBaseButtonStyle {
   WidgetStateProperty<Color?>? get backgroundColor =>
       WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.disabled)) {
-          return colorPalette.primary.withValues(alpha: .12);
+          return colorPalette.muted;
         }
         return colorPalette.primary;
       });
@@ -129,7 +129,7 @@ class _FilledButtonPrimaryStyle extends _UiBaseButtonStyle {
           return 0.0;
         }
         if (states.contains(WidgetState.hovered)) {
-          return 1.0;
+          return 0.0;
         }
         if (states.contains(WidgetState.focused)) {
           return 0.0;
@@ -177,15 +177,19 @@ class _UiBaseButtonStyle extends ButtonStyle {
 
   @override
   WidgetStateProperty<Size?>? get minimumSize =>
-      const WidgetStatePropertyAll(Size(60, 40));
+      const WidgetStatePropertyAll(Size(100, 40));
 
   @override
   WidgetStateProperty<Size?>? get maximumSize =>
       const WidgetStatePropertyAll(Size.infinite);
 
   @override
-  WidgetStateProperty<TextStyle?>? get textStyle =>
-      WidgetStatePropertyAll(typography.titleMedium);
+  WidgetStateProperty<TextStyle?>? get textStyle => WidgetStatePropertyAll(
+    typography.titleMedium.copyWith(
+      fontFamily: 'SfPro',
+      fontWeight: FontWeight.w600,
+    ),
+  );
 
   @override
   WidgetStateProperty<Color>? get shadowColor =>

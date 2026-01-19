@@ -9,6 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  ui_kit:
+    path: packages/ui_kit
 
   cupertino_icons: ^1.0.8
 
@@ -25,3 +27,14 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  fonts:
+    - family: SfPro
+      fonts:
+        - asset: packages/ui_kit/fonts/SF-Pro-Display-Regular.otf
+        - asset: packages/ui_kit/fonts/SF-Pro-Display-Semibold.otf
+          weight: 600
+        - asset: packages/ui_kit/fonts/SF-Pro-Display-Bold.otf
+          weight: 700
+        - asset: packages/ui_kit/fonts/SF-Pro-Display-Heavy.otf
+          weight: 800

@@ -54,9 +54,35 @@ class UiPreview extends StatelessWidget {
             ),
             sliver: SliverList.list(
               children: [
-                Align(alignment: Alignment.center, child: Text('Buttons')),
+                Align(
+                  alignment: Alignment.center,
+                  child: UiText.titleMedium(
+                    'Typography',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const TypographyPreview(),
+                const SizedBox(height: 24),
+                Align(
+                  alignment: Alignment.center,
+                  child: UiText.titleMedium(
+                    'Buttons',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                ),
                 const SizedBox(height: 8),
                 const ButtonsPreview(),
+                const SizedBox(height: 24),
+                Align(
+                  alignment: Alignment.center,
+                  child: UiText.titleMedium(
+                    'Text Inputs',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const TextFieldsPreview(),
                 const SizedBox(height: 24),
               ],
             ),
