@@ -114,7 +114,7 @@ class _StandardUiTextFieldStyle extends UiTextFieldStyle {
 
   @override
   TextStyle? get textStyle =>
-      typography.bodyMedium.copyWith(color: palette.secondaryForeground);
+      typography.bodyMedium.copyWith(color: palette.foreground);
 
   @override
   TextStyle? get counterStyle =>
@@ -139,7 +139,7 @@ class _StandardUiTextFieldStyle extends UiTextFieldStyle {
   @override
   InputBorder? get focusedBorder => OutlineInputBorder(
     borderRadius: BorderRadius.circular(12),
-    borderSide: BorderSide(color: palette.primary, width: 1),
+    borderSide: BorderSide(color: Colors.transparent),
   );
 
   @override
@@ -157,14 +157,20 @@ class _StandardUiTextFieldStyle extends UiTextFieldStyle {
   @override
   InputBorder? get enabledBorder => OutlineInputBorder(
     borderRadius: BorderRadius.circular(12),
-    borderSide: BorderSide(color: palette.ring),
+    borderSide: BorderSide(color: Colors.transparent),
   );
 
   @override
   InputBorder? get disabledBorder => OutlineInputBorder(
-    borderRadius: BorderRadius.circular(6),
-    borderSide: BorderSide(color: palette.foreground.withOpacity(.08)),
+    borderRadius: BorderRadius.circular(12),
+    borderSide: BorderSide(color: palette.foreground.withValues(alpha: .08)),
   );
+
+  @override
+  Color? get fillColor => palette.secondary;
+
+  @override
+  bool? get filled => true;
 
   @override
   EdgeInsetsGeometry? get contentPadding =>
