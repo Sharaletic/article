@@ -4,6 +4,7 @@ class UiText extends StatelessWidget {
   const UiText(
     this.data, {
     this.color,
+    this.height,
     this.style,
     this.textAlign,
     this.overflow,
@@ -303,6 +304,7 @@ class UiText extends StatelessWidget {
   final TextOverflow? overflow;
   final int? maxLines;
   final Color? color;
+  final double? height;
   final TextStyle? Function(AppTypography)? _styleBuilder;
 
   @override
@@ -319,7 +321,7 @@ class UiText extends StatelessWidget {
       maxLines: maxLines,
       style: baseStyle
           .merge(style)
-          .copyWith(color: color ?? palette.foreground),
+          .copyWith(color: color ?? palette.foreground, height: height ?? 1.0),
     );
   }
 }

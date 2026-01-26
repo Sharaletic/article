@@ -1,3 +1,5 @@
+enum UserRole { author, reviewer, editor, admin }
+
 abstract class UserEntity {
   const factory UserEntity.notAuthenticatedUser() = NotAuthenticatedUser;
 

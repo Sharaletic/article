@@ -19,6 +19,18 @@ dependencies:
   logger: ^2.6.2
   bloc_concurrency: ^0.3.0
 
+  # Firebase
+  firebase_core: ^4.4.0
+  firebase_auth: ^6.1.4
+
+  # HTTP
+  http: ^1.6.0
+  cronet_http: ^1.7.0
+  cupertino_http: ^2.4.0
+
+  # Utils
+  path: ^1.9.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

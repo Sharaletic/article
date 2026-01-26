@@ -10,10 +10,9 @@ class DependenciesScope extends StatelessWidget {
   final IAppDependencies dependencies;
   final Widget child;
 
-  static IAppDependencies of(BuildContext context, {bool listen = true}) {
-    final inheritedWidget = listen
-        ? context.dependOnInheritedWidgetOfExactType<_DependenciesInherited>()
-        : context.getInheritedWidgetOfExactType<_DependenciesInherited>();
+  static IAppDependencies of(BuildContext context) {
+    final inheritedWidget = context
+        .getInheritedWidgetOfExactType<_DependenciesInherited>();
     return inheritedWidget?.dependencies ??
         (throw Exception('$DependenciesScope not found in the context.'));
   }

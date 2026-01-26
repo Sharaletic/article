@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1031256898634",
+    "project_id": "article-b3280",
+    "storage_bucket": "article-b3280.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1031256898634:android:d3f74c994a2ce8e9bdbab3",
+        "android_client_info": {
+          "package_name": "com.example.arcticle_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPliY6nqKHo4JOsXOGHWxNFTT6n6hSR-I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
