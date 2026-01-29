@@ -8,29 +8,26 @@ class Users extends Table {
   TextColumn get emailAddress => text().named('email_address')();
   TextColumn get displayName => text().named('display_name').nullable()();
   TextColumn get photoUrl => text().named('photo_url').nullable()();
-
-  @override
-  Set<Column<Object>> get primaryKey => {uid};
 }
 
 class Authors extends Table {
-  IntColumn get id => integer().autoIncrement()();
   TextColumn get uid => text().references(Users, #uid)();
+  IntColumn get id => integer()();
 }
 
 class Editors extends Table {
-  IntColumn get id => integer().autoIncrement()();
   TextColumn get uid => text().references(Users, #uid)();
+  IntColumn get id => integer()();
 }
 
 class Reviewers extends Table {
-  IntColumn get id => integer().autoIncrement()();
   TextColumn get uid => text().references(Users, #uid)();
+  IntColumn get id => integer()();
 }
 
 class Admin extends Table {
-  IntColumn get id => integer().autoIncrement()();
   TextColumn get uid => text().references(Users, #uid)();
+  IntColumn get id => integer()();
 }
 
 class Requests extends Table {

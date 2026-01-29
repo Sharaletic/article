@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'app/app.dart';
-import 'core/core.dart';
-import 'feature/src/authentication/authentication.dart';
+import 'src/app/app.dart';
+import 'src/core/core.dart';
+import 'src/feature/src/authentication/authentication.dart';
 
 Future<void> main() async {
   final logger = LoggerSettings.initLogger();

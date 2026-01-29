@@ -107,7 +107,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {uid};
+  Set<GeneratedColumn> get $primaryKey => const {};
   @override
   User map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -337,19 +337,6 @@ class $AuthorsTable extends Authors with TableInfo<$AuthorsTable, Author> {
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $AuthorsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
   static const VerificationMeta _uidMeta = const VerificationMeta('uid');
   @override
   late final GeneratedColumn<String> uid = GeneratedColumn<String>(
@@ -362,8 +349,17 @@ class $AuthorsTable extends Authors with TableInfo<$AuthorsTable, Author> {
       'REFERENCES users (uid)',
     ),
   );
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  List<GeneratedColumn> get $columns => [id, uid];
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [uid, id];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -376,9 +372,6 @@ class $AuthorsTable extends Authors with TableInfo<$AuthorsTable, Author> {
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
     if (data.containsKey('uid')) {
       context.handle(
         _uidMeta,
@@ -387,22 +380,27 @@ class $AuthorsTable extends Authors with TableInfo<$AuthorsTable, Author> {
     } else if (isInserting) {
       context.missing(_uidMeta);
     }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => const {};
   @override
   Author map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return Author(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}id'],
-      )!,
       uid: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}uid'],
+      )!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
       )!,
     );
   }
@@ -414,19 +412,19 @@ class $AuthorsTable extends Authors with TableInfo<$AuthorsTable, Author> {
 }
 
 class Author extends DataClass implements Insertable<Author> {
-  final int id;
   final String uid;
-  const Author({required this.id, required this.uid});
+  final int id;
+  const Author({required this.uid, required this.id});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
     map['uid'] = Variable<String>(uid);
+    map['id'] = Variable<int>(id);
     return map;
   }
 
   AuthorsCompanion toCompanion(bool nullToAbsent) {
-    return AuthorsCompanion(id: Value(id), uid: Value(uid));
+    return AuthorsCompanion(uid: Value(uid), id: Value(id));
   }
 
   factory Author.fromJson(
@@ -435,76 +433,95 @@ class Author extends DataClass implements Insertable<Author> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Author(
-      id: serializer.fromJson<int>(json['id']),
       uid: serializer.fromJson<String>(json['uid']),
+      id: serializer.fromJson<int>(json['id']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
       'uid': serializer.toJson<String>(uid),
+      'id': serializer.toJson<int>(id),
     };
   }
 
-  Author copyWith({int? id, String? uid}) =>
-      Author(id: id ?? this.id, uid: uid ?? this.uid);
+  Author copyWith({String? uid, int? id}) =>
+      Author(uid: uid ?? this.uid, id: id ?? this.id);
   Author copyWithCompanion(AuthorsCompanion data) {
     return Author(
-      id: data.id.present ? data.id.value : this.id,
       uid: data.uid.present ? data.uid.value : this.uid,
+      id: data.id.present ? data.id.value : this.id,
     );
   }
 
   @override
   String toString() {
     return (StringBuffer('Author(')
-          ..write('id: $id, ')
-          ..write('uid: $uid')
+          ..write('uid: $uid, ')
+          ..write('id: $id')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, uid);
+  int get hashCode => Object.hash(uid, id);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Author && other.id == this.id && other.uid == this.uid);
+      (other is Author && other.uid == this.uid && other.id == this.id);
 }
 
 class AuthorsCompanion extends UpdateCompanion<Author> {
-  final Value<int> id;
   final Value<String> uid;
+  final Value<int> id;
+  final Value<int> rowid;
   const AuthorsCompanion({
-    this.id = const Value.absent(),
     this.uid = const Value.absent(),
+    this.id = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
-  AuthorsCompanion.insert({this.id = const Value.absent(), required String uid})
-    : uid = Value(uid);
+  AuthorsCompanion.insert({
+    required String uid,
+    required int id,
+    this.rowid = const Value.absent(),
+  }) : uid = Value(uid),
+       id = Value(id);
   static Insertable<Author> custom({
-    Expression<int>? id,
     Expression<String>? uid,
+    Expression<int>? id,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
-      if (id != null) 'id': id,
       if (uid != null) 'uid': uid,
+      if (id != null) 'id': id,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
-  AuthorsCompanion copyWith({Value<int>? id, Value<String>? uid}) {
-    return AuthorsCompanion(id: id ?? this.id, uid: uid ?? this.uid);
+  AuthorsCompanion copyWith({
+    Value<String>? uid,
+    Value<int>? id,
+    Value<int>? rowid,
+  }) {
+    return AuthorsCompanion(
+      uid: uid ?? this.uid,
+      id: id ?? this.id,
+      rowid: rowid ?? this.rowid,
+    );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (uid.present) {
+      map['uid'] = Variable<String>(uid.value);
+    }
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
-    if (uid.present) {
-      map['uid'] = Variable<String>(uid.value);
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
     }
     return map;
   }
@@ -512,8 +529,9 @@ class AuthorsCompanion extends UpdateCompanion<Author> {
   @override
   String toString() {
     return (StringBuffer('AuthorsCompanion(')
+          ..write('uid: $uid, ')
           ..write('id: $id, ')
-          ..write('uid: $uid')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -524,19 +542,6 @@ class $EditorsTable extends Editors with TableInfo<$EditorsTable, Editor> {
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $EditorsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
   static const VerificationMeta _uidMeta = const VerificationMeta('uid');
   @override
   late final GeneratedColumn<String> uid = GeneratedColumn<String>(
@@ -549,8 +554,17 @@ class $EditorsTable extends Editors with TableInfo<$EditorsTable, Editor> {
       'REFERENCES users (uid)',
     ),
   );
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  List<GeneratedColumn> get $columns => [id, uid];
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [uid, id];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -563,9 +577,6 @@ class $EditorsTable extends Editors with TableInfo<$EditorsTable, Editor> {
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
     if (data.containsKey('uid')) {
       context.handle(
         _uidMeta,
@@ -574,22 +585,27 @@ class $EditorsTable extends Editors with TableInfo<$EditorsTable, Editor> {
     } else if (isInserting) {
       context.missing(_uidMeta);
     }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => const {};
   @override
   Editor map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return Editor(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}id'],
-      )!,
       uid: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}uid'],
+      )!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
       )!,
     );
   }
@@ -601,19 +617,19 @@ class $EditorsTable extends Editors with TableInfo<$EditorsTable, Editor> {
 }
 
 class Editor extends DataClass implements Insertable<Editor> {
-  final int id;
   final String uid;
-  const Editor({required this.id, required this.uid});
+  final int id;
+  const Editor({required this.uid, required this.id});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
     map['uid'] = Variable<String>(uid);
+    map['id'] = Variable<int>(id);
     return map;
   }
 
   EditorsCompanion toCompanion(bool nullToAbsent) {
-    return EditorsCompanion(id: Value(id), uid: Value(uid));
+    return EditorsCompanion(uid: Value(uid), id: Value(id));
   }
 
   factory Editor.fromJson(
@@ -622,76 +638,95 @@ class Editor extends DataClass implements Insertable<Editor> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Editor(
-      id: serializer.fromJson<int>(json['id']),
       uid: serializer.fromJson<String>(json['uid']),
+      id: serializer.fromJson<int>(json['id']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
       'uid': serializer.toJson<String>(uid),
+      'id': serializer.toJson<int>(id),
     };
   }
 
-  Editor copyWith({int? id, String? uid}) =>
-      Editor(id: id ?? this.id, uid: uid ?? this.uid);
+  Editor copyWith({String? uid, int? id}) =>
+      Editor(uid: uid ?? this.uid, id: id ?? this.id);
   Editor copyWithCompanion(EditorsCompanion data) {
     return Editor(
-      id: data.id.present ? data.id.value : this.id,
       uid: data.uid.present ? data.uid.value : this.uid,
+      id: data.id.present ? data.id.value : this.id,
     );
   }
 
   @override
   String toString() {
     return (StringBuffer('Editor(')
-          ..write('id: $id, ')
-          ..write('uid: $uid')
+          ..write('uid: $uid, ')
+          ..write('id: $id')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, uid);
+  int get hashCode => Object.hash(uid, id);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Editor && other.id == this.id && other.uid == this.uid);
+      (other is Editor && other.uid == this.uid && other.id == this.id);
 }
 
 class EditorsCompanion extends UpdateCompanion<Editor> {
-  final Value<int> id;
   final Value<String> uid;
+  final Value<int> id;
+  final Value<int> rowid;
   const EditorsCompanion({
-    this.id = const Value.absent(),
     this.uid = const Value.absent(),
+    this.id = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
-  EditorsCompanion.insert({this.id = const Value.absent(), required String uid})
-    : uid = Value(uid);
+  EditorsCompanion.insert({
+    required String uid,
+    required int id,
+    this.rowid = const Value.absent(),
+  }) : uid = Value(uid),
+       id = Value(id);
   static Insertable<Editor> custom({
-    Expression<int>? id,
     Expression<String>? uid,
+    Expression<int>? id,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
-      if (id != null) 'id': id,
       if (uid != null) 'uid': uid,
+      if (id != null) 'id': id,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
-  EditorsCompanion copyWith({Value<int>? id, Value<String>? uid}) {
-    return EditorsCompanion(id: id ?? this.id, uid: uid ?? this.uid);
+  EditorsCompanion copyWith({
+    Value<String>? uid,
+    Value<int>? id,
+    Value<int>? rowid,
+  }) {
+    return EditorsCompanion(
+      uid: uid ?? this.uid,
+      id: id ?? this.id,
+      rowid: rowid ?? this.rowid,
+    );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (uid.present) {
+      map['uid'] = Variable<String>(uid.value);
+    }
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
-    if (uid.present) {
-      map['uid'] = Variable<String>(uid.value);
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
     }
     return map;
   }
@@ -699,8 +734,9 @@ class EditorsCompanion extends UpdateCompanion<Editor> {
   @override
   String toString() {
     return (StringBuffer('EditorsCompanion(')
+          ..write('uid: $uid, ')
           ..write('id: $id, ')
-          ..write('uid: $uid')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -712,19 +748,6 @@ class $ReviewersTable extends Reviewers
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $ReviewersTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
   static const VerificationMeta _uidMeta = const VerificationMeta('uid');
   @override
   late final GeneratedColumn<String> uid = GeneratedColumn<String>(
@@ -737,8 +760,17 @@ class $ReviewersTable extends Reviewers
       'REFERENCES users (uid)',
     ),
   );
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  List<GeneratedColumn> get $columns => [id, uid];
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [uid, id];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -751,9 +783,6 @@ class $ReviewersTable extends Reviewers
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
     if (data.containsKey('uid')) {
       context.handle(
         _uidMeta,
@@ -762,22 +791,27 @@ class $ReviewersTable extends Reviewers
     } else if (isInserting) {
       context.missing(_uidMeta);
     }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => const {};
   @override
   Reviewer map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return Reviewer(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}id'],
-      )!,
       uid: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}uid'],
+      )!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
       )!,
     );
   }
@@ -789,19 +823,19 @@ class $ReviewersTable extends Reviewers
 }
 
 class Reviewer extends DataClass implements Insertable<Reviewer> {
-  final int id;
   final String uid;
-  const Reviewer({required this.id, required this.uid});
+  final int id;
+  const Reviewer({required this.uid, required this.id});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
     map['uid'] = Variable<String>(uid);
+    map['id'] = Variable<int>(id);
     return map;
   }
 
   ReviewersCompanion toCompanion(bool nullToAbsent) {
-    return ReviewersCompanion(id: Value(id), uid: Value(uid));
+    return ReviewersCompanion(uid: Value(uid), id: Value(id));
   }
 
   factory Reviewer.fromJson(
@@ -810,78 +844,95 @@ class Reviewer extends DataClass implements Insertable<Reviewer> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Reviewer(
-      id: serializer.fromJson<int>(json['id']),
       uid: serializer.fromJson<String>(json['uid']),
+      id: serializer.fromJson<int>(json['id']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
       'uid': serializer.toJson<String>(uid),
+      'id': serializer.toJson<int>(id),
     };
   }
 
-  Reviewer copyWith({int? id, String? uid}) =>
-      Reviewer(id: id ?? this.id, uid: uid ?? this.uid);
+  Reviewer copyWith({String? uid, int? id}) =>
+      Reviewer(uid: uid ?? this.uid, id: id ?? this.id);
   Reviewer copyWithCompanion(ReviewersCompanion data) {
     return Reviewer(
-      id: data.id.present ? data.id.value : this.id,
       uid: data.uid.present ? data.uid.value : this.uid,
+      id: data.id.present ? data.id.value : this.id,
     );
   }
 
   @override
   String toString() {
     return (StringBuffer('Reviewer(')
-          ..write('id: $id, ')
-          ..write('uid: $uid')
+          ..write('uid: $uid, ')
+          ..write('id: $id')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, uid);
+  int get hashCode => Object.hash(uid, id);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Reviewer && other.id == this.id && other.uid == this.uid);
+      (other is Reviewer && other.uid == this.uid && other.id == this.id);
 }
 
 class ReviewersCompanion extends UpdateCompanion<Reviewer> {
-  final Value<int> id;
   final Value<String> uid;
+  final Value<int> id;
+  final Value<int> rowid;
   const ReviewersCompanion({
-    this.id = const Value.absent(),
     this.uid = const Value.absent(),
+    this.id = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   ReviewersCompanion.insert({
-    this.id = const Value.absent(),
     required String uid,
-  }) : uid = Value(uid);
+    required int id,
+    this.rowid = const Value.absent(),
+  }) : uid = Value(uid),
+       id = Value(id);
   static Insertable<Reviewer> custom({
-    Expression<int>? id,
     Expression<String>? uid,
+    Expression<int>? id,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
-      if (id != null) 'id': id,
       if (uid != null) 'uid': uid,
+      if (id != null) 'id': id,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
-  ReviewersCompanion copyWith({Value<int>? id, Value<String>? uid}) {
-    return ReviewersCompanion(id: id ?? this.id, uid: uid ?? this.uid);
+  ReviewersCompanion copyWith({
+    Value<String>? uid,
+    Value<int>? id,
+    Value<int>? rowid,
+  }) {
+    return ReviewersCompanion(
+      uid: uid ?? this.uid,
+      id: id ?? this.id,
+      rowid: rowid ?? this.rowid,
+    );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (uid.present) {
+      map['uid'] = Variable<String>(uid.value);
+    }
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
-    if (uid.present) {
-      map['uid'] = Variable<String>(uid.value);
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
     }
     return map;
   }
@@ -889,8 +940,9 @@ class ReviewersCompanion extends UpdateCompanion<Reviewer> {
   @override
   String toString() {
     return (StringBuffer('ReviewersCompanion(')
+          ..write('uid: $uid, ')
           ..write('id: $id, ')
-          ..write('uid: $uid')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -901,19 +953,6 @@ class $AdminTable extends Admin with TableInfo<$AdminTable, AdminData> {
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $AdminTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
   static const VerificationMeta _uidMeta = const VerificationMeta('uid');
   @override
   late final GeneratedColumn<String> uid = GeneratedColumn<String>(
@@ -926,8 +965,17 @@ class $AdminTable extends Admin with TableInfo<$AdminTable, AdminData> {
       'REFERENCES users (uid)',
     ),
   );
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  List<GeneratedColumn> get $columns => [id, uid];
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [uid, id];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -940,9 +988,6 @@ class $AdminTable extends Admin with TableInfo<$AdminTable, AdminData> {
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
     if (data.containsKey('uid')) {
       context.handle(
         _uidMeta,
@@ -951,22 +996,27 @@ class $AdminTable extends Admin with TableInfo<$AdminTable, AdminData> {
     } else if (isInserting) {
       context.missing(_uidMeta);
     }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => const {};
   @override
   AdminData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return AdminData(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}id'],
-      )!,
       uid: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}uid'],
+      )!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
       )!,
     );
   }
@@ -978,19 +1028,19 @@ class $AdminTable extends Admin with TableInfo<$AdminTable, AdminData> {
 }
 
 class AdminData extends DataClass implements Insertable<AdminData> {
-  final int id;
   final String uid;
-  const AdminData({required this.id, required this.uid});
+  final int id;
+  const AdminData({required this.uid, required this.id});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
     map['uid'] = Variable<String>(uid);
+    map['id'] = Variable<int>(id);
     return map;
   }
 
   AdminCompanion toCompanion(bool nullToAbsent) {
-    return AdminCompanion(id: Value(id), uid: Value(uid));
+    return AdminCompanion(uid: Value(uid), id: Value(id));
   }
 
   factory AdminData.fromJson(
@@ -999,76 +1049,95 @@ class AdminData extends DataClass implements Insertable<AdminData> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return AdminData(
-      id: serializer.fromJson<int>(json['id']),
       uid: serializer.fromJson<String>(json['uid']),
+      id: serializer.fromJson<int>(json['id']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
       'uid': serializer.toJson<String>(uid),
+      'id': serializer.toJson<int>(id),
     };
   }
 
-  AdminData copyWith({int? id, String? uid}) =>
-      AdminData(id: id ?? this.id, uid: uid ?? this.uid);
+  AdminData copyWith({String? uid, int? id}) =>
+      AdminData(uid: uid ?? this.uid, id: id ?? this.id);
   AdminData copyWithCompanion(AdminCompanion data) {
     return AdminData(
-      id: data.id.present ? data.id.value : this.id,
       uid: data.uid.present ? data.uid.value : this.uid,
+      id: data.id.present ? data.id.value : this.id,
     );
   }
 
   @override
   String toString() {
     return (StringBuffer('AdminData(')
-          ..write('id: $id, ')
-          ..write('uid: $uid')
+          ..write('uid: $uid, ')
+          ..write('id: $id')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, uid);
+  int get hashCode => Object.hash(uid, id);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is AdminData && other.id == this.id && other.uid == this.uid);
+      (other is AdminData && other.uid == this.uid && other.id == this.id);
 }
 
 class AdminCompanion extends UpdateCompanion<AdminData> {
-  final Value<int> id;
   final Value<String> uid;
+  final Value<int> id;
+  final Value<int> rowid;
   const AdminCompanion({
-    this.id = const Value.absent(),
     this.uid = const Value.absent(),
+    this.id = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
-  AdminCompanion.insert({this.id = const Value.absent(), required String uid})
-    : uid = Value(uid);
+  AdminCompanion.insert({
+    required String uid,
+    required int id,
+    this.rowid = const Value.absent(),
+  }) : uid = Value(uid),
+       id = Value(id);
   static Insertable<AdminData> custom({
-    Expression<int>? id,
     Expression<String>? uid,
+    Expression<int>? id,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
-      if (id != null) 'id': id,
       if (uid != null) 'uid': uid,
+      if (id != null) 'id': id,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
-  AdminCompanion copyWith({Value<int>? id, Value<String>? uid}) {
-    return AdminCompanion(id: id ?? this.id, uid: uid ?? this.uid);
+  AdminCompanion copyWith({
+    Value<String>? uid,
+    Value<int>? id,
+    Value<int>? rowid,
+  }) {
+    return AdminCompanion(
+      uid: uid ?? this.uid,
+      id: id ?? this.id,
+      rowid: rowid ?? this.rowid,
+    );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (uid.present) {
+      map['uid'] = Variable<String>(uid.value);
+    }
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
-    if (uid.present) {
-      map['uid'] = Variable<String>(uid.value);
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
     }
     return map;
   }
@@ -1076,8 +1145,9 @@ class AdminCompanion extends UpdateCompanion<AdminData> {
   @override
   String toString() {
     return (StringBuffer('AdminCompanion(')
+          ..write('uid: $uid, ')
           ..write('id: $id, ')
-          ..write('uid: $uid')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -3725,9 +3795,17 @@ typedef $$UsersTableProcessedTableManager =
       })
     >;
 typedef $$AuthorsTableCreateCompanionBuilder =
-    AuthorsCompanion Function({Value<int> id, required String uid});
+    AuthorsCompanion Function({
+      required String uid,
+      required int id,
+      Value<int> rowid,
+    });
 typedef $$AuthorsTableUpdateCompanionBuilder =
-    AuthorsCompanion Function({Value<int> id, Value<String> uid});
+    AuthorsCompanion Function({
+      Value<String> uid,
+      Value<int> id,
+      Value<int> rowid,
+    });
 
 final class $$AuthorsTableReferences
     extends BaseReferences<_$AppDatabase, $AuthorsTable, Author> {
@@ -4029,12 +4107,16 @@ class $$AuthorsTableTableManager
               $$AuthorsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
                 Value<String> uid = const Value.absent(),
-              }) => AuthorsCompanion(id: id, uid: uid),
+                Value<int> id = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => AuthorsCompanion(uid: uid, id: id, rowid: rowid),
           createCompanionCallback:
-              ({Value<int> id = const Value.absent(), required String uid}) =>
-                  AuthorsCompanion.insert(id: id, uid: uid),
+              ({
+                required String uid,
+                required int id,
+                Value<int> rowid = const Value.absent(),
+              }) => AuthorsCompanion.insert(uid: uid, id: id, rowid: rowid),
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
@@ -4142,9 +4224,17 @@ typedef $$AuthorsTableProcessedTableManager =
       PrefetchHooks Function({bool uid, bool chatsRefs, bool requestsRefs})
     >;
 typedef $$EditorsTableCreateCompanionBuilder =
-    EditorsCompanion Function({Value<int> id, required String uid});
+    EditorsCompanion Function({
+      required String uid,
+      required int id,
+      Value<int> rowid,
+    });
 typedef $$EditorsTableUpdateCompanionBuilder =
-    EditorsCompanion Function({Value<int> id, Value<String> uid});
+    EditorsCompanion Function({
+      Value<String> uid,
+      Value<int> id,
+      Value<int> rowid,
+    });
 
 final class $$EditorsTableReferences
     extends BaseReferences<_$AppDatabase, $EditorsTable, Editor> {
@@ -4449,12 +4539,16 @@ class $$EditorsTableTableManager
               $$EditorsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
                 Value<String> uid = const Value.absent(),
-              }) => EditorsCompanion(id: id, uid: uid),
+                Value<int> id = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => EditorsCompanion(uid: uid, id: id, rowid: rowid),
           createCompanionCallback:
-              ({Value<int> id = const Value.absent(), required String uid}) =>
-                  EditorsCompanion.insert(id: id, uid: uid),
+              ({
+                required String uid,
+                required int id,
+                Value<int> rowid = const Value.absent(),
+              }) => EditorsCompanion.insert(uid: uid, id: id, rowid: rowid),
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
@@ -4562,9 +4656,17 @@ typedef $$EditorsTableProcessedTableManager =
       PrefetchHooks Function({bool uid, bool chatsRefs, bool assigmentsRefs})
     >;
 typedef $$ReviewersTableCreateCompanionBuilder =
-    ReviewersCompanion Function({Value<int> id, required String uid});
+    ReviewersCompanion Function({
+      required String uid,
+      required int id,
+      Value<int> rowid,
+    });
 typedef $$ReviewersTableUpdateCompanionBuilder =
-    ReviewersCompanion Function({Value<int> id, Value<String> uid});
+    ReviewersCompanion Function({
+      Value<String> uid,
+      Value<int> id,
+      Value<int> rowid,
+    });
 
 final class $$ReviewersTableReferences
     extends BaseReferences<_$AppDatabase, $ReviewersTable, Reviewer> {
@@ -4870,12 +4972,16 @@ class $$ReviewersTableTableManager
               $$ReviewersTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
                 Value<String> uid = const Value.absent(),
-              }) => ReviewersCompanion(id: id, uid: uid),
+                Value<int> id = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ReviewersCompanion(uid: uid, id: id, rowid: rowid),
           createCompanionCallback:
-              ({Value<int> id = const Value.absent(), required String uid}) =>
-                  ReviewersCompanion.insert(id: id, uid: uid),
+              ({
+                required String uid,
+                required int id,
+                Value<int> rowid = const Value.absent(),
+              }) => ReviewersCompanion.insert(uid: uid, id: id, rowid: rowid),
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
@@ -4991,9 +5097,17 @@ typedef $$ReviewersTableProcessedTableManager =
       PrefetchHooks Function({bool uid, bool chatsRefs, bool assigmentsRefs})
     >;
 typedef $$AdminTableCreateCompanionBuilder =
-    AdminCompanion Function({Value<int> id, required String uid});
+    AdminCompanion Function({
+      required String uid,
+      required int id,
+      Value<int> rowid,
+    });
 typedef $$AdminTableUpdateCompanionBuilder =
-    AdminCompanion Function({Value<int> id, Value<String> uid});
+    AdminCompanion Function({
+      Value<String> uid,
+      Value<int> id,
+      Value<int> rowid,
+    });
 
 final class $$AdminTableReferences
     extends BaseReferences<_$AppDatabase, $AdminTable, AdminData> {
@@ -5156,12 +5270,16 @@ class $$AdminTableTableManager
               $$AdminTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
                 Value<String> uid = const Value.absent(),
-              }) => AdminCompanion(id: id, uid: uid),
+                Value<int> id = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => AdminCompanion(uid: uid, id: id, rowid: rowid),
           createCompanionCallback:
-              ({Value<int> id = const Value.absent(), required String uid}) =>
-                  AdminCompanion.insert(id: id, uid: uid),
+              ({
+                required String uid,
+                required int id,
+                Value<int> rowid = const Value.absent(),
+              }) => AdminCompanion.insert(uid: uid, id: id, rowid: rowid),
           withReferenceMapper: (p0) => p0
               .map(
                 (e) =>
