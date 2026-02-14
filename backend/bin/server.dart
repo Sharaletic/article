@@ -15,6 +15,7 @@ void main([List<String>? args]) async {
     () async {
       final handler = Cascade()
           .add(composition.dependencies.userController.handler)
+          .add(composition.dependencies.authorController.handler)
           .handler;
 
       final pipeline = Pipeline()

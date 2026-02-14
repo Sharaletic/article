@@ -1,6 +1,10 @@
+import 'package:arcticle_app/src/feature/src/authentication/authentication.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ui_kit/ui_kit.dart';
 
-class LoginButton extends StatelessWidget {
+import '../../../../../../app/app.dart';
+
+class LoginButton extends StatefulWidget {
   const LoginButton({
     super.key,
     required this.emailController,
@@ -10,10 +14,36 @@ class LoginButton extends StatelessWidget {
   final TextEditingController passwordController;
 
   @override
+  State<LoginButton> createState() => _LoginButtonState();
+}
+
+class _LoginButtonState extends State<LoginButton> {
+  late final AuthenticationBloc _authBloc;
+
+  @override
+  void initState() {
+    _authBloc = DependenciesScope.of(context).authenticationBloc;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return UiButton.filledPrimary(
-      label: const Text('Войти'),
-      onPressed: () {},
+    return BlocProvider.value(
+      value: _authBloc,
+      child: BlocListener<AuthenticationBloc, AuthenticationState>(
+        listener: (context, state) {
+          // TODO: implement listener
+        },
+        child: UiButton.filledPrimary(
+          label: const Text('Войти'),
+          onPressed: () => _authBloc.add(
+            AuthenticationEvent.login(
+              email: widget.emailController.text,
+              password: widget.passwordController.text,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

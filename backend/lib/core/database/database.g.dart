@@ -28,6 +28,15 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _roleMeta = const VerificationMeta('role');
+  @override
+  late final GeneratedColumn<String> role = GeneratedColumn<String>(
+    'role',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _displayNameMeta = const VerificationMeta(
     'displayName',
   );
@@ -54,6 +63,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   List<GeneratedColumn> get $columns => [
     uid,
     emailAddress,
+    role,
     displayName,
     photoUrl,
   ];
@@ -88,6 +98,14 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
     } else if (isInserting) {
       context.missing(_emailAddressMeta);
     }
+    if (data.containsKey('role')) {
+      context.handle(
+        _roleMeta,
+        role.isAcceptableOrUnknown(data['role']!, _roleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_roleMeta);
+    }
     if (data.containsKey('display_name')) {
       context.handle(
         _displayNameMeta,
@@ -120,6 +138,10 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
         DriftSqlType.string,
         data['${effectivePrefix}email_address'],
       )!,
+      role: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}role'],
+      )!,
       displayName: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}display_name'],
@@ -140,11 +162,13 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
 class User extends DataClass implements Insertable<User> {
   final String uid;
   final String emailAddress;
+  final String role;
   final String? displayName;
   final String? photoUrl;
   const User({
     required this.uid,
     required this.emailAddress,
+    required this.role,
     this.displayName,
     this.photoUrl,
   });
@@ -153,6 +177,7 @@ class User extends DataClass implements Insertable<User> {
     final map = <String, Expression>{};
     map['uid'] = Variable<String>(uid);
     map['email_address'] = Variable<String>(emailAddress);
+    map['role'] = Variable<String>(role);
     if (!nullToAbsent || displayName != null) {
       map['display_name'] = Variable<String>(displayName);
     }
@@ -166,6 +191,7 @@ class User extends DataClass implements Insertable<User> {
     return UsersCompanion(
       uid: Value(uid),
       emailAddress: Value(emailAddress),
+      role: Value(role),
       displayName: displayName == null && nullToAbsent
           ? const Value.absent()
           : Value(displayName),
@@ -183,6 +209,7 @@ class User extends DataClass implements Insertable<User> {
     return User(
       uid: serializer.fromJson<String>(json['uid']),
       emailAddress: serializer.fromJson<String>(json['emailAddress']),
+      role: serializer.fromJson<String>(json['role']),
       displayName: serializer.fromJson<String?>(json['displayName']),
       photoUrl: serializer.fromJson<String?>(json['photoUrl']),
     );
@@ -193,6 +220,7 @@ class User extends DataClass implements Insertable<User> {
     return <String, dynamic>{
       'uid': serializer.toJson<String>(uid),
       'emailAddress': serializer.toJson<String>(emailAddress),
+      'role': serializer.toJson<String>(role),
       'displayName': serializer.toJson<String?>(displayName),
       'photoUrl': serializer.toJson<String?>(photoUrl),
     };
@@ -201,11 +229,13 @@ class User extends DataClass implements Insertable<User> {
   User copyWith({
     String? uid,
     String? emailAddress,
+    String? role,
     Value<String?> displayName = const Value.absent(),
     Value<String?> photoUrl = const Value.absent(),
   }) => User(
     uid: uid ?? this.uid,
     emailAddress: emailAddress ?? this.emailAddress,
+    role: role ?? this.role,
     displayName: displayName.present ? displayName.value : this.displayName,
     photoUrl: photoUrl.present ? photoUrl.value : this.photoUrl,
   );
@@ -215,6 +245,7 @@ class User extends DataClass implements Insertable<User> {
       emailAddress: data.emailAddress.present
           ? data.emailAddress.value
           : this.emailAddress,
+      role: data.role.present ? data.role.value : this.role,
       displayName: data.displayName.present
           ? data.displayName.value
           : this.displayName,
@@ -227,6 +258,7 @@ class User extends DataClass implements Insertable<User> {
     return (StringBuffer('User(')
           ..write('uid: $uid, ')
           ..write('emailAddress: $emailAddress, ')
+          ..write('role: $role, ')
           ..write('displayName: $displayName, ')
           ..write('photoUrl: $photoUrl')
           ..write(')'))
@@ -234,13 +266,15 @@ class User extends DataClass implements Insertable<User> {
   }
 
   @override
-  int get hashCode => Object.hash(uid, emailAddress, displayName, photoUrl);
+  int get hashCode =>
+      Object.hash(uid, emailAddress, role, displayName, photoUrl);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is User &&
           other.uid == this.uid &&
           other.emailAddress == this.emailAddress &&
+          other.role == this.role &&
           other.displayName == this.displayName &&
           other.photoUrl == this.photoUrl);
 }
@@ -248,12 +282,14 @@ class User extends DataClass implements Insertable<User> {
 class UsersCompanion extends UpdateCompanion<User> {
   final Value<String> uid;
   final Value<String> emailAddress;
+  final Value<String> role;
   final Value<String?> displayName;
   final Value<String?> photoUrl;
   final Value<int> rowid;
   const UsersCompanion({
     this.uid = const Value.absent(),
     this.emailAddress = const Value.absent(),
+    this.role = const Value.absent(),
     this.displayName = const Value.absent(),
     this.photoUrl = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -261,14 +297,17 @@ class UsersCompanion extends UpdateCompanion<User> {
   UsersCompanion.insert({
     required String uid,
     required String emailAddress,
+    required String role,
     this.displayName = const Value.absent(),
     this.photoUrl = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : uid = Value(uid),
-       emailAddress = Value(emailAddress);
+       emailAddress = Value(emailAddress),
+       role = Value(role);
   static Insertable<User> custom({
     Expression<String>? uid,
     Expression<String>? emailAddress,
+    Expression<String>? role,
     Expression<String>? displayName,
     Expression<String>? photoUrl,
     Expression<int>? rowid,
@@ -276,6 +315,7 @@ class UsersCompanion extends UpdateCompanion<User> {
     return RawValuesInsertable({
       if (uid != null) 'uid': uid,
       if (emailAddress != null) 'email_address': emailAddress,
+      if (role != null) 'role': role,
       if (displayName != null) 'display_name': displayName,
       if (photoUrl != null) 'photo_url': photoUrl,
       if (rowid != null) 'rowid': rowid,
@@ -285,6 +325,7 @@ class UsersCompanion extends UpdateCompanion<User> {
   UsersCompanion copyWith({
     Value<String>? uid,
     Value<String>? emailAddress,
+    Value<String>? role,
     Value<String?>? displayName,
     Value<String?>? photoUrl,
     Value<int>? rowid,
@@ -292,6 +333,7 @@ class UsersCompanion extends UpdateCompanion<User> {
     return UsersCompanion(
       uid: uid ?? this.uid,
       emailAddress: emailAddress ?? this.emailAddress,
+      role: role ?? this.role,
       displayName: displayName ?? this.displayName,
       photoUrl: photoUrl ?? this.photoUrl,
       rowid: rowid ?? this.rowid,
@@ -306,6 +348,9 @@ class UsersCompanion extends UpdateCompanion<User> {
     }
     if (emailAddress.present) {
       map['email_address'] = Variable<String>(emailAddress.value);
+    }
+    if (role.present) {
+      map['role'] = Variable<String>(role.value);
     }
     if (displayName.present) {
       map['display_name'] = Variable<String>(displayName.value);
@@ -324,6 +369,7 @@ class UsersCompanion extends UpdateCompanion<User> {
     return (StringBuffer('UsersCompanion(')
           ..write('uid: $uid, ')
           ..write('emailAddress: $emailAddress, ')
+          ..write('role: $role, ')
           ..write('displayName: $displayName, ')
           ..write('photoUrl: $photoUrl, ')
           ..write('rowid: $rowid')
@@ -355,8 +401,12 @@ class $AuthorsTable extends Authors with TableInfo<$AuthorsTable, Author> {
     'id',
     aliasedName,
     false,
+    hasAutoIncrement: true,
     type: DriftSqlType.int,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
   );
   @override
   List<GeneratedColumn> get $columns => [uid, id];
@@ -382,14 +432,12 @@ class $AuthorsTable extends Authors with TableInfo<$AuthorsTable, Author> {
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
     }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => const {};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   Author map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -475,40 +523,24 @@ class Author extends DataClass implements Insertable<Author> {
 class AuthorsCompanion extends UpdateCompanion<Author> {
   final Value<String> uid;
   final Value<int> id;
-  final Value<int> rowid;
   const AuthorsCompanion({
     this.uid = const Value.absent(),
     this.id = const Value.absent(),
-    this.rowid = const Value.absent(),
   });
-  AuthorsCompanion.insert({
-    required String uid,
-    required int id,
-    this.rowid = const Value.absent(),
-  }) : uid = Value(uid),
-       id = Value(id);
+  AuthorsCompanion.insert({required String uid, this.id = const Value.absent()})
+    : uid = Value(uid);
   static Insertable<Author> custom({
     Expression<String>? uid,
     Expression<int>? id,
-    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (uid != null) 'uid': uid,
       if (id != null) 'id': id,
-      if (rowid != null) 'rowid': rowid,
     });
   }
 
-  AuthorsCompanion copyWith({
-    Value<String>? uid,
-    Value<int>? id,
-    Value<int>? rowid,
-  }) {
-    return AuthorsCompanion(
-      uid: uid ?? this.uid,
-      id: id ?? this.id,
-      rowid: rowid ?? this.rowid,
-    );
+  AuthorsCompanion copyWith({Value<String>? uid, Value<int>? id}) {
+    return AuthorsCompanion(uid: uid ?? this.uid, id: id ?? this.id);
   }
 
   @override
@@ -520,9 +552,6 @@ class AuthorsCompanion extends UpdateCompanion<Author> {
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
     return map;
   }
 
@@ -530,8 +559,7 @@ class AuthorsCompanion extends UpdateCompanion<Author> {
   String toString() {
     return (StringBuffer('AuthorsCompanion(')
           ..write('uid: $uid, ')
-          ..write('id: $id, ')
-          ..write('rowid: $rowid')
+          ..write('id: $id')
           ..write(')'))
         .toString();
   }
@@ -560,8 +588,12 @@ class $EditorsTable extends Editors with TableInfo<$EditorsTable, Editor> {
     'id',
     aliasedName,
     false,
+    hasAutoIncrement: true,
     type: DriftSqlType.int,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
   );
   @override
   List<GeneratedColumn> get $columns => [uid, id];
@@ -587,14 +619,12 @@ class $EditorsTable extends Editors with TableInfo<$EditorsTable, Editor> {
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
     }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => const {};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   Editor map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -680,40 +710,24 @@ class Editor extends DataClass implements Insertable<Editor> {
 class EditorsCompanion extends UpdateCompanion<Editor> {
   final Value<String> uid;
   final Value<int> id;
-  final Value<int> rowid;
   const EditorsCompanion({
     this.uid = const Value.absent(),
     this.id = const Value.absent(),
-    this.rowid = const Value.absent(),
   });
-  EditorsCompanion.insert({
-    required String uid,
-    required int id,
-    this.rowid = const Value.absent(),
-  }) : uid = Value(uid),
-       id = Value(id);
+  EditorsCompanion.insert({required String uid, this.id = const Value.absent()})
+    : uid = Value(uid);
   static Insertable<Editor> custom({
     Expression<String>? uid,
     Expression<int>? id,
-    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (uid != null) 'uid': uid,
       if (id != null) 'id': id,
-      if (rowid != null) 'rowid': rowid,
     });
   }
 
-  EditorsCompanion copyWith({
-    Value<String>? uid,
-    Value<int>? id,
-    Value<int>? rowid,
-  }) {
-    return EditorsCompanion(
-      uid: uid ?? this.uid,
-      id: id ?? this.id,
-      rowid: rowid ?? this.rowid,
-    );
+  EditorsCompanion copyWith({Value<String>? uid, Value<int>? id}) {
+    return EditorsCompanion(uid: uid ?? this.uid, id: id ?? this.id);
   }
 
   @override
@@ -725,9 +739,6 @@ class EditorsCompanion extends UpdateCompanion<Editor> {
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
     return map;
   }
 
@@ -735,8 +746,7 @@ class EditorsCompanion extends UpdateCompanion<Editor> {
   String toString() {
     return (StringBuffer('EditorsCompanion(')
           ..write('uid: $uid, ')
-          ..write('id: $id, ')
-          ..write('rowid: $rowid')
+          ..write('id: $id')
           ..write(')'))
         .toString();
   }
@@ -766,8 +776,12 @@ class $ReviewersTable extends Reviewers
     'id',
     aliasedName,
     false,
+    hasAutoIncrement: true,
     type: DriftSqlType.int,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
   );
   @override
   List<GeneratedColumn> get $columns => [uid, id];
@@ -793,14 +807,12 @@ class $ReviewersTable extends Reviewers
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
     }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => const {};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   Reviewer map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -886,40 +898,26 @@ class Reviewer extends DataClass implements Insertable<Reviewer> {
 class ReviewersCompanion extends UpdateCompanion<Reviewer> {
   final Value<String> uid;
   final Value<int> id;
-  final Value<int> rowid;
   const ReviewersCompanion({
     this.uid = const Value.absent(),
     this.id = const Value.absent(),
-    this.rowid = const Value.absent(),
   });
   ReviewersCompanion.insert({
     required String uid,
-    required int id,
-    this.rowid = const Value.absent(),
-  }) : uid = Value(uid),
-       id = Value(id);
+    this.id = const Value.absent(),
+  }) : uid = Value(uid);
   static Insertable<Reviewer> custom({
     Expression<String>? uid,
     Expression<int>? id,
-    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (uid != null) 'uid': uid,
       if (id != null) 'id': id,
-      if (rowid != null) 'rowid': rowid,
     });
   }
 
-  ReviewersCompanion copyWith({
-    Value<String>? uid,
-    Value<int>? id,
-    Value<int>? rowid,
-  }) {
-    return ReviewersCompanion(
-      uid: uid ?? this.uid,
-      id: id ?? this.id,
-      rowid: rowid ?? this.rowid,
-    );
+  ReviewersCompanion copyWith({Value<String>? uid, Value<int>? id}) {
+    return ReviewersCompanion(uid: uid ?? this.uid, id: id ?? this.id);
   }
 
   @override
@@ -931,9 +929,6 @@ class ReviewersCompanion extends UpdateCompanion<Reviewer> {
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
     return map;
   }
 
@@ -941,8 +936,7 @@ class ReviewersCompanion extends UpdateCompanion<Reviewer> {
   String toString() {
     return (StringBuffer('ReviewersCompanion(')
           ..write('uid: $uid, ')
-          ..write('id: $id, ')
-          ..write('rowid: $rowid')
+          ..write('id: $id')
           ..write(')'))
         .toString();
   }
@@ -971,8 +965,12 @@ class $AdminTable extends Admin with TableInfo<$AdminTable, AdminData> {
     'id',
     aliasedName,
     false,
+    hasAutoIncrement: true,
     type: DriftSqlType.int,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
   );
   @override
   List<GeneratedColumn> get $columns => [uid, id];
@@ -998,14 +996,12 @@ class $AdminTable extends Admin with TableInfo<$AdminTable, AdminData> {
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
     }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => const {};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   AdminData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -1091,40 +1087,24 @@ class AdminData extends DataClass implements Insertable<AdminData> {
 class AdminCompanion extends UpdateCompanion<AdminData> {
   final Value<String> uid;
   final Value<int> id;
-  final Value<int> rowid;
   const AdminCompanion({
     this.uid = const Value.absent(),
     this.id = const Value.absent(),
-    this.rowid = const Value.absent(),
   });
-  AdminCompanion.insert({
-    required String uid,
-    required int id,
-    this.rowid = const Value.absent(),
-  }) : uid = Value(uid),
-       id = Value(id);
+  AdminCompanion.insert({required String uid, this.id = const Value.absent()})
+    : uid = Value(uid);
   static Insertable<AdminData> custom({
     Expression<String>? uid,
     Expression<int>? id,
-    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (uid != null) 'uid': uid,
       if (id != null) 'id': id,
-      if (rowid != null) 'rowid': rowid,
     });
   }
 
-  AdminCompanion copyWith({
-    Value<String>? uid,
-    Value<int>? id,
-    Value<int>? rowid,
-  }) {
-    return AdminCompanion(
-      uid: uid ?? this.uid,
-      id: id ?? this.id,
-      rowid: rowid ?? this.rowid,
-    );
+  AdminCompanion copyWith({Value<String>? uid, Value<int>? id}) {
+    return AdminCompanion(uid: uid ?? this.uid, id: id ?? this.id);
   }
 
   @override
@@ -1136,9 +1116,6 @@ class AdminCompanion extends UpdateCompanion<AdminData> {
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
     return map;
   }
 
@@ -1146,8 +1123,7 @@ class AdminCompanion extends UpdateCompanion<AdminData> {
   String toString() {
     return (StringBuffer('AdminCompanion(')
           ..write('uid: $uid, ')
-          ..write('id: $id, ')
-          ..write('rowid: $rowid')
+          ..write('id: $id')
           ..write(')'))
         .toString();
   }
@@ -3160,6 +3136,7 @@ typedef $$UsersTableCreateCompanionBuilder =
     UsersCompanion Function({
       required String uid,
       required String emailAddress,
+      required String role,
       Value<String?> displayName,
       Value<String?> photoUrl,
       Value<int> rowid,
@@ -3168,6 +3145,7 @@ typedef $$UsersTableUpdateCompanionBuilder =
     UsersCompanion Function({
       Value<String> uid,
       Value<String> emailAddress,
+      Value<String> role,
       Value<String?> displayName,
       Value<String?> photoUrl,
       Value<int> rowid,
@@ -3287,6 +3265,11 @@ class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
 
   ColumnFilters<String> get emailAddress => $composableBuilder(
     column: $table.emailAddress,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get role => $composableBuilder(
+    column: $table.role,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -3445,6 +3428,11 @@ class $$UsersTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get role => $composableBuilder(
+    column: $table.role,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get displayName => $composableBuilder(
     column: $table.displayName,
     builder: (column) => ColumnOrderings(column),
@@ -3472,6 +3460,9 @@ class $$UsersTableAnnotationComposer
     column: $table.emailAddress,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get role =>
+      $composableBuilder(column: $table.role, builder: (column) => column);
 
   GeneratedColumn<String> get displayName => $composableBuilder(
     column: $table.displayName,
@@ -3643,12 +3634,14 @@ class $$UsersTableTableManager
               ({
                 Value<String> uid = const Value.absent(),
                 Value<String> emailAddress = const Value.absent(),
+                Value<String> role = const Value.absent(),
                 Value<String?> displayName = const Value.absent(),
                 Value<String?> photoUrl = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => UsersCompanion(
                 uid: uid,
                 emailAddress: emailAddress,
+                role: role,
                 displayName: displayName,
                 photoUrl: photoUrl,
                 rowid: rowid,
@@ -3657,12 +3650,14 @@ class $$UsersTableTableManager
               ({
                 required String uid,
                 required String emailAddress,
+                required String role,
                 Value<String?> displayName = const Value.absent(),
                 Value<String?> photoUrl = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => UsersCompanion.insert(
                 uid: uid,
                 emailAddress: emailAddress,
+                role: role,
                 displayName: displayName,
                 photoUrl: photoUrl,
                 rowid: rowid,
@@ -3795,17 +3790,9 @@ typedef $$UsersTableProcessedTableManager =
       })
     >;
 typedef $$AuthorsTableCreateCompanionBuilder =
-    AuthorsCompanion Function({
-      required String uid,
-      required int id,
-      Value<int> rowid,
-    });
+    AuthorsCompanion Function({required String uid, Value<int> id});
 typedef $$AuthorsTableUpdateCompanionBuilder =
-    AuthorsCompanion Function({
-      Value<String> uid,
-      Value<int> id,
-      Value<int> rowid,
-    });
+    AuthorsCompanion Function({Value<String> uid, Value<int> id});
 
 final class $$AuthorsTableReferences
     extends BaseReferences<_$AppDatabase, $AuthorsTable, Author> {
@@ -4109,14 +4096,10 @@ class $$AuthorsTableTableManager
               ({
                 Value<String> uid = const Value.absent(),
                 Value<int> id = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => AuthorsCompanion(uid: uid, id: id, rowid: rowid),
+              }) => AuthorsCompanion(uid: uid, id: id),
           createCompanionCallback:
-              ({
-                required String uid,
-                required int id,
-                Value<int> rowid = const Value.absent(),
-              }) => AuthorsCompanion.insert(uid: uid, id: id, rowid: rowid),
+              ({required String uid, Value<int> id = const Value.absent()}) =>
+                  AuthorsCompanion.insert(uid: uid, id: id),
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
@@ -4224,17 +4207,9 @@ typedef $$AuthorsTableProcessedTableManager =
       PrefetchHooks Function({bool uid, bool chatsRefs, bool requestsRefs})
     >;
 typedef $$EditorsTableCreateCompanionBuilder =
-    EditorsCompanion Function({
-      required String uid,
-      required int id,
-      Value<int> rowid,
-    });
+    EditorsCompanion Function({required String uid, Value<int> id});
 typedef $$EditorsTableUpdateCompanionBuilder =
-    EditorsCompanion Function({
-      Value<String> uid,
-      Value<int> id,
-      Value<int> rowid,
-    });
+    EditorsCompanion Function({Value<String> uid, Value<int> id});
 
 final class $$EditorsTableReferences
     extends BaseReferences<_$AppDatabase, $EditorsTable, Editor> {
@@ -4541,14 +4516,10 @@ class $$EditorsTableTableManager
               ({
                 Value<String> uid = const Value.absent(),
                 Value<int> id = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => EditorsCompanion(uid: uid, id: id, rowid: rowid),
+              }) => EditorsCompanion(uid: uid, id: id),
           createCompanionCallback:
-              ({
-                required String uid,
-                required int id,
-                Value<int> rowid = const Value.absent(),
-              }) => EditorsCompanion.insert(uid: uid, id: id, rowid: rowid),
+              ({required String uid, Value<int> id = const Value.absent()}) =>
+                  EditorsCompanion.insert(uid: uid, id: id),
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
@@ -4656,17 +4627,9 @@ typedef $$EditorsTableProcessedTableManager =
       PrefetchHooks Function({bool uid, bool chatsRefs, bool assigmentsRefs})
     >;
 typedef $$ReviewersTableCreateCompanionBuilder =
-    ReviewersCompanion Function({
-      required String uid,
-      required int id,
-      Value<int> rowid,
-    });
+    ReviewersCompanion Function({required String uid, Value<int> id});
 typedef $$ReviewersTableUpdateCompanionBuilder =
-    ReviewersCompanion Function({
-      Value<String> uid,
-      Value<int> id,
-      Value<int> rowid,
-    });
+    ReviewersCompanion Function({Value<String> uid, Value<int> id});
 
 final class $$ReviewersTableReferences
     extends BaseReferences<_$AppDatabase, $ReviewersTable, Reviewer> {
@@ -4974,14 +4937,10 @@ class $$ReviewersTableTableManager
               ({
                 Value<String> uid = const Value.absent(),
                 Value<int> id = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => ReviewersCompanion(uid: uid, id: id, rowid: rowid),
+              }) => ReviewersCompanion(uid: uid, id: id),
           createCompanionCallback:
-              ({
-                required String uid,
-                required int id,
-                Value<int> rowid = const Value.absent(),
-              }) => ReviewersCompanion.insert(uid: uid, id: id, rowid: rowid),
+              ({required String uid, Value<int> id = const Value.absent()}) =>
+                  ReviewersCompanion.insert(uid: uid, id: id),
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
@@ -5097,17 +5056,9 @@ typedef $$ReviewersTableProcessedTableManager =
       PrefetchHooks Function({bool uid, bool chatsRefs, bool assigmentsRefs})
     >;
 typedef $$AdminTableCreateCompanionBuilder =
-    AdminCompanion Function({
-      required String uid,
-      required int id,
-      Value<int> rowid,
-    });
+    AdminCompanion Function({required String uid, Value<int> id});
 typedef $$AdminTableUpdateCompanionBuilder =
-    AdminCompanion Function({
-      Value<String> uid,
-      Value<int> id,
-      Value<int> rowid,
-    });
+    AdminCompanion Function({Value<String> uid, Value<int> id});
 
 final class $$AdminTableReferences
     extends BaseReferences<_$AppDatabase, $AdminTable, AdminData> {
@@ -5272,14 +5223,10 @@ class $$AdminTableTableManager
               ({
                 Value<String> uid = const Value.absent(),
                 Value<int> id = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => AdminCompanion(uid: uid, id: id, rowid: rowid),
+              }) => AdminCompanion(uid: uid, id: id),
           createCompanionCallback:
-              ({
-                required String uid,
-                required int id,
-                Value<int> rowid = const Value.absent(),
-              }) => AdminCompanion.insert(uid: uid, id: id, rowid: rowid),
+              ({required String uid, Value<int> id = const Value.absent()}) =>
+                  AdminCompanion.insert(uid: uid, id: id),
           withReferenceMapper: (p0) => p0
               .map(
                 (e) =>

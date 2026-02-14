@@ -4,9 +4,9 @@ import 'package:shelf_router/shelf_router.dart';
 import '../../data/data.dart';
 
 class UserController {
-  UserController({required UserRepository userRepository})
+  UserController({required IUserRepository userRepository})
     : _userRepository = userRepository;
-  final UserRepository _userRepository;
+  final IUserRepository _userRepository;
 
   Handler get handler {
     final router = Router();

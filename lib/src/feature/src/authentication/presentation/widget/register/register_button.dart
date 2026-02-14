@@ -39,7 +39,6 @@ class _RegisterButtonState extends State<RegisterButton> {
             AuthenticationEvent.signup(
               email: widget.emailController.text,
               password: widget.passwordController.text,
-              role: UserRole.author,
             ),
           ),
         ),

@@ -3,13 +3,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:logger/logger.dart';
 import '../../core/rest_client/rest_client.dart';
 import '../../feature/src/authentication/authentication.dart';
-import '../../feature/src/author/author.dart';
+import '../../feature/src/athor/author.dart';
 import '../app.dart';
 
 abstract interface class IAppDependencies {
   Logger get logger;
   RestClient get restClientHttp;
   AuthenticationBloc get authenticationBloc;
+  IAuthorRepository get authorRepository;
   Future<void> dispose();
 }
 
@@ -18,6 +19,7 @@ final class AppDependencies implements IAppDependencies {
     required this.logger,
     required this.restClientHttp,
     required this.authenticationBloc,
+    required this.authorRepository,
   });
 
   @override
@@ -28,6 +30,9 @@ final class AppDependencies implements IAppDependencies {
 
   @override
   final AuthenticationBloc authenticationBloc;
+
+  @override
+  final IAuthorRepository authorRepository;
 
   static Future<IAppDependencies> init({required Logger logger}) async {
     // Firebase
@@ -49,7 +54,7 @@ final class AppDependencies implements IAppDependencies {
 
     // Authentication
     final IAuthenticationRepository authenticationRepository =
-        AuthenticationRepositoryImpl();
+        AuthenticationRepositoryImpl(restClientHttp: restClientHttp);
 
     final AuthenticationBloc authenticationBloc = AuthenticationBloc(
       authenticationRepository: authenticationRepository,
@@ -64,6 +69,7 @@ final class AppDependencies implements IAppDependencies {
       logger: initLogger,
       restClientHttp: restClientHttp,
       authenticationBloc: authenticationBloc,
+      authorRepository: authorRepository,
     );
   }
 

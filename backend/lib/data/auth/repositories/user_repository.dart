@@ -1,11 +1,11 @@
-import '../../database/database.dart';
+import '../../../core/database/database.dart';
 import '../dtos/user_dto.dart';
 
-abstract interface class UserRepository {
+abstract interface class IUserRepository {
   Future<UserDto> createUser({required UserDto userDto});
 }
 
-class UserRepositoryImpl implements UserRepository {
+class UserRepositoryImpl implements IUserRepository {
   UserRepositoryImpl({required AppDatabase appDatabase})
     : _appDatabase = appDatabase;
   final AppDatabase _appDatabase;

@@ -6,28 +6,40 @@ part 'database.g.dart';
 class Users extends Table {
   TextColumn get uid => text()();
   TextColumn get emailAddress => text().named('email_address')();
-  TextColumn get displayName => text().named('display_name').nullable()();
+  TextColumn get role => text()();
+  TextColumn get displayName => text().named('display_name')();
   TextColumn get photoUrl => text().named('photo_url').nullable()();
 }
 
 class Authors extends Table {
   TextColumn get uid => text().references(Users, #uid)();
-  IntColumn get id => integer()();
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get lastNameRu => text().named('last_name_ru')();
+  TextColumn get lastNameEn => text().named('last_name_en')();
+  TextColumn get firstNameRu => text().named('first_name_ru')();
+  TextColumn get firstNameEn => text().named('first_name_en')();
+  TextColumn get middleNameRu => text().named('middle_name_ru').nullable()();
+  TextColumn get middleNameEn => text().named('middle_name_en').nullable()();
+  IntColumn get organizationId => integer().named('organization_id')();
+  TextColumn get educationLevel => text().named('education_level').nullable()();
+  TextColumn get post => text().nullable()();
+  TextColumn get academicDegree => text().named('academic_degree').nullable()();
+  TextColumn get academicTitle => text().named('academic_title').nullable()();
 }
 
 class Editors extends Table {
   TextColumn get uid => text().references(Users, #uid)();
-  IntColumn get id => integer()();
+  IntColumn get id => integer().autoIncrement()();
 }
 
 class Reviewers extends Table {
   TextColumn get uid => text().references(Users, #uid)();
-  IntColumn get id => integer()();
+  IntColumn get id => integer().autoIncrement()();
 }
 
 class Admin extends Table {
   TextColumn get uid => text().references(Users, #uid)();
-  IntColumn get id => integer()();
+  IntColumn get id => integer().autoIncrement()();
 }
 
 class Requests extends Table {

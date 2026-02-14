@@ -30,7 +30,6 @@ class AuthenticationBloc
       final user = await _authenticationRepository.signup(
         emailAddress: event.email,
         password: event.password,
-        role: event.role,
       );
       emit(AuthenticationState.successfull(user: user));
     } on Object catch (error, stackTrace) {

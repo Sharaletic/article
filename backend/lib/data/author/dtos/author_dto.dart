@@ -1,8 +1,8 @@
-import 'package:backend/data/dtos/user_dto.dart';
+import 'package:backend/data/auth/dtos/user_dto.dart';
 import 'package:backend/domain/user_entity.dart';
 import 'package:drift/drift.dart';
-import '../../database/database.dart';
-import '../../domain/author_entity.dart';
+import '../../../core/database/database.dart';
+import '../../../domain/author_entity.dart';
 
 class AuthorDto {
   const factory AuthorDto.created({required UserEntity user}) =
@@ -23,9 +23,9 @@ class AuthorDtoCreated implements AuthorDto {
   factory AuthorDtoCreated.fromEntity(AuthorEntityCreated author) =>
       AuthorDtoCreated(user: author.user);
 
-  factory AuthorDtoCreated.fromJson(Map<String, Object> json) =>
+  factory AuthorDtoCreated.fromJson(Map<String, Object?> json) =>
       AuthorDtoCreated(
-        user: UserDto.fromJson(json['user'] as Map<String, Object>).toEntity(),
+        user: UserDto.fromJson(json['user'] as Map<String, Object?>).toEntity(),
       );
 }
 

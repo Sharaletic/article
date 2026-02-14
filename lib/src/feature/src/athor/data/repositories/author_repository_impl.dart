@@ -1,5 +1,4 @@
 import '../../../../../core/rest_client/rest_client.dart';
-import '../../../authentication/authentication.dart';
 import '../../author.dart';
 
 class AuthorRepositoryImpl implements IAuthorRepository {
@@ -8,10 +7,8 @@ class AuthorRepositoryImpl implements IAuthorRepository {
   final RestClient _httpClient;
 
   @override
-  Future<void> createAuthor({required AuthenticatedUser user}) async {
-    await _httpClient.post(
-      path: '/author',
-      body: AuthorDtoCreated(user: user).toJson(),
-    );
+  Future<void> createAuthor({required AuthorEntity author}) async {
+    final authorDto = AuthorDto.fromEntity(author: author);
+    await _httpClient.post(path: '/author', body: authorDto.toJson());
   }
 }

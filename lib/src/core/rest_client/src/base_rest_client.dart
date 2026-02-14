@@ -76,11 +76,10 @@ abstract base class BaseRestClient implements RestClient {
 
   Uri createUri({required String path, Map<String, String?>? queryParams}) {
     final uri = Uri.parse(p.join(_baseUri.path, path));
-    _baseUri.replace(
+    return _baseUri.replace(
       path: uri.path,
       queryParameters: {..._baseUri.queryParameters, ...?queryParams},
     );
-    return _baseUri;
   }
 
   Map<String, Object?>? decodeResponse({

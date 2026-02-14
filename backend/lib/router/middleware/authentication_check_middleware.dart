@@ -25,13 +25,14 @@ abstract class AuthenticationCheckMiddleware {
             );
 
             if (idToken.isVerified != true) {
-              logger.severe('Token is not valid / $token');
+              logger.severe('Token is invalid');
               return _getUnauthorizedResponse(request);
             }
           } else {
             return _getUnauthorizedResponse(request);
           }
-        } catch (error) {
+        } catch (error, stackTrace) {
+          logger.severe('Authentication middleware failed', error, stackTrace);
           return Response.badRequest();
         }
 

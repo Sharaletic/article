@@ -1,9 +1,10 @@
 import 'package:firebase_admin/firebase_admin.dart';
 import 'package:logger/logger.dart';
+import '../../auth/claims_service.dart';
 import '../logging/logger.dart';
 import '../model/application_config.dart';
 import '../model/dependencies_container.dart';
-import '../../database/database.dart';
+import '../../core/database/database.dart';
 import '../../router/router.dart';
 import '../../data/data.dart';
 
@@ -42,18 +43,37 @@ Future<DependenciesContainer> createDependenciesContainer({
       credential: FirebaseAdmin.instance.certFromPath(
         config.pathToServiceAccount,
       ),
-      projectId: 'article',
+      projectId: 'article-b3280',
     ),
   );
 
+  // Claims
+  final IClaimsService claimsService = ClaimsService(
+    firebaseAdminSDKApp: firebaseAdminSDKApp,
+  );
+
   // User
-  final userRepository = UserRepositoryImpl(appDatabase: appDatabase);
+  final IUserRepository userRepository = UserRepositoryImpl(
+    appDatabase: appDatabase,
+  );
   final userController = UserController(userRepository: userRepository);
+
+  // Author
+  final IAuthorRepository authorRepository = AuthorRepositoryImpl(
+    appDatabase: appDatabase,
+    claimsService: claimsService,
+  );
+
+  final authorController = AuthorController(
+    authorRepository: authorRepository,
+    logger: logger,
+  );
 
   return DependenciesContainer(
     logger: logger,
     firebaseAdminSDKApp: firebaseAdminSDKApp,
     config: config,
     userController: userController,
+    authorController: authorController,
   );
 }

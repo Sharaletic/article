@@ -1,6 +1,6 @@
 import 'package:firebase_admin/firebase_admin.dart';
 import 'package:logger/web.dart';
-import '../../router/controllers/user_controller.dart';
+import '../../router/router.dart';
 import 'application_config.dart';
 
 class DependenciesContainer {
@@ -9,9 +9,11 @@ class DependenciesContainer {
     required this.config,
     required this.firebaseAdminSDKApp,
     required this.userController,
+    required this.authorController,
   });
   final Logger logger;
   final ApplicationConfig config;
   final App firebaseAdminSDKApp;
   final UserController userController;
+  final AuthorController authorController;
 }

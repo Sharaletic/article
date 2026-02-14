@@ -1,4 +1,12 @@
-enum UserRole { author, reviewer, editor, admin }
+enum UserRole {
+  author('author'),
+  reviewer('reviewer'),
+  editor('editor'),
+  admin('admin');
+
+  const UserRole(this.value);
+  final String value;
+}
 
 abstract class UserEntity {
   const factory UserEntity.notAuthenticatedUser() = NotAuthenticatedUser;
@@ -6,7 +14,7 @@ abstract class UserEntity {
   const factory UserEntity.authenticatedUser({
     required String uid,
     required String emailAddress,
-    UserRole? role,
+    required UserRole role,
     String? displayName,
     String? photoUrl,
   }) = AuthenticatedUser;
@@ -53,14 +61,14 @@ class AuthenticatedUser implements UserEntity {
   const AuthenticatedUser({
     required this.uid,
     required this.emailAddress,
-    this.role,
+    required this.role,
     this.displayName,
     this.photoUrl,
   });
 
   final String uid;
   final String emailAddress;
-  final UserRole? role;
+  final UserRole role;
   final String? displayName;
   final String? photoUrl;
 

@@ -8,7 +8,6 @@ sealed class AuthenticationEvent {
   const factory AuthenticationEvent.signup({
     required String email,
     required String password,
-    required UserRole role,
   }) = _SignupEvent;
 
   const factory AuthenticationEvent.login({
@@ -33,14 +32,9 @@ sealed class AuthenticationEvent {
 }
 
 final class _SignupEvent extends AuthenticationEvent {
-  const _SignupEvent({
-    required this.email,
-    required this.password,
-    required this.role,
-  });
+  const _SignupEvent({required this.email, required this.password});
   final String email;
   final String password;
-  final UserRole role;
 }
 
 final class _LoginEvent extends AuthenticationEvent {
