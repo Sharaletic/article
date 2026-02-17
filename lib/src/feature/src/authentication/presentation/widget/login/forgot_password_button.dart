@@ -5,11 +5,22 @@ class ForgotPasswordButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final palette = Theme.of(context).colorPalette;
+
     return Align(
-      alignment: Alignment.topRight,
+      alignment: .centerRight,
       child: UiButton.text(
         onPressed: () {},
-        label: const Text('Забыль пароль?'),
+        label: UiText.titleSmall(
+          'Забыли пароль?',
+          color: palette.primary,
+          style: TextStyle(fontWeight: .w600),
+        ),
+        style: TextButton.styleFrom(
+          minimumSize: Size.zero,
+          padding: EdgeInsets.zero,
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        ),
       ),
     );
   }

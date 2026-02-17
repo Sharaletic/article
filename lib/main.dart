@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'src/app/app.dart';
 import 'src/core/core.dart';
-import 'src/feature/src/authentication/authentication.dart';
+import 'src/feature/src/athor/author.dart';
 
 Future<void> main() async {
   final logger = LoggerSettings.initLogger();
@@ -33,7 +33,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: DependenciesScope(dependencies: dependencies, child: const Auth()),
+      home: DependenciesScope(
+        dependencies: dependencies,
+        child: const AddInformation(),
+      ),
     );
   }
 }

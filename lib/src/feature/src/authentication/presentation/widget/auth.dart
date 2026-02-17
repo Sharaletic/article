@@ -12,12 +12,13 @@ class _AuthState extends State<Auth> {
   @override
   Widget build(BuildContext context) {
     final palette = Theme.of(context).colorPalette;
+
     return Scaffold(
       backgroundColor: palette.background,
       body: const Padding(
-        padding: EdgeInsetsGeometry.symmetric(horizontal: 24, vertical: 84),
+        padding: .symmetric(horizontal: 24, vertical: 84),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [AuthHeader(), SizedBox(height: 24), AuthForm()],
         ),
       ),

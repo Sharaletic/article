@@ -1,8 +1,7 @@
-import 'package:arcticle_app/src/feature/src/authentication/authentication.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ui_kit/ui_kit.dart';
-
 import '../../../../../../app/app.dart';
+import '../../../authentication.dart';
 
 class LoginButton extends StatefulWidget {
   const LoginButton({

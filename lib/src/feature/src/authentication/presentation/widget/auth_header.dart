@@ -8,7 +8,7 @@ class AuthHeader extends StatelessWidget {
     final palette = Theme.of(context).colorPalette;
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         UiText.displaySmall(
           'Начните использовать',

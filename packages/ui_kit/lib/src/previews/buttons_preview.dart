@@ -105,10 +105,10 @@ class _SegmentedButton extends StatelessWidget {
         child: UiText.titleSmall('Segmented Button'),
       ),
       const SizedBox(height: 16),
-      UiSegmentedButton(
-        onSelected: (selected) => print(selected),
-        items: const ['button1', 'button2'],
-      ),
+      // UiSegmentedButton(
+      //   onSelected: (selected) => print(selected),
+      //   items: const ['button1', 'button2'],
+      // ),
     ],
   );
 }

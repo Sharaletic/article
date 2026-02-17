@@ -27,7 +27,7 @@ class _AuthFormState extends State<AuthForm> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: .stretch,
       children: [
         UiText.titleMedium(
           'Email адрес',
@@ -70,7 +70,7 @@ class _AuthFormState extends State<AuthForm> {
           ),
         ),
         if (_authType == AuthType.login) ...[
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           const ForgotPasswordButton(),
           const SizedBox(height: 32),
           LoginButton(
@@ -79,7 +79,7 @@ class _AuthFormState extends State<AuthForm> {
           ),
         ],
         if (_authType == AuthType.register) ...[
-          const SizedBox(height: 54),
+          const SizedBox(height: 58),
           RegisterButton(
             emailController: _emailController,
             passwordController: _passwordController,
