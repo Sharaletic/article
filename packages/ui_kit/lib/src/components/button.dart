@@ -1,6 +1,6 @@
 import '../../ui_kit.dart';
 
-enum ButtonVariant { filledPrimary }
+enum ButtonVariant { filledPrimary, text, segmented }
 
 class UiButton extends ButtonStyleButton {
   final ButtonVariant variant;
@@ -8,7 +8,7 @@ class UiButton extends ButtonStyleButton {
   UiButton.filledPrimary({
     required VoidCallback? onPressed,
     bool enabled = true,
-    IconAlignment iconAlignment = IconAlignment.start,
+    IconAlignment iconAlignment = .start,
     Widget? label,
     Widget? icon,
     VoidCallback? onLongPress,
@@ -21,7 +21,61 @@ class UiButton extends ButtonStyleButton {
     super.statesController,
     super.isSemanticButton,
     super.key,
-  }) : variant = ButtonVariant.filledPrimary,
+  }) : variant = .filledPrimary,
+       super(
+         child: _ButtonIconAndLabel(
+           icon: icon,
+           label: label,
+           iconAlignment: iconAlignment,
+         ),
+         onPressed: enabled ? onPressed : null,
+         onLongPress: enabled ? onLongPress : null,
+       );
+
+  UiButton.text({
+    required VoidCallback onPressed,
+    bool enabled = true,
+    IconAlignment iconAlignment = IconAlignment.start,
+    Widget? label,
+    Widget? icon,
+    VoidCallback? onLongPress,
+    super.autofocus = false,
+    super.onHover,
+    super.onFocusChange,
+    super.style,
+    super.focusNode,
+    super.clipBehavior,
+    super.statesController,
+    super.isSemanticButton,
+    super.key,
+  }) : variant = .text,
+       super(
+         child: _ButtonIconAndLabel(
+           icon: icon,
+           label: label,
+           iconAlignment: iconAlignment,
+         ),
+         onPressed: enabled ? onPressed : null,
+         onLongPress: enabled ? onLongPress : null,
+       );
+
+  UiButton.segmented({
+    required VoidCallback onPressed,
+    bool enabled = true,
+    IconAlignment iconAlignment = .start,
+    required Widget label,
+    Widget? icon,
+    VoidCallback? onLongPress,
+    super.autofocus = false,
+    super.onHover,
+    super.onFocusChange,
+    super.style,
+    super.focusNode,
+    super.clipBehavior,
+    super.statesController,
+    super.isSemanticButton,
+    super.key,
+  }) : variant = .segmented,
        super(
          child: _ButtonIconAndLabel(
            icon: icon,
@@ -39,7 +93,12 @@ class UiButton extends ButtonStyleButton {
     final typography = theme.appTypography;
 
     return switch (variant) {
-      ButtonVariant.filledPrimary => _FilledButtonPrimaryStyle(
+      .filledPrimary => _FilledButtonPrimaryStyle(
+        colorPalette: colors,
+        typography: typography,
+      ),
+      .text => _TextButtonStyle(colorPalette: colors, typography: typography),
+      .segmented => _SegmentedButtonStyle(
         colorPalette: colors,
         typography: typography,
       ),
@@ -143,6 +202,105 @@ class _FilledButtonPrimaryStyle extends _UiBaseButtonStyle {
   );
 }
 
+class _TextButtonStyle extends _UiBaseButtonStyle {
+  const _TextButtonStyle({
+    required super.colorPalette,
+    required super.typography,
+  });
+
+  @override
+  WidgetStateProperty<Color?>? get backgroundColor =>
+      const WidgetStatePropertyAll(Colors.transparent);
+
+  @override
+  WidgetStateProperty<Color?>? get foregroundColor =>
+      WidgetStateProperty.resolveWith((Set<WidgetState> states) {
+        if (states.contains(WidgetState.disabled)) {
+          return colorPalette.mutedForeground;
+        }
+        return colorPalette.primary;
+      });
+
+  @override
+  WidgetStateProperty<Color?>? get overlayColor =>
+      WidgetStateProperty.resolveWith((Set<WidgetState> states) {
+        if (states.contains(WidgetState.pressed)) {
+          return colorPalette.primary.withValues(alpha: 0.1);
+        }
+        if (states.contains(WidgetState.hovered)) {
+          return colorPalette.primary.withValues(alpha: 0.08);
+        }
+        if (states.contains(WidgetState.focused)) {
+          return colorPalette.primary.withValues(alpha: 0.1);
+        }
+        return null;
+      });
+}
+
+class _SegmentedButtonStyle extends _UiBaseButtonStyle {
+  const _SegmentedButtonStyle({
+    required super.colorPalette,
+    required super.typography,
+  });
+
+  @override
+  WidgetStateProperty<Color?>? get foregroundColor =>
+      WidgetStateProperty.resolveWith((Set<WidgetState> states) {
+        if (states.contains(WidgetState.disabled)) {
+          return colorPalette.mutedForeground;
+        }
+        return colorPalette.primaryForeground;
+      });
+
+  @override
+  WidgetStateProperty<Color?>? get backgroundColor =>
+      WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return colorPalette.muted;
+        }
+        return colorPalette.primary;
+      });
+
+  @override
+  WidgetStateProperty<Color?>? get overlayColor =>
+      WidgetStateProperty.resolveWith((Set<WidgetState> states) {
+        final color = colorPalette.primaryForeground;
+        if (states.contains(WidgetState.pressed)) {
+          return color.withValues(alpha: 0.1);
+        }
+        if (states.contains(WidgetState.hovered)) {
+          return color.withValues(alpha: 0.08);
+        }
+        if (states.contains(WidgetState.focused)) {
+          return color.withValues(alpha: 0.1);
+        }
+        return null;
+      });
+
+  @override
+  WidgetStateProperty<double>? get elevation =>
+      WidgetStateProperty.resolveWith((Set<WidgetState> states) {
+        if (states.contains(WidgetState.disabled)) {
+          return 0.0;
+        }
+        if (states.contains(WidgetState.pressed)) {
+          return 0.0;
+        }
+        if (states.contains(WidgetState.hovered)) {
+          return 0.0;
+        }
+        if (states.contains(WidgetState.focused)) {
+          return 0.0;
+        }
+        return 0.0;
+      });
+
+  @override
+  WidgetStateProperty<Color>? get shadowColor => WidgetStatePropertyAll<Color>(
+    colorPalette.foreground.withValues(alpha: .18),
+  );
+}
+
 class _UiBaseButtonStyle extends ButtonStyle {
   const _UiBaseButtonStyle({
     required this.colorPalette,
@@ -161,9 +319,7 @@ class _UiBaseButtonStyle extends ButtonStyle {
   @override
   WidgetStateProperty<OutlinedBorder?>? get shape =>
       const WidgetStatePropertyAll(
-        RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(12)),
-        ),
+        RoundedRectangleBorder(borderRadius: .all(.circular(12))),
       );
 
   @override
@@ -171,9 +327,7 @@ class _UiBaseButtonStyle extends ButtonStyle {
 
   @override
   WidgetStateProperty<EdgeInsetsGeometry?>? get padding =>
-      const WidgetStatePropertyAll(
-        EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      );
+      const WidgetStatePropertyAll(.symmetric(horizontal: 16, vertical: 12));
 
   @override
   WidgetStateProperty<Size?>? get minimumSize =>
@@ -233,7 +387,7 @@ class _UiBaseButtonStyle extends ButtonStyle {
       showBorder: states.contains(WidgetState.focused),
       border: RoundedRectangleBorder(
         side: BorderSide(color: colorPalette.ring, width: 2),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: .circular(8),
       ),
       child: child,
     );

@@ -4,6 +4,7 @@ export 'package:flutter/material.dart';
 
 /// Components
 export 'src/components/button.dart';
+export 'src/components/segmented_button.dart';
 export 'src/components/text.dart';
 export 'src/components/text_field.dart';
 export 'src/components/card.dart';
