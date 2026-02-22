@@ -17,9 +17,9 @@ class ForgotPasswordButton extends StatelessWidget {
           style: TextStyle(fontWeight: .w600),
         ),
         style: TextButton.styleFrom(
-          minimumSize: Size.zero,
-          padding: EdgeInsets.zero,
-          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          minimumSize: .zero,
+          padding: .zero,
+          tapTargetSize: .shrinkWrap,
         ),
       ),
     );

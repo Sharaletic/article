@@ -1,6 +1,6 @@
 import '../../ui_kit.dart';
 
-enum ButtonVariant { filledPrimary, text, segmented }
+enum ButtonVariant { filledPrimary, filledSecondary, text, segmented }
 
 class UiButton extends ButtonStyleButton {
   final ButtonVariant variant;
@@ -22,6 +22,33 @@ class UiButton extends ButtonStyleButton {
     super.isSemanticButton,
     super.key,
   }) : variant = .filledPrimary,
+       super(
+         child: _ButtonIconAndLabel(
+           icon: icon,
+           label: label,
+           iconAlignment: iconAlignment,
+         ),
+         onPressed: enabled ? onPressed : null,
+         onLongPress: enabled ? onLongPress : null,
+       );
+
+  UiButton.filledSecondary({
+    required VoidCallback? onPressed,
+    bool enabled = true,
+    IconAlignment iconAlignment = .start,
+    Widget? label,
+    Widget? icon,
+    VoidCallback? onLongPress,
+    super.autofocus = false,
+    super.onHover,
+    super.onFocusChange,
+    super.style,
+    super.focusNode,
+    super.clipBehavior,
+    super.statesController,
+    super.isSemanticButton,
+    super.key,
+  }) : variant = ButtonVariant.filledSecondary,
        super(
          child: _ButtonIconAndLabel(
            icon: icon,
@@ -63,7 +90,7 @@ class UiButton extends ButtonStyleButton {
     required VoidCallback onPressed,
     bool enabled = true,
     IconAlignment iconAlignment = .start,
-    required Widget label,
+    Widget? label,
     Widget? icon,
     VoidCallback? onLongPress,
     super.autofocus = false,
@@ -97,11 +124,15 @@ class UiButton extends ButtonStyleButton {
         colorPalette: colors,
         typography: typography,
       ),
-      .text => _TextButtonStyle(colorPalette: colors, typography: typography),
+      .filledSecondary => _FilledButtonSecondaryStyle(
+        colorPalette: colors,
+        typography: typography,
+      ),
       .segmented => _SegmentedButtonStyle(
         colorPalette: colors,
         typography: typography,
       ),
+      .text => _TextButtonStyle(colorPalette: colors, typography: typography),
     };
   }
 
@@ -202,6 +233,71 @@ class _FilledButtonPrimaryStyle extends _UiBaseButtonStyle {
   );
 }
 
+class _FilledButtonSecondaryStyle extends _UiBaseButtonStyle {
+  const _FilledButtonSecondaryStyle({
+    required super.colorPalette,
+    required super.typography,
+  });
+
+  @override
+  WidgetStateProperty<Color?>? get foregroundColor =>
+      WidgetStateProperty.resolveWith((Set<WidgetState> states) {
+        if (states.contains(WidgetState.disabled)) {
+          return colorPalette.secondary.withValues(alpha: .38);
+        }
+        return colorPalette.secondaryForeground;
+      });
+
+  @override
+  WidgetStateProperty<Color?>? get backgroundColor =>
+      WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return colorPalette.secondary.withValues(alpha: .12);
+        }
+        return colorPalette.secondary;
+      });
+
+  @override
+  WidgetStateProperty<Color?>? get overlayColor =>
+      WidgetStateProperty.resolveWith((Set<WidgetState> states) {
+        final color = colorPalette.secondaryForeground;
+
+        if (states.contains(WidgetState.pressed)) {
+          return color.withValues(alpha: 0.1);
+        }
+        if (states.contains(WidgetState.hovered)) {
+          return color.withValues(alpha: 0.08);
+        }
+        if (states.contains(WidgetState.focused)) {
+          return color.withValues(alpha: 0.1);
+        }
+        return null;
+      });
+
+  @override
+  WidgetStateProperty<double>? get elevation =>
+      WidgetStateProperty.resolveWith((Set<WidgetState> states) {
+        if (states.contains(WidgetState.disabled)) {
+          return 0.0;
+        }
+        if (states.contains(WidgetState.pressed)) {
+          return 0.0;
+        }
+        if (states.contains(WidgetState.hovered)) {
+          return 1.0;
+        }
+        if (states.contains(WidgetState.focused)) {
+          return 0.0;
+        }
+        return 0.0;
+      });
+
+  @override
+  WidgetStateProperty<Color>? get shadowColor => WidgetStatePropertyAll<Color>(
+    colorPalette.foreground.withValues(alpha: .18),
+  );
+}
+
 class _TextButtonStyle extends _UiBaseButtonStyle {
   const _TextButtonStyle({
     required super.colorPalette,
@@ -258,15 +354,21 @@ class _SegmentedButtonStyle extends _UiBaseButtonStyle {
         if (states.contains(WidgetState.disabled)) {
           return colorPalette.muted;
         }
-        return colorPalette.primary;
+        if (states.contains(WidgetState.pressed)) {
+          return colorPalette.destructiveBorder;
+        }
+        if (states.contains(WidgetState.hovered)) {
+          return colorPalette.destructiveBorder;
+        }
+        return Colors.transparent;
       });
 
   @override
   WidgetStateProperty<Color?>? get overlayColor =>
       WidgetStateProperty.resolveWith((Set<WidgetState> states) {
-        final color = colorPalette.primaryForeground;
+        final color = colorPalette.secondary;
         if (states.contains(WidgetState.pressed)) {
-          return color.withValues(alpha: 0.1);
+          return color.withValues(alpha: 0.4);
         }
         if (states.contains(WidgetState.hovered)) {
           return color.withValues(alpha: 0.08);
@@ -339,10 +441,7 @@ class _UiBaseButtonStyle extends ButtonStyle {
 
   @override
   WidgetStateProperty<TextStyle?>? get textStyle => WidgetStatePropertyAll(
-    typography.titleMedium.copyWith(
-      fontFamily: 'SfPro',
-      fontWeight: FontWeight.w600,
-    ),
+    typography.titleMedium.copyWith(fontWeight: FontWeight.w600),
   );
 
   @override

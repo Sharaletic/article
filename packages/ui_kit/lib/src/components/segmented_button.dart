@@ -19,12 +19,11 @@ class UiSegmentedButton<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colors = theme.colorPalette;
-    final typography = theme.appTypography;
 
     return Container(
       decoration: BoxDecoration(
         color: colors.secondary,
-        borderRadius: const .all(.circular(16.0)),
+        borderRadius: const .all(.circular(16)),
       ),
       padding: const .all(4.0),
       child: Row(
@@ -34,7 +33,7 @@ class UiSegmentedButton<T> extends StatelessWidget {
           final label = itemLabelBuilder?.call(item);
           final icon = itemIconBuilder?.call(item);
           return Expanded(
-            child: UiButton.filledPrimary(
+            child: UiButton.segmented(
               onPressed: () => onSelected(item),
               label: label,
               icon: icon,
@@ -45,10 +44,6 @@ class UiSegmentedButton<T> extends StatelessWidget {
                 backgroundColor: isSelected
                     ? WidgetStatePropertyAll(colors.background)
                     : const WidgetStatePropertyAll(Colors.transparent),
-                textStyle: WidgetStatePropertyAll(
-                  typography.titleSmall.copyWith(fontWeight: .w600),
-                ),
-                foregroundColor: WidgetStatePropertyAll(colors.foreground),
               ),
             ),
           );

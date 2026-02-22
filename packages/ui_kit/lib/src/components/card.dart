@@ -10,9 +10,8 @@ class UiCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorPalette = Theme.of(context).colorPalette;
     return Padding(
-      padding: margin ?? const EdgeInsets.all(0),
+      padding: margin ?? const .all(0),
       child: Container(
-        color: color,
         decoration: BoxDecoration(
           color: color ?? colorPalette.mutedForeground,
           borderRadius: BorderRadius.circular(12),

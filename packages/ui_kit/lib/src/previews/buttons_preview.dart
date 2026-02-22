@@ -11,7 +11,7 @@ class ButtonsPreview extends StatelessWidget {
         child: Wrap(
           spacing: 16,
           runSpacing: 16,
-          children: [_FilledPrimaryButton(), _TextButton(), _SegmentedButton()],
+          children: [_FilledPrimaryButton(), _TextButton()],
         ),
       ),
     );
@@ -84,31 +84,12 @@ class _TextButton extends StatelessWidget {
       ),
       const SizedBox(height: 16),
       UiButton.text(onPressed: () {}, label: const Text('standard')),
-      const SizedBox(height: 8),
+      const SizedBox(height: 4),
       UiButton.text(
         onPressed: () {},
         label: const Text('disabled'),
         enabled: false,
       ),
-    ],
-  );
-}
-
-class _SegmentedButton extends StatelessWidget {
-  const _SegmentedButton();
-
-  @override
-  Widget build(BuildContext context) => Column(
-    children: [
-      Align(
-        alignment: Alignment.center,
-        child: UiText.titleSmall('Segmented Button'),
-      ),
-      const SizedBox(height: 16),
-      // UiSegmentedButton(
-      //   onSelected: (selected) => print(selected),
-      //   items: const ['button1', 'button2'],
-      // ),
     ],
   );
 }

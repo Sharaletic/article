@@ -11,6 +11,7 @@ ThemeData createThemeData({
   brightness: brightness,
   fontFamily: 'SfPro',
   extensions: {palette, typography},
+  textSelectionTheme: TextSelectionThemeData(cursorColor: palette.primary),
 );
 
 ColorPalette generatePaletteForBrightness(Brightness brightness) {

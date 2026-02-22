@@ -39,7 +39,7 @@ class _AddInformationState extends State<AddInformation> {
                 });
               },
               items: Status.values,
-              itemLabelBuilder: (status) => Text(status.value),
+              itemLabelBuilder: (status) => UiText.titleSmall(status.value),
             ),
             const SizedBox(height: 16),
             if (selectedStatus == Status.student) const StudentForm(),

@@ -180,9 +180,6 @@ class _StandardUiTextFieldStyle extends UiTextFieldStyle {
   BoxConstraints? get constraints => const BoxConstraints(minHeight: 32);
 
   @override
-  Color? get cursorColor => palette.primary;
-
-  @override
   bool? get isDense => true;
 }
 

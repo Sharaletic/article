@@ -16,6 +16,17 @@ class _StudentFormState extends State<StudentForm> {
   final _middleNameEnController = TextEditingController();
 
   @override
+  void dispose() {
+    _lastNameRuController.dispose();
+    _lastNameEnController.dispose();
+    _firstNameRuController.dispose();
+    _firstNameEnController.dispose();
+    _middleNameRuController.dispose();
+    _middleNameEnController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: .start,

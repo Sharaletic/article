@@ -84,6 +84,26 @@ class UiPreview extends StatelessWidget {
                 const SizedBox(height: 8),
                 const TextFieldsPreview(),
                 const SizedBox(height: 24),
+                Align(
+                  alignment: Alignment.center,
+                  child: UiText.titleMedium(
+                    'Segmented Button',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const SegmentedButtonPreview(),
+                const SizedBox(height: 24),
+                Align(
+                  alignment: Alignment.center,
+                  child: UiText.titleMedium(
+                    'Drop Down Menu',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const DropDownMenuPreview(),
+                const SizedBox(height: 24),
               ],
             ),
           ),
