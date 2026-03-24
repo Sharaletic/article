@@ -1,19 +1,31 @@
-import 'package:backend/domain/user_entity.dart';
 import 'package:drift/drift.dart';
 import '../../../core/database/database.dart';
+import '../../../core/rest_client/api_server.dart';
+import '../../../domain/user_entity.dart';
+
+UserRole _userRoleFromJson(String role) {
+  final normalized = role.toLowerCase().trim();
+  return switch (normalized) {
+    'author' => UserRole.author,
+    'reviewer' => UserRole.reviewer,
+    'editor' => UserRole.editor,
+    'admin' => UserRole.admin,
+    _ => throw ValidationException(message: 'Unknown role: $role'),
+  };
+}
 
 class UserDto {
   UserDto({
     required this.uid,
     required this.emailAddress,
     required this.role,
-    this.displayName,
+    required this.displayName,
     this.photoUrl,
   });
   final String uid;
   final String emailAddress;
   final UserRole role;
-  final String? displayName;
+  final String displayName;
   final String? photoUrl;
 
   Map<String, Object?> toJson() => {
@@ -47,18 +59,30 @@ class UserDto {
     photoUrl: user.photoUrl,
   );
 
-  factory UserDto.fromJson(Map<String, Object?> json) => UserDto(
-    uid: json['uid'] as String,
-    emailAddress: json['email_address'] as String,
-    role: UserRole.fromJson(json['role'] as String),
-    displayName: json['display_name'] as String?,
-    photoUrl: json['photo_url'] as String?,
-  );
+  factory UserDto.fromJson(Map<String, Object?> json) {
+    if (json case <String, Object?>{
+      'uid': var uid as String,
+      'email_address': var emailAddress as String,
+      'role': var role as String,
+      'display_name': var displayName as String,
+      'photo_url': var photoUrl as String?,
+    }) {
+      return UserDto(
+        uid: uid,
+        emailAddress: emailAddress,
+        role: _userRoleFromJson(role),
+        displayName: displayName,
+        photoUrl: photoUrl,
+      );
+    } else {
+      throw JsonDeserializationException(message: 'Invalid JSON format');
+    }
+  }
 
   factory UserDto.fromDataBase(User user) => UserDto(
     uid: user.uid,
     emailAddress: user.emailAddress,
-    role: UserRole.fromJson(user.role),
+    role: _userRoleFromJson(user.role),
     displayName: user.displayName,
     photoUrl: user.photoUrl,
   );

@@ -14,8 +14,8 @@ void main([List<String>? args]) async {
   runZonedGuarded<Future<void>>(
     () async {
       final handler = Cascade()
-          .add(composition.dependencies.userController.handler)
           .add(composition.dependencies.authorController.handler)
+          .add(composition.dependencies.organizationController.handler)
           .handler;
 
       final pipeline = Pipeline()
@@ -24,12 +24,19 @@ void main([List<String>? args]) async {
           .addMiddleware(
             AuthenticationCheckMiddleware.createAuthenticationCheckMiddleware(
               firebaseAdminSDKApp: di.firebaseAdminSDKApp,
-              logger: di.logger,
+              apiServer: di.apiServer,
+              logger: logger,
+            ),
+          )
+          .addMiddleware(
+            ErrorMiddleware.createErrorMiddleware(
+              logger: logger,
+              apiServer: di.apiServer,
             ),
           )
           .addHandler(handler);
 
-      di.logger.info('Server is ready to start');
+      logger.info('Server is ready to start');
 
       await serve(
         pipeline,
@@ -38,7 +45,7 @@ void main([List<String>? args]) async {
       );
     },
     (error, stackTrace) {
-      di.logger.severe(error, error, stackTrace);
+      logger.severe(error, error, stackTrace);
       io.exit(2);
     },
   );

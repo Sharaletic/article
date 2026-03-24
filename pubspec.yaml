@@ -31,6 +31,9 @@ dependencies:
   # Utils
   path: ^1.9.1
 
+  # Routing
+  auto_route: ^11.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

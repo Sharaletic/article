@@ -1,68 +1,111 @@
+import '../../../../../core/core.dart';
 import '../../../authentication/authentication.dart';
 import '../../author.dart';
 
+AuthorStatus _statusFromJson(String status) => switch (status) {
+  'Студент' => AuthorStatus.student,
+  'Преподаватель' => AuthorStatus.teacher,
+  _ => throw StructuredBackendException(
+    error: {'details': 'Invalid status $status received from server.'},
+  ),
+};
+
+EducationLevel _educationLevelFromJson(String? educationLevel) =>
+    switch (educationLevel) {
+      'Бакалавриат' => EducationLevel.bachelor,
+      'Специалитет' => EducationLevel.specialist,
+      'Магистратура' => EducationLevel.master,
+      'Аспирантура' => EducationLevel.postgraduate,
+      _ => throw StructuredBackendException(
+        error: {
+          'details':
+              'Invalid education level $educationLevel received from server.',
+        },
+      ),
+    };
+
 class AuthorDto {
   const AuthorDto({
-    required this.id,
+    this.id,
     required this.user,
-    required this.lastName,
-    required this.firstName,
-    this.middleName,
+    required this.status,
+    required this.lastNameRu,
+    required this.lastNameEn,
+    required this.firstNameRu,
+    required this.firstNameEn,
+    this.middleNameRu,
+    this.middleNameEn,
     required this.organization,
-    this.educationLevel,
+    required this.educationLevel,
     this.post,
     this.academicDegree,
-    this.academictitle,
+    this.academicTitle,
   });
-  final int id;
+  final int? id;
   final UserDto user;
-  final String lastName;
-  final String firstName;
-  final String? middleName;
+  final AuthorStatus status;
+  final String lastNameRu;
+  final String lastNameEn;
+  final String firstNameRu;
+  final String firstNameEn;
+  final String? middleNameRu;
+  final String? middleNameEn;
   final OrganizationDto organization;
-  final String? educationLevel;
+  final EducationLevel? educationLevel;
   final String? post;
   final String? academicDegree;
-  final String? academictitle;
+  final String? academicTitle;
 
   factory AuthorDto.fromEntity({required AuthorEntity author}) => AuthorDto(
     id: author.id,
     user: UserDto.fromEntity(user: author.user),
-    lastName: author.lastName,
-    firstName: author.firstName,
-    middleName: author.middleName,
-    organization: OrganizationDto.fromEntity(entity: author.organization),
+    status: author.status,
+    lastNameRu: author.lastNameRu,
+    lastNameEn: author.lastNameEn,
+    firstNameRu: author.firstNameRu,
+    firstNameEn: author.firstNameEn,
+    middleNameRu: author.middleNameRu,
+    middleNameEn: author.middleNameEn,
+    organization: OrganizationDto.fromEntity(author.organization),
     educationLevel: author.educationLevel,
     post: author.post,
     academicDegree: author.academicDegree,
-    academictitle: author.academictitle,
+    academicTitle: author.academicTitle,
   );
 
   factory AuthorDto.fromJson({required Map<String, Object?> json}) => AuthorDto(
     id: json['id'] as int,
     user: UserDto.fromJson(json: json['user'] as Map<String, Object?>),
-    lastName: json['lastName'] as String,
-    firstName: json['firstName'] as String,
-    middleName: json['middleName'] as String?,
+    status: _statusFromJson(json['status'] as String),
+    lastNameRu: json['last_name_ru'] as String,
+    lastNameEn: json['last_name_en'] as String,
+    firstNameRu: json['first_name_ru'] as String,
+    firstNameEn: json['first_name_en'] as String,
+    middleNameRu: json['middle_name_ru'] as String?,
+    middleNameEn: json['middle_name_en'] as String?,
     organization: OrganizationDto.fromJson(
-      json: json['organization'] as Map<String, Object?>,
+      json['organization'] as Map<String, Object?>,
     ),
-    educationLevel: json['educationLevel'] as String?,
+    educationLevel: _educationLevelFromJson(json['education_level'] as String?),
     post: json['post'] as String?,
-    academicDegree: json['academicDegree'] as String?,
-    academictitle: json['academictitle'] as String?,
+    academicDegree: json['academic_degree'] as String?,
+    academicTitle: json['academic_title'] as String?,
   );
 
   Map<String, Object?> toJson() => {
     'id': id,
     'user': user.toJson(),
-    'lastName': lastName,
-    'firstName': firstName,
-    'middleName': middleName,
+    'status': status.value,
+    'last_name_ru': lastNameRu,
+    'last_name_en': lastNameEn,
+    'first_name_ru': firstNameRu,
+    'first_name_en': firstNameEn,
+    'middle_name_ru': middleNameRu,
+    'middle_name_en': middleNameEn,
     'organization': organization.toJson(),
-    'educationLevel': educationLevel,
+    'education_level': educationLevel?.value,
     'post': post,
-    'academicDegree': academicDegree,
-    'academictitle': academictitle,
+    'academic_degree': academicDegree,
+    'academic_title': academicTitle,
   };
 }

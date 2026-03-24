@@ -1,17 +1,18 @@
 import 'dart:convert';
-import 'package:backend/app/app.dart';
-import 'package:logger/logger.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
+import '../../core/rest_client/api_server.dart';
 import '../../data/data.dart';
 
 class AuthorController {
   AuthorController({
     required IAuthorRepository authorRepository,
-    required this.logger,
-  }) : _authorRepository = authorRepository;
+    required ApiServer apiServer,
+  }) : _authorRepository = authorRepository,
+       _apiServer = apiServer;
+
   final IAuthorRepository _authorRepository;
-  final Logger logger;
+  final ApiServer _apiServer;
 
   Handler get handler {
     final router = Router();
@@ -24,11 +25,10 @@ class AuthorController {
   Future<Response> createAuthor(Request request) async {
     final body = await request.readAsString();
     final json = jsonDecode(body);
-    logger.info(json);
-    final author = AuthorDtoCreated.fromJson(json).toEntity();
+    final author = AuthorDto.fromJson(json).toEntity();
 
     await _authorRepository.createAuthor(author: author);
 
-    return Response.ok(jsonEncode(json));
+    return _apiServer.sendResponse(201);
   }
 }

@@ -13,8 +13,6 @@ class ClaimsService implements IClaimsService {
   Future<void> setUserRole({required String uid, required String role}) async {
     try {
       await _firebaseAdminSDKApp.auth().setCustomUserClaims(uid, {role: role});
-    } on Exception catch (e) {
-      // TODO
-    }
+    } on Exception catch (_) {}
   }
 }

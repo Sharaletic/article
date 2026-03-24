@@ -1,14 +1,6 @@
 import 'package:ui_kit/ui_kit.dart';
 import '../../author.dart';
 
-enum Status {
-  student('Студент'),
-  teacher('Преподаватель');
-
-  const Status(this.value);
-  final String value;
-}
-
 class AddInformation extends StatefulWidget {
   const AddInformation({super.key});
 
@@ -17,7 +9,7 @@ class AddInformation extends StatefulWidget {
 }
 
 class _AddInformationState extends State<AddInformation> {
-  var selectedStatus = Status.student;
+  var selectedStatus = AuthorStatus.student;
 
   @override
   Widget build(BuildContext context) {
@@ -25,27 +17,31 @@ class _AddInformationState extends State<AddInformation> {
 
     return Scaffold(
       backgroundColor: palette.background,
-      body: Padding(
-        padding: const .symmetric(horizontal: 24, vertical: 84),
-        child: Column(
-          crossAxisAlignment: .stretch,
-          children: [
-            const AddInformationHeader(),
-            UiSegmentedButton(
-              selected: selectedStatus,
-              onSelected: (selected) {
-                setState(() {
-                  selectedStatus = selected;
-                });
-              },
-              items: Status.values,
-              itemLabelBuilder: (status) => UiText.titleSmall(status.value),
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(child: const SizedBox(height: 84)),
+          SliverToBoxAdapter(child: const AddInformationHeader()),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const .symmetric(horizontal: 24),
+              child: UiSegmentedButton(
+                selected: selectedStatus,
+                onSelected: (selected) {
+                  setState(() {
+                    selectedStatus = selected;
+                  });
+                },
+                items: AuthorStatus.values,
+                itemLabelBuilder: (status) => UiText.titleSmall(status.value),
+              ),
             ),
-            const SizedBox(height: 16),
-            if (selectedStatus == Status.student) const StudentForm(),
-            if (selectedStatus == Status.teacher) const TeacherForm(),
-          ],
-        ),
+          ),
+          SliverToBoxAdapter(child: const SizedBox(height: 16)),
+          if (selectedStatus == AuthorStatus.student)
+            const SliverToBoxAdapter(child: StudentForm()),
+          if (selectedStatus == AuthorStatus.teacher)
+            const SliverToBoxAdapter(child: TeacherForm()),
+        ],
       ),
     );
   }

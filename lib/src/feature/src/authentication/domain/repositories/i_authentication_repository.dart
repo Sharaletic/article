@@ -6,11 +6,12 @@ abstract interface class IAuthenticationRepository {
     required String password,
   });
 
-  Future<void> createUser({required UserDto userDto, required String jwtToken});
-
   Future<UserEntity> login({
     required String emailAddress,
     required String password,
   });
+
+  Future<UserEntity> updateDisplayName({required String name});
+
   Future<void> logout();
 }

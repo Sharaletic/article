@@ -1,6 +1,7 @@
-import 'package:arcticle_app/src/app/app.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ui_kit/ui_kit.dart';
+import '../../../../../../core/core.dart';
 import '../../../authentication.dart';
 
 class RegisterButton extends StatefulWidget {
@@ -17,29 +18,26 @@ class RegisterButton extends StatefulWidget {
 }
 
 class _RegisterButtonState extends State<RegisterButton> {
-  late final AuthenticationBloc _authBloc;
-
-  @override
-  void initState() {
-    _authBloc = DependenciesScope.of(context).authenticationBloc;
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: _authBloc,
-      child: BlocListener<AuthenticationBloc, AuthenticationState>(
-        listener: (context, state) {
-          state.mapOrNull(successfull: (_) => {}, error: (_) => {});
-        },
-        child: UiButton.filledPrimary(
-          label: const Text('Зарегистрироваться'),
-          onPressed: () => _authBloc.add(
-            AuthenticationEvent.signup(
-              email: widget.emailController.text,
-              password: widget.passwordController.text,
-            ),
+    return BlocListener<AuthenticationBloc, AuthenticationState>(
+      listener: (context, state) {
+        state.mapOrNull(
+          successfull: (_) =>
+              context.router.replace(NamedRoute('AddInformationRoute')),
+          error: (state) => ErrorUtil.displayErrorSnackBar(
+            context,
+            state.error,
+            state.stackTrace,
+          ),
+        );
+      },
+      child: UiButton.filledPrimary(
+        label: const Text('Зарегистрироваться'),
+        onPressed: () => context.read<AuthenticationBloc>().add(
+          AuthenticationEvent.signup(
+            email: widget.emailController.text,
+            password: widget.passwordController.text,
           ),
         ),
       ),

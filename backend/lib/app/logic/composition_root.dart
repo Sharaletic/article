@@ -1,6 +1,7 @@
 import 'package:firebase_admin/firebase_admin.dart';
 import 'package:logger/logger.dart';
 import '../../auth/claims_service.dart';
+import '../../core/rest_client/api_server.dart';
 import '../logging/logger.dart';
 import '../model/application_config.dart';
 import '../model/dependencies_container.dart';
@@ -47,6 +48,9 @@ Future<DependenciesContainer> createDependenciesContainer({
     ),
   );
 
+  // Api Server
+  final ApiServer apiServer = BaseApiServer();
+
   // Claims
   final IClaimsService claimsService = ClaimsService(
     firebaseAdminSDKApp: firebaseAdminSDKApp,
@@ -56,6 +60,7 @@ Future<DependenciesContainer> createDependenciesContainer({
   final IUserRepository userRepository = UserRepositoryImpl(
     appDatabase: appDatabase,
   );
+
   final userController = UserController(userRepository: userRepository);
 
   // Author
@@ -66,14 +71,25 @@ Future<DependenciesContainer> createDependenciesContainer({
 
   final authorController = AuthorController(
     authorRepository: authorRepository,
-    logger: logger,
+    apiServer: apiServer,
+  );
+
+  // Organization
+  final IOrganizationRepository organizationRepository =
+      OrganizationRepositoryImpl(appDatabase: appDatabase, logger: logger);
+
+  final organizationController = OrganizationController(
+    organizationRepository: organizationRepository,
+    apiServer: apiServer,
   );
 
   return DependenciesContainer(
     logger: logger,
+    apiServer: apiServer,
     firebaseAdminSDKApp: firebaseAdminSDKApp,
     config: config,
     userController: userController,
     authorController: authorController,
+    organizationController: organizationController,
   );
 }

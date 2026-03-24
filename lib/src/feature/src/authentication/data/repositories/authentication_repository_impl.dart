@@ -22,28 +22,12 @@ class AuthenticationRepositoryImpl implements IAuthenticationRepository {
         role: UserRole.author,
       );
 
-      final idTokenResult = await userCredential.user!.getIdTokenResult();
-      print(idTokenResult.token);
-      await createUser(userDto: userDto, jwtToken: idTokenResult.token!);
+      // final idTokenResult = await userCredential.user!.getIdTokenResult();
+      // print(idTokenResult.token);
+      // await createUser(userDto: userDto, jwtToken: idTokenResult.token!);
       return userDto.toEntity();
-    } on FirebaseAuthException catch (e) {
-      throw Exception(e.toString());
-    }
-  }
-
-  @override
-  Future<void> createUser({
-    required UserDto userDto,
-    required String jwtToken,
-  }) async {
-    try {
-      await restClientHttp.post(
-        path: '/author',
-        body: userDto.toJson(),
-        headers: {'jwt_token': jwtToken},
-      );
-    } catch (e) {
-      throw Exception(e.toString());
+    } on Object catch (error) {
+      throw Exception(error);
     }
   }
 
@@ -61,13 +45,24 @@ class AuthenticationRepositoryImpl implements IAuthenticationRepository {
 
       print('Custom Claims: ${idTokenResult.claims}');
       return UserDto.fromFirebase(user: user, role: UserRole.author).toEntity();
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        throw Exception('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        throw Exception('No user found for that email.');
-      }
-      throw Exception(e.toString());
+    } on Object catch (error) {
+      throw Exception(error);
+    }
+  }
+
+  @override
+  Future<UserEntity> updateDisplayName({required String name}) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      await user!.updateDisplayName(name);
+      final newUser = FirebaseAuth.instance.currentUser;
+
+      return UserDto.fromFirebase(
+        user: newUser!,
+        role: UserRole.author,
+      ).toEntity();
+    } catch (error) {
+      throw Exception(error);
     }
   }
 

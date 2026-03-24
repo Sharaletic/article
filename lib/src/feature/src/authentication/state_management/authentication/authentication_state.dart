@@ -8,19 +8,23 @@ sealed class AuthenticationState {
 
   final UserEntity user;
 
-  bool get isAuthenticated => user.isAuthenticated;
+  AuthenticatedUser? get authenticatedUser => user.when(
+    authenticatedUser: (user) => user,
+    notAuthenticatedUser: () => null,
+  );
 
   const factory AuthenticationState.authenticated({
-    required final AuthenticatedUser user,
+    required final UserEntity user,
   }) = _AuthenticatedAuthenticationState;
 
   const factory AuthenticationState.notAuthenticated({
-    required final NotAuthenticatedUser user,
+    required final UserEntity user,
   }) = _NotAuthenticatedAuthenticationState;
 
   const factory AuthenticationState.error({
     required final UserEntity user,
-    required String message,
+    required Object error,
+    required StackTrace stackTrace,
   }) = _ErrorAuthenticationState;
 
   const factory AuthenticationState.successfull({
@@ -93,8 +97,13 @@ final class _NotAuthenticatedAuthenticationState extends AuthenticationState {
 }
 
 final class _ErrorAuthenticationState extends AuthenticationState {
-  const _ErrorAuthenticationState({required super.user, required this.message});
-  final String message;
+  const _ErrorAuthenticationState({
+    required super.user,
+    required this.error,
+    required this.stackTrace,
+  });
+  final Object error;
+  final StackTrace stackTrace;
 }
 
 final class _SuccessfullAuthenticationState extends AuthenticationState {

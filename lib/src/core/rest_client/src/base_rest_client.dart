@@ -1,10 +1,17 @@
+import 'dart:convert';
+
+import 'package:arcticle_app/src/core/core.dart';
 import 'package:http/http.dart' as http;
+import 'package:logger/logger.dart';
 import 'package:path/path.dart' as p;
-import '../rest_client.dart';
 
 abstract base class BaseRestClient implements RestClient {
-  BaseRestClient({required String baseUri}) : _baseUri = Uri.parse(baseUri);
+  BaseRestClient({required String baseUri, required this.logger})
+    : _baseUri = Uri.parse(baseUri);
   final Uri _baseUri;
+  final Logger logger;
+
+  static final _jsonUTF8 = json.fuse(utf8);
 
   Future<Map<String, Object?>?> sendRequest({
     required String path,
@@ -90,9 +97,9 @@ abstract base class BaseRestClient implements RestClient {
     try {
       final decodedBody = switch (body) {
         MapResponseBody(data: final Map<String, Object?> mapData) => mapData,
-        StringResponseBody(data: final String stringData) => {
-          'data': stringData,
-        },
+        StringResponseBody(data: final String stringData) =>
+          json.decode(stringData) as Map<String, Object?>,
+        BytesResponseBody(:final List<int> data) => _decodeBytes(data),
       };
 
       if (decodedBody case {'error': final Map<String, Object?> error}) {
@@ -117,6 +124,12 @@ abstract base class BaseRestClient implements RestClient {
       }
     }
   }
+
+  Map<String, Object?>? _decodeBytes(List<int> bytesBody) {
+    if (bytesBody.isEmpty) return null;
+
+    return _jsonUTF8.decode(bytesBody)! as Map<String, Object?>;
+  }
 }
 
 sealed class ResponseBody<T> {
@@ -130,4 +143,8 @@ class MapResponseBody extends ResponseBody<Map<String, Object?>> {
 
 class StringResponseBody extends ResponseBody<String> {
   const StringResponseBody(super.data);
+}
+
+class BytesResponseBody extends ResponseBody<List<int>> {
+  const BytesResponseBody(super.data);
 }

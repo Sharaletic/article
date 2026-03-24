@@ -6,14 +6,6 @@ enum UserRole {
 
   const UserRole(this.value);
   final String value;
-
-  factory UserRole.fromJson(String role) => switch (role) {
-    'author' => UserRole.author,
-    'reviewer' => UserRole.reviewer,
-    'editor' => UserRole.editor,
-    'admin' => UserRole.admin,
-    _ => throw Exception('Unknown role: $role'),
-  };
 }
 
 class UserEntity {
@@ -21,13 +13,13 @@ class UserEntity {
     required this.uid,
     required this.emailAddress,
     required this.role,
-    this.displayName,
+    required this.displayName,
     this.photoUrl,
   });
   final String uid;
   final String emailAddress;
   final UserRole role;
-  final String? displayName;
+  final String displayName;
   final String? photoUrl;
 
   UserEntity copyWith({

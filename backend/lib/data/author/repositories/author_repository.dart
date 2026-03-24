@@ -4,7 +4,7 @@ import '../../../domain/author_entity.dart';
 import '../../data.dart';
 
 abstract interface class IAuthorRepository {
-  Future<void> createAuthor({required AuthorEntityCreated author});
+  Future<void> createAuthor({required AuthorEntity author});
 }
 
 class AuthorRepositoryImpl implements IAuthorRepository {
@@ -13,11 +13,12 @@ class AuthorRepositoryImpl implements IAuthorRepository {
     required IClaimsService claimsService,
   }) : _appDatabase = appDatabase,
        _claimsService = claimsService;
+
   final AppDatabase _appDatabase;
   final IClaimsService _claimsService;
 
   @override
-  Future<void> createAuthor({required AuthorEntityCreated author}) async {
+  Future<void> createAuthor({required AuthorEntity author}) async {
     await _appDatabase.transaction(() async {
       await _appDatabase
           .into(_appDatabase.users)
@@ -25,12 +26,12 @@ class AuthorRepositoryImpl implements IAuthorRepository {
 
       await _claimsService.setUserRole(
         uid: author.user.uid,
-        role: author.role.value,
+        role: author.user.role.value,
       );
 
       await _appDatabase
           .into(_appDatabase.authors)
-          .insert(AuthorDtoCreated.fromEntity(author).toCompanion());
+          .insert(AuthorDto.fromEntity(author).toCompanion());
     });
   }
 }

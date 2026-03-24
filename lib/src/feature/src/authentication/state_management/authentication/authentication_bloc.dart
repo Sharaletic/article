@@ -15,6 +15,7 @@ class AuthenticationBloc
       await event.map(
         signup: (e) => _signup(e, emit),
         login: (e) => _login(e, emit),
+        updateDisplayName: (e) => _updateDisplayName(e, emit),
         logout: (_) => _logout(emit),
       );
     }, transformer: droppable());
@@ -37,7 +38,8 @@ class AuthenticationBloc
       emit(
         AuthenticationState.error(
           user: state.user,
-          message: 'Ошибка регистрации',
+          error: error,
+          stackTrace: stackTrace,
         ),
       );
       rethrow;
@@ -70,7 +72,8 @@ class AuthenticationBloc
       emit(
         AuthenticationState.error(
           user: state.user,
-          message: 'Ошибка аутентификации',
+          error: error,
+          stackTrace: stackTrace,
         ),
       );
       rethrow;
@@ -88,6 +91,29 @@ class AuthenticationBloc
     }
   }
 
+  Future<void> _updateDisplayName(
+    _UpdateDisplayNameEvent event,
+    Emitter<AuthenticationState> emit,
+  ) async {
+    try {
+      final user = await _authenticationRepository.updateDisplayName(
+        name: event.name,
+      );
+      emit(AuthenticationState.successfull(user: user));
+      emit(AuthenticationState.authenticated(user: user));
+    } on Object catch (error, stackTrace) {
+      addError(error, stackTrace);
+      emit(
+        AuthenticationState.error(
+          user: state.user,
+          error: error,
+          stackTrace: stackTrace,
+        ),
+      );
+      rethrow;
+    }
+  }
+
   Future<void> _logout(Emitter<AuthenticationState> emit) async {
     try {
       await _authenticationRepository.logout();
@@ -101,7 +127,8 @@ class AuthenticationBloc
       emit(
         AuthenticationState.error(
           user: state.user,
-          message: 'Ошибка аутентификации',
+          error: error,
+          stackTrace: stackTrace,
         ),
       );
       rethrow;

@@ -1,40 +1,53 @@
 import 'package:arcticle_app/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:logger/logger.dart';
-import '../../core/rest_client/rest_client.dart';
+import '../../core/core.dart';
 import '../../feature/src/authentication/authentication.dart';
 import '../../feature/src/athor/author.dart';
 import '../app.dart';
 
 abstract interface class IAppDependencies {
   Logger get logger;
+  AppRouter get router;
   RestClient get restClientHttp;
-  AuthenticationBloc get authenticationBloc;
+  IAuthenticationRepository get authenticationRepository;
   IAuthorRepository get authorRepository;
+  IOrganizationRepository get organizationRepository;
   Future<void> dispose();
 }
 
 final class AppDependencies implements IAppDependencies {
   AppDependencies._({
     required this.logger,
+    required this.router,
     required this.restClientHttp,
-    required this.authenticationBloc,
+    required this.authenticationRepository,
     required this.authorRepository,
+    required this.organizationRepository,
   });
 
   @override
   final Logger logger;
 
   @override
+  final AppRouter router;
+
+  @override
   final RestClient restClientHttp;
 
   @override
-  final AuthenticationBloc authenticationBloc;
+  final IAuthenticationRepository authenticationRepository;
 
   @override
   final IAuthorRepository authorRepository;
 
-  static Future<IAppDependencies> init({required Logger logger}) async {
+  @override
+  final IOrganizationRepository organizationRepository;
+
+  static Future<IAppDependencies> init({
+    required Logger logger,
+    required AppRouter router,
+  }) async {
     // Firebase
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
@@ -43,6 +56,9 @@ final class AppDependencies implements IAppDependencies {
     // Logger
     final initLogger = logger;
 
+    // Router
+    final initRouter = router;
+
     // Config
     ApplicationConfig config = const ApplicationConfig();
 
@@ -50,31 +66,33 @@ final class AppDependencies implements IAppDependencies {
     RestClient restClientHttp = RestClientHttp(
       httpClient: httpClient(),
       baseUri: 'http://localhost:${config.port}',
+      logger: logger,
     );
 
     // Authentication
     final IAuthenticationRepository authenticationRepository =
         AuthenticationRepositoryImpl(restClientHttp: restClientHttp);
 
-    final AuthenticationBloc authenticationBloc = AuthenticationBloc(
-      authenticationRepository: authenticationRepository,
-    );
-
     // Author
     final IAuthorRepository authorRepository = AuthorRepositoryImpl(
       httpClient: restClientHttp,
     );
 
+    final IOrganizationRepository organizationRepository =
+        OrganizationRepositoryImpl(httpClient: restClientHttp, logger: logger);
+
     return AppDependencies._(
       logger: initLogger,
+      router: initRouter,
       restClientHttp: restClientHttp,
-      authenticationBloc: authenticationBloc,
+      authenticationRepository: authenticationRepository,
       authorRepository: authorRepository,
+      organizationRepository: organizationRepository,
     );
   }
 
   @override
   Future<void> dispose() async {
-    await [logger.close(), authenticationBloc.close()].wait;
+    await [logger.close()].wait;
   }
 }

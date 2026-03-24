@@ -2,44 +2,88 @@ import '../../../../../app/app.dart';
 import '../../../authentication/authentication.dart';
 import '../../author.dart';
 
+enum EducationLevel {
+  bachelor('Бакалавриат'),
+  specialist('Специалитет'),
+  master('Магистратура'),
+  postgraduate('Аспирантура');
+
+  const EducationLevel(this.value);
+  final String value;
+}
+
+enum AuthorStatus {
+  student('Студент'),
+  teacher('Преподаватель');
+
+  const AuthorStatus(this.value);
+  final String value;
+}
+
 class AuthorEntity with EqualsMixin {
   const AuthorEntity({
-    required this.id,
+    this.id,
     required this.user,
-    required this.lastName,
-    required this.firstName,
-    this.middleName,
+    required this.status,
+    required this.lastNameRu,
+    required this.lastNameEn,
+    required this.firstNameRu,
+    required this.firstNameEn,
+    this.middleNameRu,
+    this.middleNameEn,
     required this.organization,
     this.educationLevel,
     this.post,
     this.academicDegree,
-    this.academictitle,
+    this.academicTitle,
   });
-  final int id;
+  final int? id;
   final AuthenticatedUser user;
-  final String lastName;
-  final String firstName;
-  final String? middleName;
+  final AuthorStatus status;
+  final String lastNameRu;
+  final String lastNameEn;
+  final String firstNameRu;
+  final String firstNameEn;
+  final String? middleNameRu;
+  final String? middleNameEn;
   final OrganizationEntity organization;
-  final String? educationLevel;
+  final EducationLevel? educationLevel;
   final String? post;
   final String? academicDegree;
-  final String? academictitle;
+  final String? academicTitle;
 
   @override
-  String toString() => '_AuthorEntityCreated(user: ${user.toString()})';
+  String toString() =>
+      '''_AthorEntityCreated(
+      id: $id,
+      user: ${user.toString()},
+      status: $status,
+      lastNameRu: $lastNameRu,
+      lastNameEn: $lastNameEn,
+      firstNameRu: $firstNameRu,
+      firstNameEn: $firstNameEn,
+      middleNameRu: $middleNameRu,
+      middleNameEn: $middleNameEn,
+      organization: $organization,
+      educationLevel: $educationLevel,
+      post: $post,
+      academicDegree: $academicDegree,
+      academicTitle: $academicTitle)''';
 
   @override
   List<Object?> get fields => [
     id,
     user,
-    lastName,
-    firstName,
-    middleName,
+    lastNameRu,
+    lastNameEn,
+    firstNameRu,
+    firstNameEn,
+    middleNameRu,
+    middleNameEn,
     organization,
     educationLevel,
     post,
     academicDegree,
-    academictitle,
+    academicTitle,
   ];
 }

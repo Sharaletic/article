@@ -11,7 +11,7 @@ class UiDropDownMenu<T extends Object> extends StatefulWidget {
     this.trailingIcon,
     this.selectedTrailingIcon,
     this.width,
-    this.expandedInsets,
+    this.expandedInsets = .zero,
     this.controller,
     this.enabled = true,
     this.enableFilter = true,

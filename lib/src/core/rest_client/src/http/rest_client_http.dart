@@ -19,7 +19,12 @@ http.Client httpClient() {
 }
 
 final class RestClientHttp extends BaseRestClient {
-  RestClientHttp({required this.httpClient, required super.baseUri});
+  RestClientHttp({
+    required this.httpClient,
+    required super.baseUri,
+    required super.logger,
+  });
+
   final http.Client httpClient;
 
   @override
@@ -40,19 +45,16 @@ final class RestClientHttp extends BaseRestClient {
         request.body = jsonEncode(body);
       }
 
-      if (headers != null) {
-        request.headers.addAll(headers);
-      }
+      if (headers != null) request.headers.addAll(headers);
 
       final response = await httpClient
           .send(request)
           .then(http.Response.fromStream);
 
       final result = decodeResponse(
-        body: StringResponseBody(response.body),
+        body: BytesResponseBody(response.bodyBytes),
         statusCode: response.statusCode,
       );
-
       return result;
     } on RestClientException {
       rethrow;

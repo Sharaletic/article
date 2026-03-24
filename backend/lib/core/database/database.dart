@@ -20,11 +20,12 @@ class Authors extends Table {
   TextColumn get firstNameEn => text().named('first_name_en')();
   TextColumn get middleNameRu => text().named('middle_name_ru').nullable()();
   TextColumn get middleNameEn => text().named('middle_name_en').nullable()();
-  IntColumn get organizationId => integer().named('organization_id')();
+  IntColumn get organizationId =>
+      integer().named('organization_id').references(Organization, #id)();
   TextColumn get educationLevel => text().named('education_level').nullable()();
   TextColumn get post => text().nullable()();
   TextColumn get academicDegree => text().named('academic_degree').nullable()();
-  TextColumn get academicTitle => text().named('academic_title').nullable()();
+  TextColumn get academicTitle => text().named('academic_degree').nullable()();
 }
 
 class Editors extends Table {
@@ -40,6 +41,12 @@ class Reviewers extends Table {
 class Admin extends Table {
   TextColumn get uid => text().references(Users, #uid)();
   IntColumn get id => integer().autoIncrement()();
+}
+
+class Organization extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get titleRu => text().named('title_ru')();
+  TextColumn get titleEn => text().named('title_en')();
 }
 
 class Requests extends Table {
@@ -103,6 +110,7 @@ class Assigments extends Table {
     Editors,
     Reviewers,
     Admin,
+    Organization,
     Requests,
     Conferences,
     Sections,

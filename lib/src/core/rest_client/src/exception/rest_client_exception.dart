@@ -25,8 +25,16 @@ final class ClientException extends RestClientException {
       ')';
 }
 
+final class AuthenticationTokenException extends RestClientException {
+  const AuthenticationTokenException({super.cause})
+    : super(message: 'Токен недействителен или срок его действия истек');
+
+  @override
+  String toString() => 'AuthenticationTokenException: $message';
+}
+
 final class StructuredBackendException extends RestClientException {
-  StructuredBackendException({required this.error, super.statusCode})
+  StructuredBackendException({required this.error, super.statusCode = 500})
     : super(message: 'Backend returned structured error');
   final Map<String, Object?> error;
 

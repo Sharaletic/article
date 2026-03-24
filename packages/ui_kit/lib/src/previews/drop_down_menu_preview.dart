@@ -9,7 +9,7 @@ class DropDownMenuPreview extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           children: [
             UiDropDownMenu.standard(
               hintText: 'Hint Text',
@@ -18,7 +18,6 @@ class DropDownMenuPreview extends StatelessWidget {
                 Item('Item 2'),
                 Item('Item 3'),
               ],
-              expandedInsets: EdgeInsets.zero,
               itemLabelMenuBuilder: (item) => item.title,
               itemValueMenuBuilder: (item) => item,
             ),

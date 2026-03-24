@@ -44,9 +44,9 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   late final GeneratedColumn<String> displayName = GeneratedColumn<String>(
     'display_name',
     aliasedName,
-    true,
+    false,
     type: DriftSqlType.string,
-    requiredDuringInsert: false,
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _photoUrlMeta = const VerificationMeta(
     'photoUrl',
@@ -114,6 +114,8 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
           _displayNameMeta,
         ),
       );
+    } else if (isInserting) {
+      context.missing(_displayNameMeta);
     }
     if (data.containsKey('photo_url')) {
       context.handle(
@@ -145,7 +147,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
       displayName: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}display_name'],
-      ),
+      )!,
       photoUrl: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}photo_url'],
@@ -163,13 +165,13 @@ class User extends DataClass implements Insertable<User> {
   final String uid;
   final String emailAddress;
   final String role;
-  final String? displayName;
+  final String displayName;
   final String? photoUrl;
   const User({
     required this.uid,
     required this.emailAddress,
     required this.role,
-    this.displayName,
+    required this.displayName,
     this.photoUrl,
   });
   @override
@@ -178,9 +180,7 @@ class User extends DataClass implements Insertable<User> {
     map['uid'] = Variable<String>(uid);
     map['email_address'] = Variable<String>(emailAddress);
     map['role'] = Variable<String>(role);
-    if (!nullToAbsent || displayName != null) {
-      map['display_name'] = Variable<String>(displayName);
-    }
+    map['display_name'] = Variable<String>(displayName);
     if (!nullToAbsent || photoUrl != null) {
       map['photo_url'] = Variable<String>(photoUrl);
     }
@@ -192,9 +192,7 @@ class User extends DataClass implements Insertable<User> {
       uid: Value(uid),
       emailAddress: Value(emailAddress),
       role: Value(role),
-      displayName: displayName == null && nullToAbsent
-          ? const Value.absent()
-          : Value(displayName),
+      displayName: Value(displayName),
       photoUrl: photoUrl == null && nullToAbsent
           ? const Value.absent()
           : Value(photoUrl),
@@ -210,7 +208,7 @@ class User extends DataClass implements Insertable<User> {
       uid: serializer.fromJson<String>(json['uid']),
       emailAddress: serializer.fromJson<String>(json['emailAddress']),
       role: serializer.fromJson<String>(json['role']),
-      displayName: serializer.fromJson<String?>(json['displayName']),
+      displayName: serializer.fromJson<String>(json['displayName']),
       photoUrl: serializer.fromJson<String?>(json['photoUrl']),
     );
   }
@@ -221,7 +219,7 @@ class User extends DataClass implements Insertable<User> {
       'uid': serializer.toJson<String>(uid),
       'emailAddress': serializer.toJson<String>(emailAddress),
       'role': serializer.toJson<String>(role),
-      'displayName': serializer.toJson<String?>(displayName),
+      'displayName': serializer.toJson<String>(displayName),
       'photoUrl': serializer.toJson<String?>(photoUrl),
     };
   }
@@ -230,13 +228,13 @@ class User extends DataClass implements Insertable<User> {
     String? uid,
     String? emailAddress,
     String? role,
-    Value<String?> displayName = const Value.absent(),
+    String? displayName,
     Value<String?> photoUrl = const Value.absent(),
   }) => User(
     uid: uid ?? this.uid,
     emailAddress: emailAddress ?? this.emailAddress,
     role: role ?? this.role,
-    displayName: displayName.present ? displayName.value : this.displayName,
+    displayName: displayName ?? this.displayName,
     photoUrl: photoUrl.present ? photoUrl.value : this.photoUrl,
   );
   User copyWithCompanion(UsersCompanion data) {
@@ -283,7 +281,7 @@ class UsersCompanion extends UpdateCompanion<User> {
   final Value<String> uid;
   final Value<String> emailAddress;
   final Value<String> role;
-  final Value<String?> displayName;
+  final Value<String> displayName;
   final Value<String?> photoUrl;
   final Value<int> rowid;
   const UsersCompanion({
@@ -298,12 +296,13 @@ class UsersCompanion extends UpdateCompanion<User> {
     required String uid,
     required String emailAddress,
     required String role,
-    this.displayName = const Value.absent(),
+    required String displayName,
     this.photoUrl = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : uid = Value(uid),
        emailAddress = Value(emailAddress),
-       role = Value(role);
+       role = Value(role),
+       displayName = Value(displayName);
   static Insertable<User> custom({
     Expression<String>? uid,
     Expression<String>? emailAddress,
@@ -326,7 +325,7 @@ class UsersCompanion extends UpdateCompanion<User> {
     Value<String>? uid,
     Value<String>? emailAddress,
     Value<String>? role,
-    Value<String?>? displayName,
+    Value<String>? displayName,
     Value<String?>? photoUrl,
     Value<int>? rowid,
   }) {
@@ -378,6 +377,258 @@ class UsersCompanion extends UpdateCompanion<User> {
   }
 }
 
+class $OrganizationTable extends Organization
+    with TableInfo<$OrganizationTable, OrganizationData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $OrganizationTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _titleRuMeta = const VerificationMeta(
+    'titleRu',
+  );
+  @override
+  late final GeneratedColumn<String> titleRu = GeneratedColumn<String>(
+    'title_ru',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _titleEnMeta = const VerificationMeta(
+    'titleEn',
+  );
+  @override
+  late final GeneratedColumn<String> titleEn = GeneratedColumn<String>(
+    'title_en',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, titleRu, titleEn];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'organization';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<OrganizationData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('title_ru')) {
+      context.handle(
+        _titleRuMeta,
+        titleRu.isAcceptableOrUnknown(data['title_ru']!, _titleRuMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_titleRuMeta);
+    }
+    if (data.containsKey('title_en')) {
+      context.handle(
+        _titleEnMeta,
+        titleEn.isAcceptableOrUnknown(data['title_en']!, _titleEnMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_titleEnMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  OrganizationData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return OrganizationData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      titleRu: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title_ru'],
+      )!,
+      titleEn: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title_en'],
+      )!,
+    );
+  }
+
+  @override
+  $OrganizationTable createAlias(String alias) {
+    return $OrganizationTable(attachedDatabase, alias);
+  }
+}
+
+class OrganizationData extends DataClass
+    implements Insertable<OrganizationData> {
+  final int id;
+  final String titleRu;
+  final String titleEn;
+  const OrganizationData({
+    required this.id,
+    required this.titleRu,
+    required this.titleEn,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['title_ru'] = Variable<String>(titleRu);
+    map['title_en'] = Variable<String>(titleEn);
+    return map;
+  }
+
+  OrganizationCompanion toCompanion(bool nullToAbsent) {
+    return OrganizationCompanion(
+      id: Value(id),
+      titleRu: Value(titleRu),
+      titleEn: Value(titleEn),
+    );
+  }
+
+  factory OrganizationData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return OrganizationData(
+      id: serializer.fromJson<int>(json['id']),
+      titleRu: serializer.fromJson<String>(json['titleRu']),
+      titleEn: serializer.fromJson<String>(json['titleEn']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'titleRu': serializer.toJson<String>(titleRu),
+      'titleEn': serializer.toJson<String>(titleEn),
+    };
+  }
+
+  OrganizationData copyWith({int? id, String? titleRu, String? titleEn}) =>
+      OrganizationData(
+        id: id ?? this.id,
+        titleRu: titleRu ?? this.titleRu,
+        titleEn: titleEn ?? this.titleEn,
+      );
+  OrganizationData copyWithCompanion(OrganizationCompanion data) {
+    return OrganizationData(
+      id: data.id.present ? data.id.value : this.id,
+      titleRu: data.titleRu.present ? data.titleRu.value : this.titleRu,
+      titleEn: data.titleEn.present ? data.titleEn.value : this.titleEn,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('OrganizationData(')
+          ..write('id: $id, ')
+          ..write('titleRu: $titleRu, ')
+          ..write('titleEn: $titleEn')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, titleRu, titleEn);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is OrganizationData &&
+          other.id == this.id &&
+          other.titleRu == this.titleRu &&
+          other.titleEn == this.titleEn);
+}
+
+class OrganizationCompanion extends UpdateCompanion<OrganizationData> {
+  final Value<int> id;
+  final Value<String> titleRu;
+  final Value<String> titleEn;
+  const OrganizationCompanion({
+    this.id = const Value.absent(),
+    this.titleRu = const Value.absent(),
+    this.titleEn = const Value.absent(),
+  });
+  OrganizationCompanion.insert({
+    this.id = const Value.absent(),
+    required String titleRu,
+    required String titleEn,
+  }) : titleRu = Value(titleRu),
+       titleEn = Value(titleEn);
+  static Insertable<OrganizationData> custom({
+    Expression<int>? id,
+    Expression<String>? titleRu,
+    Expression<String>? titleEn,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (titleRu != null) 'title_ru': titleRu,
+      if (titleEn != null) 'title_en': titleEn,
+    });
+  }
+
+  OrganizationCompanion copyWith({
+    Value<int>? id,
+    Value<String>? titleRu,
+    Value<String>? titleEn,
+  }) {
+    return OrganizationCompanion(
+      id: id ?? this.id,
+      titleRu: titleRu ?? this.titleRu,
+      titleEn: titleEn ?? this.titleEn,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (titleRu.present) {
+      map['title_ru'] = Variable<String>(titleRu.value);
+    }
+    if (titleEn.present) {
+      map['title_en'] = Variable<String>(titleEn.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('OrganizationCompanion(')
+          ..write('id: $id, ')
+          ..write('titleRu: $titleRu, ')
+          ..write('titleEn: $titleEn')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $AuthorsTable extends Authors with TableInfo<$AuthorsTable, Author> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -408,8 +659,144 @@ class $AuthorsTable extends Authors with TableInfo<$AuthorsTable, Author> {
       'PRIMARY KEY AUTOINCREMENT',
     ),
   );
+  static const VerificationMeta _lastNameRuMeta = const VerificationMeta(
+    'lastNameRu',
+  );
   @override
-  List<GeneratedColumn> get $columns => [uid, id];
+  late final GeneratedColumn<String> lastNameRu = GeneratedColumn<String>(
+    'last_name_ru',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _lastNameEnMeta = const VerificationMeta(
+    'lastNameEn',
+  );
+  @override
+  late final GeneratedColumn<String> lastNameEn = GeneratedColumn<String>(
+    'last_name_en',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _firstNameRuMeta = const VerificationMeta(
+    'firstNameRu',
+  );
+  @override
+  late final GeneratedColumn<String> firstNameRu = GeneratedColumn<String>(
+    'first_name_ru',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _firstNameEnMeta = const VerificationMeta(
+    'firstNameEn',
+  );
+  @override
+  late final GeneratedColumn<String> firstNameEn = GeneratedColumn<String>(
+    'first_name_en',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _middleNameRuMeta = const VerificationMeta(
+    'middleNameRu',
+  );
+  @override
+  late final GeneratedColumn<String> middleNameRu = GeneratedColumn<String>(
+    'middle_name_ru',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _middleNameEnMeta = const VerificationMeta(
+    'middleNameEn',
+  );
+  @override
+  late final GeneratedColumn<String> middleNameEn = GeneratedColumn<String>(
+    'middle_name_en',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _organizationIdMeta = const VerificationMeta(
+    'organizationId',
+  );
+  @override
+  late final GeneratedColumn<int> organizationId = GeneratedColumn<int>(
+    'organization_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES organization (id)',
+    ),
+  );
+  static const VerificationMeta _educationLevelMeta = const VerificationMeta(
+    'educationLevel',
+  );
+  @override
+  late final GeneratedColumn<String> educationLevel = GeneratedColumn<String>(
+    'education_level',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _postMeta = const VerificationMeta('post');
+  @override
+  late final GeneratedColumn<String> post = GeneratedColumn<String>(
+    'post',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _academicDegreeMeta = const VerificationMeta(
+    'academicDegree',
+  );
+  @override
+  late final GeneratedColumn<String> academicDegree = GeneratedColumn<String>(
+    'academic_degree',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _academicTitleMeta = const VerificationMeta(
+    'academicTitle',
+  );
+  @override
+  late final GeneratedColumn<String> academicTitle = GeneratedColumn<String>(
+    'academic_title',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    uid,
+    id,
+    lastNameRu,
+    lastNameEn,
+    firstNameRu,
+    firstNameEn,
+    middleNameRu,
+    middleNameEn,
+    organizationId,
+    educationLevel,
+    post,
+    academicDegree,
+    academicTitle,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -433,6 +820,112 @@ class $AuthorsTable extends Authors with TableInfo<$AuthorsTable, Author> {
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
+    if (data.containsKey('last_name_ru')) {
+      context.handle(
+        _lastNameRuMeta,
+        lastNameRu.isAcceptableOrUnknown(
+          data['last_name_ru']!,
+          _lastNameRuMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_lastNameRuMeta);
+    }
+    if (data.containsKey('last_name_en')) {
+      context.handle(
+        _lastNameEnMeta,
+        lastNameEn.isAcceptableOrUnknown(
+          data['last_name_en']!,
+          _lastNameEnMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_lastNameEnMeta);
+    }
+    if (data.containsKey('first_name_ru')) {
+      context.handle(
+        _firstNameRuMeta,
+        firstNameRu.isAcceptableOrUnknown(
+          data['first_name_ru']!,
+          _firstNameRuMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_firstNameRuMeta);
+    }
+    if (data.containsKey('first_name_en')) {
+      context.handle(
+        _firstNameEnMeta,
+        firstNameEn.isAcceptableOrUnknown(
+          data['first_name_en']!,
+          _firstNameEnMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_firstNameEnMeta);
+    }
+    if (data.containsKey('middle_name_ru')) {
+      context.handle(
+        _middleNameRuMeta,
+        middleNameRu.isAcceptableOrUnknown(
+          data['middle_name_ru']!,
+          _middleNameRuMeta,
+        ),
+      );
+    }
+    if (data.containsKey('middle_name_en')) {
+      context.handle(
+        _middleNameEnMeta,
+        middleNameEn.isAcceptableOrUnknown(
+          data['middle_name_en']!,
+          _middleNameEnMeta,
+        ),
+      );
+    }
+    if (data.containsKey('organization_id')) {
+      context.handle(
+        _organizationIdMeta,
+        organizationId.isAcceptableOrUnknown(
+          data['organization_id']!,
+          _organizationIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_organizationIdMeta);
+    }
+    if (data.containsKey('education_level')) {
+      context.handle(
+        _educationLevelMeta,
+        educationLevel.isAcceptableOrUnknown(
+          data['education_level']!,
+          _educationLevelMeta,
+        ),
+      );
+    }
+    if (data.containsKey('post')) {
+      context.handle(
+        _postMeta,
+        post.isAcceptableOrUnknown(data['post']!, _postMeta),
+      );
+    }
+    if (data.containsKey('academic_degree')) {
+      context.handle(
+        _academicDegreeMeta,
+        academicDegree.isAcceptableOrUnknown(
+          data['academic_degree']!,
+          _academicDegreeMeta,
+        ),
+      );
+    }
+    if (data.containsKey('academic_title')) {
+      context.handle(
+        _academicTitleMeta,
+        academicTitle.isAcceptableOrUnknown(
+          data['academic_title']!,
+          _academicTitleMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -450,6 +943,50 @@ class $AuthorsTable extends Authors with TableInfo<$AuthorsTable, Author> {
         DriftSqlType.int,
         data['${effectivePrefix}id'],
       )!,
+      lastNameRu: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}last_name_ru'],
+      )!,
+      lastNameEn: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}last_name_en'],
+      )!,
+      firstNameRu: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}first_name_ru'],
+      )!,
+      firstNameEn: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}first_name_en'],
+      )!,
+      middleNameRu: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}middle_name_ru'],
+      ),
+      middleNameEn: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}middle_name_en'],
+      ),
+      organizationId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}organization_id'],
+      )!,
+      educationLevel: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}education_level'],
+      ),
+      post: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}post'],
+      ),
+      academicDegree: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}academic_degree'],
+      ),
+      academicTitle: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}academic_title'],
+      ),
     );
   }
 
@@ -462,17 +999,89 @@ class $AuthorsTable extends Authors with TableInfo<$AuthorsTable, Author> {
 class Author extends DataClass implements Insertable<Author> {
   final String uid;
   final int id;
-  const Author({required this.uid, required this.id});
+  final String lastNameRu;
+  final String lastNameEn;
+  final String firstNameRu;
+  final String firstNameEn;
+  final String? middleNameRu;
+  final String? middleNameEn;
+  final int organizationId;
+  final String? educationLevel;
+  final String? post;
+  final String? academicDegree;
+  final String? academicTitle;
+  const Author({
+    required this.uid,
+    required this.id,
+    required this.lastNameRu,
+    required this.lastNameEn,
+    required this.firstNameRu,
+    required this.firstNameEn,
+    this.middleNameRu,
+    this.middleNameEn,
+    required this.organizationId,
+    this.educationLevel,
+    this.post,
+    this.academicDegree,
+    this.academicTitle,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['uid'] = Variable<String>(uid);
     map['id'] = Variable<int>(id);
+    map['last_name_ru'] = Variable<String>(lastNameRu);
+    map['last_name_en'] = Variable<String>(lastNameEn);
+    map['first_name_ru'] = Variable<String>(firstNameRu);
+    map['first_name_en'] = Variable<String>(firstNameEn);
+    if (!nullToAbsent || middleNameRu != null) {
+      map['middle_name_ru'] = Variable<String>(middleNameRu);
+    }
+    if (!nullToAbsent || middleNameEn != null) {
+      map['middle_name_en'] = Variable<String>(middleNameEn);
+    }
+    map['organization_id'] = Variable<int>(organizationId);
+    if (!nullToAbsent || educationLevel != null) {
+      map['education_level'] = Variable<String>(educationLevel);
+    }
+    if (!nullToAbsent || post != null) {
+      map['post'] = Variable<String>(post);
+    }
+    if (!nullToAbsent || academicDegree != null) {
+      map['academic_degree'] = Variable<String>(academicDegree);
+    }
+    if (!nullToAbsent || academicTitle != null) {
+      map['academic_title'] = Variable<String>(academicTitle);
+    }
     return map;
   }
 
   AuthorsCompanion toCompanion(bool nullToAbsent) {
-    return AuthorsCompanion(uid: Value(uid), id: Value(id));
+    return AuthorsCompanion(
+      uid: Value(uid),
+      id: Value(id),
+      lastNameRu: Value(lastNameRu),
+      lastNameEn: Value(lastNameEn),
+      firstNameRu: Value(firstNameRu),
+      firstNameEn: Value(firstNameEn),
+      middleNameRu: middleNameRu == null && nullToAbsent
+          ? const Value.absent()
+          : Value(middleNameRu),
+      middleNameEn: middleNameEn == null && nullToAbsent
+          ? const Value.absent()
+          : Value(middleNameEn),
+      organizationId: Value(organizationId),
+      educationLevel: educationLevel == null && nullToAbsent
+          ? const Value.absent()
+          : Value(educationLevel),
+      post: post == null && nullToAbsent ? const Value.absent() : Value(post),
+      academicDegree: academicDegree == null && nullToAbsent
+          ? const Value.absent()
+          : Value(academicDegree),
+      academicTitle: academicTitle == null && nullToAbsent
+          ? const Value.absent()
+          : Value(academicTitle),
+    );
   }
 
   factory Author.fromJson(
@@ -483,6 +1092,17 @@ class Author extends DataClass implements Insertable<Author> {
     return Author(
       uid: serializer.fromJson<String>(json['uid']),
       id: serializer.fromJson<int>(json['id']),
+      lastNameRu: serializer.fromJson<String>(json['lastNameRu']),
+      lastNameEn: serializer.fromJson<String>(json['lastNameEn']),
+      firstNameRu: serializer.fromJson<String>(json['firstNameRu']),
+      firstNameEn: serializer.fromJson<String>(json['firstNameEn']),
+      middleNameRu: serializer.fromJson<String?>(json['middleNameRu']),
+      middleNameEn: serializer.fromJson<String?>(json['middleNameEn']),
+      organizationId: serializer.fromJson<int>(json['organizationId']),
+      educationLevel: serializer.fromJson<String?>(json['educationLevel']),
+      post: serializer.fromJson<String?>(json['post']),
+      academicDegree: serializer.fromJson<String?>(json['academicDegree']),
+      academicTitle: serializer.fromJson<String?>(json['academicTitle']),
     );
   }
   @override
@@ -491,15 +1111,90 @@ class Author extends DataClass implements Insertable<Author> {
     return <String, dynamic>{
       'uid': serializer.toJson<String>(uid),
       'id': serializer.toJson<int>(id),
+      'lastNameRu': serializer.toJson<String>(lastNameRu),
+      'lastNameEn': serializer.toJson<String>(lastNameEn),
+      'firstNameRu': serializer.toJson<String>(firstNameRu),
+      'firstNameEn': serializer.toJson<String>(firstNameEn),
+      'middleNameRu': serializer.toJson<String?>(middleNameRu),
+      'middleNameEn': serializer.toJson<String?>(middleNameEn),
+      'organizationId': serializer.toJson<int>(organizationId),
+      'educationLevel': serializer.toJson<String?>(educationLevel),
+      'post': serializer.toJson<String?>(post),
+      'academicDegree': serializer.toJson<String?>(academicDegree),
+      'academicTitle': serializer.toJson<String?>(academicTitle),
     };
   }
 
-  Author copyWith({String? uid, int? id}) =>
-      Author(uid: uid ?? this.uid, id: id ?? this.id);
+  Author copyWith({
+    String? uid,
+    int? id,
+    String? lastNameRu,
+    String? lastNameEn,
+    String? firstNameRu,
+    String? firstNameEn,
+    Value<String?> middleNameRu = const Value.absent(),
+    Value<String?> middleNameEn = const Value.absent(),
+    int? organizationId,
+    Value<String?> educationLevel = const Value.absent(),
+    Value<String?> post = const Value.absent(),
+    Value<String?> academicDegree = const Value.absent(),
+    Value<String?> academicTitle = const Value.absent(),
+  }) => Author(
+    uid: uid ?? this.uid,
+    id: id ?? this.id,
+    lastNameRu: lastNameRu ?? this.lastNameRu,
+    lastNameEn: lastNameEn ?? this.lastNameEn,
+    firstNameRu: firstNameRu ?? this.firstNameRu,
+    firstNameEn: firstNameEn ?? this.firstNameEn,
+    middleNameRu: middleNameRu.present ? middleNameRu.value : this.middleNameRu,
+    middleNameEn: middleNameEn.present ? middleNameEn.value : this.middleNameEn,
+    organizationId: organizationId ?? this.organizationId,
+    educationLevel: educationLevel.present
+        ? educationLevel.value
+        : this.educationLevel,
+    post: post.present ? post.value : this.post,
+    academicDegree: academicDegree.present
+        ? academicDegree.value
+        : this.academicDegree,
+    academicTitle: academicTitle.present
+        ? academicTitle.value
+        : this.academicTitle,
+  );
   Author copyWithCompanion(AuthorsCompanion data) {
     return Author(
       uid: data.uid.present ? data.uid.value : this.uid,
       id: data.id.present ? data.id.value : this.id,
+      lastNameRu: data.lastNameRu.present
+          ? data.lastNameRu.value
+          : this.lastNameRu,
+      lastNameEn: data.lastNameEn.present
+          ? data.lastNameEn.value
+          : this.lastNameEn,
+      firstNameRu: data.firstNameRu.present
+          ? data.firstNameRu.value
+          : this.firstNameRu,
+      firstNameEn: data.firstNameEn.present
+          ? data.firstNameEn.value
+          : this.firstNameEn,
+      middleNameRu: data.middleNameRu.present
+          ? data.middleNameRu.value
+          : this.middleNameRu,
+      middleNameEn: data.middleNameEn.present
+          ? data.middleNameEn.value
+          : this.middleNameEn,
+      organizationId: data.organizationId.present
+          ? data.organizationId.value
+          : this.organizationId,
+      educationLevel: data.educationLevel.present
+          ? data.educationLevel.value
+          : this.educationLevel,
+      post: data.post.present ? data.post.value : this.post,
+      academicDegree: data.academicDegree.present
+          ? data.academicDegree.value
+          : this.academicDegree,
+      academicTitle: data.academicTitle.present
+          ? data.academicTitle.value
+          : this.academicTitle,
     );
   }
 
@@ -507,40 +1202,168 @@ class Author extends DataClass implements Insertable<Author> {
   String toString() {
     return (StringBuffer('Author(')
           ..write('uid: $uid, ')
-          ..write('id: $id')
+          ..write('id: $id, ')
+          ..write('lastNameRu: $lastNameRu, ')
+          ..write('lastNameEn: $lastNameEn, ')
+          ..write('firstNameRu: $firstNameRu, ')
+          ..write('firstNameEn: $firstNameEn, ')
+          ..write('middleNameRu: $middleNameRu, ')
+          ..write('middleNameEn: $middleNameEn, ')
+          ..write('organizationId: $organizationId, ')
+          ..write('educationLevel: $educationLevel, ')
+          ..write('post: $post, ')
+          ..write('academicDegree: $academicDegree, ')
+          ..write('academicTitle: $academicTitle')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(uid, id);
+  int get hashCode => Object.hash(
+    uid,
+    id,
+    lastNameRu,
+    lastNameEn,
+    firstNameRu,
+    firstNameEn,
+    middleNameRu,
+    middleNameEn,
+    organizationId,
+    educationLevel,
+    post,
+    academicDegree,
+    academicTitle,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Author && other.uid == this.uid && other.id == this.id);
+      (other is Author &&
+          other.uid == this.uid &&
+          other.id == this.id &&
+          other.lastNameRu == this.lastNameRu &&
+          other.lastNameEn == this.lastNameEn &&
+          other.firstNameRu == this.firstNameRu &&
+          other.firstNameEn == this.firstNameEn &&
+          other.middleNameRu == this.middleNameRu &&
+          other.middleNameEn == this.middleNameEn &&
+          other.organizationId == this.organizationId &&
+          other.educationLevel == this.educationLevel &&
+          other.post == this.post &&
+          other.academicDegree == this.academicDegree &&
+          other.academicTitle == this.academicTitle);
 }
 
 class AuthorsCompanion extends UpdateCompanion<Author> {
   final Value<String> uid;
   final Value<int> id;
+  final Value<String> lastNameRu;
+  final Value<String> lastNameEn;
+  final Value<String> firstNameRu;
+  final Value<String> firstNameEn;
+  final Value<String?> middleNameRu;
+  final Value<String?> middleNameEn;
+  final Value<int> organizationId;
+  final Value<String?> educationLevel;
+  final Value<String?> post;
+  final Value<String?> academicDegree;
+  final Value<String?> academicTitle;
   const AuthorsCompanion({
     this.uid = const Value.absent(),
     this.id = const Value.absent(),
+    this.lastNameRu = const Value.absent(),
+    this.lastNameEn = const Value.absent(),
+    this.firstNameRu = const Value.absent(),
+    this.firstNameEn = const Value.absent(),
+    this.middleNameRu = const Value.absent(),
+    this.middleNameEn = const Value.absent(),
+    this.organizationId = const Value.absent(),
+    this.educationLevel = const Value.absent(),
+    this.post = const Value.absent(),
+    this.academicDegree = const Value.absent(),
+    this.academicTitle = const Value.absent(),
   });
-  AuthorsCompanion.insert({required String uid, this.id = const Value.absent()})
-    : uid = Value(uid);
+  AuthorsCompanion.insert({
+    required String uid,
+    this.id = const Value.absent(),
+    required String lastNameRu,
+    required String lastNameEn,
+    required String firstNameRu,
+    required String firstNameEn,
+    this.middleNameRu = const Value.absent(),
+    this.middleNameEn = const Value.absent(),
+    required int organizationId,
+    this.educationLevel = const Value.absent(),
+    this.post = const Value.absent(),
+    this.academicDegree = const Value.absent(),
+    this.academicTitle = const Value.absent(),
+  }) : uid = Value(uid),
+       lastNameRu = Value(lastNameRu),
+       lastNameEn = Value(lastNameEn),
+       firstNameRu = Value(firstNameRu),
+       firstNameEn = Value(firstNameEn),
+       organizationId = Value(organizationId);
   static Insertable<Author> custom({
     Expression<String>? uid,
     Expression<int>? id,
+    Expression<String>? lastNameRu,
+    Expression<String>? lastNameEn,
+    Expression<String>? firstNameRu,
+    Expression<String>? firstNameEn,
+    Expression<String>? middleNameRu,
+    Expression<String>? middleNameEn,
+    Expression<int>? organizationId,
+    Expression<String>? educationLevel,
+    Expression<String>? post,
+    Expression<String>? academicDegree,
+    Expression<String>? academicTitle,
   }) {
     return RawValuesInsertable({
       if (uid != null) 'uid': uid,
       if (id != null) 'id': id,
+      if (lastNameRu != null) 'last_name_ru': lastNameRu,
+      if (lastNameEn != null) 'last_name_en': lastNameEn,
+      if (firstNameRu != null) 'first_name_ru': firstNameRu,
+      if (firstNameEn != null) 'first_name_en': firstNameEn,
+      if (middleNameRu != null) 'middle_name_ru': middleNameRu,
+      if (middleNameEn != null) 'middle_name_en': middleNameEn,
+      if (organizationId != null) 'organization_id': organizationId,
+      if (educationLevel != null) 'education_level': educationLevel,
+      if (post != null) 'post': post,
+      if (academicDegree != null) 'academic_degree': academicDegree,
+      if (academicTitle != null) 'academic_title': academicTitle,
     });
   }
 
-  AuthorsCompanion copyWith({Value<String>? uid, Value<int>? id}) {
-    return AuthorsCompanion(uid: uid ?? this.uid, id: id ?? this.id);
+  AuthorsCompanion copyWith({
+    Value<String>? uid,
+    Value<int>? id,
+    Value<String>? lastNameRu,
+    Value<String>? lastNameEn,
+    Value<String>? firstNameRu,
+    Value<String>? firstNameEn,
+    Value<String?>? middleNameRu,
+    Value<String?>? middleNameEn,
+    Value<int>? organizationId,
+    Value<String?>? educationLevel,
+    Value<String?>? post,
+    Value<String?>? academicDegree,
+    Value<String?>? academicTitle,
+  }) {
+    return AuthorsCompanion(
+      uid: uid ?? this.uid,
+      id: id ?? this.id,
+      lastNameRu: lastNameRu ?? this.lastNameRu,
+      lastNameEn: lastNameEn ?? this.lastNameEn,
+      firstNameRu: firstNameRu ?? this.firstNameRu,
+      firstNameEn: firstNameEn ?? this.firstNameEn,
+      middleNameRu: middleNameRu ?? this.middleNameRu,
+      middleNameEn: middleNameEn ?? this.middleNameEn,
+      organizationId: organizationId ?? this.organizationId,
+      educationLevel: educationLevel ?? this.educationLevel,
+      post: post ?? this.post,
+      academicDegree: academicDegree ?? this.academicDegree,
+      academicTitle: academicTitle ?? this.academicTitle,
+    );
   }
 
   @override
@@ -552,6 +1375,39 @@ class AuthorsCompanion extends UpdateCompanion<Author> {
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
+    if (lastNameRu.present) {
+      map['last_name_ru'] = Variable<String>(lastNameRu.value);
+    }
+    if (lastNameEn.present) {
+      map['last_name_en'] = Variable<String>(lastNameEn.value);
+    }
+    if (firstNameRu.present) {
+      map['first_name_ru'] = Variable<String>(firstNameRu.value);
+    }
+    if (firstNameEn.present) {
+      map['first_name_en'] = Variable<String>(firstNameEn.value);
+    }
+    if (middleNameRu.present) {
+      map['middle_name_ru'] = Variable<String>(middleNameRu.value);
+    }
+    if (middleNameEn.present) {
+      map['middle_name_en'] = Variable<String>(middleNameEn.value);
+    }
+    if (organizationId.present) {
+      map['organization_id'] = Variable<int>(organizationId.value);
+    }
+    if (educationLevel.present) {
+      map['education_level'] = Variable<String>(educationLevel.value);
+    }
+    if (post.present) {
+      map['post'] = Variable<String>(post.value);
+    }
+    if (academicDegree.present) {
+      map['academic_degree'] = Variable<String>(academicDegree.value);
+    }
+    if (academicTitle.present) {
+      map['academic_title'] = Variable<String>(academicTitle.value);
+    }
     return map;
   }
 
@@ -559,7 +1415,18 @@ class AuthorsCompanion extends UpdateCompanion<Author> {
   String toString() {
     return (StringBuffer('AuthorsCompanion(')
           ..write('uid: $uid, ')
-          ..write('id: $id')
+          ..write('id: $id, ')
+          ..write('lastNameRu: $lastNameRu, ')
+          ..write('lastNameEn: $lastNameEn, ')
+          ..write('firstNameRu: $firstNameRu, ')
+          ..write('firstNameEn: $firstNameEn, ')
+          ..write('middleNameRu: $middleNameRu, ')
+          ..write('middleNameEn: $middleNameEn, ')
+          ..write('organizationId: $organizationId, ')
+          ..write('educationLevel: $educationLevel, ')
+          ..write('post: $post, ')
+          ..write('academicDegree: $academicDegree, ')
+          ..write('academicTitle: $academicTitle')
           ..write(')'))
         .toString();
   }
@@ -3100,6 +3967,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $UsersTable users = $UsersTable(this);
+  late final $OrganizationTable organization = $OrganizationTable(this);
   late final $AuthorsTable authors = $AuthorsTable(this);
   late final $EditorsTable editors = $EditorsTable(this);
   late final $ReviewersTable reviewers = $ReviewersTable(this);
@@ -3116,6 +3984,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     users,
+    organization,
     authors,
     editors,
     reviewers,
@@ -3137,7 +4006,7 @@ typedef $$UsersTableCreateCompanionBuilder =
       required String uid,
       required String emailAddress,
       required String role,
-      Value<String?> displayName,
+      required String displayName,
       Value<String?> photoUrl,
       Value<int> rowid,
     });
@@ -3146,7 +4015,7 @@ typedef $$UsersTableUpdateCompanionBuilder =
       Value<String> uid,
       Value<String> emailAddress,
       Value<String> role,
-      Value<String?> displayName,
+      Value<String> displayName,
       Value<String?> photoUrl,
       Value<int> rowid,
     });
@@ -3635,7 +4504,7 @@ class $$UsersTableTableManager
                 Value<String> uid = const Value.absent(),
                 Value<String> emailAddress = const Value.absent(),
                 Value<String> role = const Value.absent(),
-                Value<String?> displayName = const Value.absent(),
+                Value<String> displayName = const Value.absent(),
                 Value<String?> photoUrl = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => UsersCompanion(
@@ -3651,7 +4520,7 @@ class $$UsersTableTableManager
                 required String uid,
                 required String emailAddress,
                 required String role,
-                Value<String?> displayName = const Value.absent(),
+                required String displayName,
                 Value<String?> photoUrl = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => UsersCompanion.insert(
@@ -3789,10 +4658,302 @@ typedef $$UsersTableProcessedTableManager =
         bool messagesRefs,
       })
     >;
+typedef $$OrganizationTableCreateCompanionBuilder =
+    OrganizationCompanion Function({
+      Value<int> id,
+      required String titleRu,
+      required String titleEn,
+    });
+typedef $$OrganizationTableUpdateCompanionBuilder =
+    OrganizationCompanion Function({
+      Value<int> id,
+      Value<String> titleRu,
+      Value<String> titleEn,
+    });
+
+final class $$OrganizationTableReferences
+    extends
+        BaseReferences<_$AppDatabase, $OrganizationTable, OrganizationData> {
+  $$OrganizationTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$AuthorsTable, List<Author>> _authorsRefsTable(
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.authors,
+    aliasName: $_aliasNameGenerator(
+      db.organization.id,
+      db.authors.organizationId,
+    ),
+  );
+
+  $$AuthorsTableProcessedTableManager get authorsRefs {
+    final manager = $$AuthorsTableTableManager(
+      $_db,
+      $_db.authors,
+    ).filter((f) => f.organizationId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_authorsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$OrganizationTableFilterComposer
+    extends Composer<_$AppDatabase, $OrganizationTable> {
+  $$OrganizationTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get titleRu => $composableBuilder(
+    column: $table.titleRu,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get titleEn => $composableBuilder(
+    column: $table.titleEn,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  Expression<bool> authorsRefs(
+    Expression<bool> Function($$AuthorsTableFilterComposer f) f,
+  ) {
+    final $$AuthorsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.authors,
+      getReferencedColumn: (t) => t.organizationId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AuthorsTableFilterComposer(
+            $db: $db,
+            $table: $db.authors,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$OrganizationTableOrderingComposer
+    extends Composer<_$AppDatabase, $OrganizationTable> {
+  $$OrganizationTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get titleRu => $composableBuilder(
+    column: $table.titleRu,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get titleEn => $composableBuilder(
+    column: $table.titleEn,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$OrganizationTableAnnotationComposer
+    extends Composer<_$AppDatabase, $OrganizationTable> {
+  $$OrganizationTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get titleRu =>
+      $composableBuilder(column: $table.titleRu, builder: (column) => column);
+
+  GeneratedColumn<String> get titleEn =>
+      $composableBuilder(column: $table.titleEn, builder: (column) => column);
+
+  Expression<T> authorsRefs<T extends Object>(
+    Expression<T> Function($$AuthorsTableAnnotationComposer a) f,
+  ) {
+    final $$AuthorsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.authors,
+      getReferencedColumn: (t) => t.organizationId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AuthorsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.authors,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$OrganizationTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $OrganizationTable,
+          OrganizationData,
+          $$OrganizationTableFilterComposer,
+          $$OrganizationTableOrderingComposer,
+          $$OrganizationTableAnnotationComposer,
+          $$OrganizationTableCreateCompanionBuilder,
+          $$OrganizationTableUpdateCompanionBuilder,
+          (OrganizationData, $$OrganizationTableReferences),
+          OrganizationData,
+          PrefetchHooks Function({bool authorsRefs})
+        > {
+  $$OrganizationTableTableManager(_$AppDatabase db, $OrganizationTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$OrganizationTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$OrganizationTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$OrganizationTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> titleRu = const Value.absent(),
+                Value<String> titleEn = const Value.absent(),
+              }) => OrganizationCompanion(
+                id: id,
+                titleRu: titleRu,
+                titleEn: titleEn,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String titleRu,
+                required String titleEn,
+              }) => OrganizationCompanion.insert(
+                id: id,
+                titleRu: titleRu,
+                titleEn: titleEn,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$OrganizationTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({authorsRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [if (authorsRefs) db.authors],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (authorsRefs)
+                    await $_getPrefetchedData<
+                      OrganizationData,
+                      $OrganizationTable,
+                      Author
+                    >(
+                      currentTable: table,
+                      referencedTable: $$OrganizationTableReferences
+                          ._authorsRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$OrganizationTableReferences(
+                            db,
+                            table,
+                            p0,
+                          ).authorsRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where(
+                            (e) => e.organizationId == item.id,
+                          ),
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$OrganizationTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $OrganizationTable,
+      OrganizationData,
+      $$OrganizationTableFilterComposer,
+      $$OrganizationTableOrderingComposer,
+      $$OrganizationTableAnnotationComposer,
+      $$OrganizationTableCreateCompanionBuilder,
+      $$OrganizationTableUpdateCompanionBuilder,
+      (OrganizationData, $$OrganizationTableReferences),
+      OrganizationData,
+      PrefetchHooks Function({bool authorsRefs})
+    >;
 typedef $$AuthorsTableCreateCompanionBuilder =
-    AuthorsCompanion Function({required String uid, Value<int> id});
+    AuthorsCompanion Function({
+      required String uid,
+      Value<int> id,
+      required String lastNameRu,
+      required String lastNameEn,
+      required String firstNameRu,
+      required String firstNameEn,
+      Value<String?> middleNameRu,
+      Value<String?> middleNameEn,
+      required int organizationId,
+      Value<String?> educationLevel,
+      Value<String?> post,
+      Value<String?> academicDegree,
+      Value<String?> academicTitle,
+    });
 typedef $$AuthorsTableUpdateCompanionBuilder =
-    AuthorsCompanion Function({Value<String> uid, Value<int> id});
+    AuthorsCompanion Function({
+      Value<String> uid,
+      Value<int> id,
+      Value<String> lastNameRu,
+      Value<String> lastNameEn,
+      Value<String> firstNameRu,
+      Value<String> firstNameEn,
+      Value<String?> middleNameRu,
+      Value<String?> middleNameEn,
+      Value<int> organizationId,
+      Value<String?> educationLevel,
+      Value<String?> post,
+      Value<String?> academicDegree,
+      Value<String?> academicTitle,
+    });
 
 final class $$AuthorsTableReferences
     extends BaseReferences<_$AppDatabase, $AuthorsTable, Author> {
@@ -3809,6 +4970,25 @@ final class $$AuthorsTableReferences
       $_db.users,
     ).filter((f) => f.uid.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_uidTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $OrganizationTable _organizationIdTable(_$AppDatabase db) =>
+      db.organization.createAlias(
+        $_aliasNameGenerator(db.authors.organizationId, db.organization.id),
+      );
+
+  $$OrganizationTableProcessedTableManager get organizationId {
+    final $_column = $_itemColumn<int>('organization_id')!;
+
+    final manager = $$OrganizationTableTableManager(
+      $_db,
+      $_db.organization,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_organizationIdTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: [item]),
@@ -3868,6 +5048,56 @@ class $$AuthorsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get lastNameRu => $composableBuilder(
+    column: $table.lastNameRu,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get lastNameEn => $composableBuilder(
+    column: $table.lastNameEn,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get firstNameRu => $composableBuilder(
+    column: $table.firstNameRu,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get firstNameEn => $composableBuilder(
+    column: $table.firstNameEn,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get middleNameRu => $composableBuilder(
+    column: $table.middleNameRu,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get middleNameEn => $composableBuilder(
+    column: $table.middleNameEn,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get educationLevel => $composableBuilder(
+    column: $table.educationLevel,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get post => $composableBuilder(
+    column: $table.post,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get academicDegree => $composableBuilder(
+    column: $table.academicDegree,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get academicTitle => $composableBuilder(
+    column: $table.academicTitle,
+    builder: (column) => ColumnFilters(column),
+  );
+
   $$UsersTableFilterComposer get uid {
     final $$UsersTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -3882,6 +5112,29 @@ class $$AuthorsTableFilterComposer
           }) => $$UsersTableFilterComposer(
             $db: $db,
             $table: $db.users,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$OrganizationTableFilterComposer get organizationId {
+    final $$OrganizationTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.organizationId,
+      referencedTable: $db.organization,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$OrganizationTableFilterComposer(
+            $db: $db,
+            $table: $db.organization,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -3956,6 +5209,56 @@ class $$AuthorsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get lastNameRu => $composableBuilder(
+    column: $table.lastNameRu,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get lastNameEn => $composableBuilder(
+    column: $table.lastNameEn,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get firstNameRu => $composableBuilder(
+    column: $table.firstNameRu,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get firstNameEn => $composableBuilder(
+    column: $table.firstNameEn,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get middleNameRu => $composableBuilder(
+    column: $table.middleNameRu,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get middleNameEn => $composableBuilder(
+    column: $table.middleNameEn,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get educationLevel => $composableBuilder(
+    column: $table.educationLevel,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get post => $composableBuilder(
+    column: $table.post,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get academicDegree => $composableBuilder(
+    column: $table.academicDegree,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get academicTitle => $composableBuilder(
+    column: $table.academicTitle,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$UsersTableOrderingComposer get uid {
     final $$UsersTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -3978,6 +5281,29 @@ class $$AuthorsTableOrderingComposer
     );
     return composer;
   }
+
+  $$OrganizationTableOrderingComposer get organizationId {
+    final $$OrganizationTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.organizationId,
+      referencedTable: $db.organization,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$OrganizationTableOrderingComposer(
+            $db: $db,
+            $table: $db.organization,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$AuthorsTableAnnotationComposer
@@ -3991,6 +5317,54 @@ class $$AuthorsTableAnnotationComposer
   });
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get lastNameRu => $composableBuilder(
+    column: $table.lastNameRu,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get lastNameEn => $composableBuilder(
+    column: $table.lastNameEn,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get firstNameRu => $composableBuilder(
+    column: $table.firstNameRu,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get firstNameEn => $composableBuilder(
+    column: $table.firstNameEn,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get middleNameRu => $composableBuilder(
+    column: $table.middleNameRu,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get middleNameEn => $composableBuilder(
+    column: $table.middleNameEn,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get educationLevel => $composableBuilder(
+    column: $table.educationLevel,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get post =>
+      $composableBuilder(column: $table.post, builder: (column) => column);
+
+  GeneratedColumn<String> get academicDegree => $composableBuilder(
+    column: $table.academicDegree,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get academicTitle => $composableBuilder(
+    column: $table.academicTitle,
+    builder: (column) => column,
+  );
 
   $$UsersTableAnnotationComposer get uid {
     final $$UsersTableAnnotationComposer composer = $composerBuilder(
@@ -4006,6 +5380,29 @@ class $$AuthorsTableAnnotationComposer
           }) => $$UsersTableAnnotationComposer(
             $db: $db,
             $table: $db.users,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$OrganizationTableAnnotationComposer get organizationId {
+    final $$OrganizationTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.organizationId,
+      referencedTable: $db.organization,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$OrganizationTableAnnotationComposer(
+            $db: $db,
+            $table: $db.organization,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -4079,7 +5476,12 @@ class $$AuthorsTableTableManager
           $$AuthorsTableUpdateCompanionBuilder,
           (Author, $$AuthorsTableReferences),
           Author,
-          PrefetchHooks Function({bool uid, bool chatsRefs, bool requestsRefs})
+          PrefetchHooks Function({
+            bool uid,
+            bool organizationId,
+            bool chatsRefs,
+            bool requestsRefs,
+          })
         > {
   $$AuthorsTableTableManager(_$AppDatabase db, $AuthorsTable table)
     : super(
@@ -4096,10 +5498,62 @@ class $$AuthorsTableTableManager
               ({
                 Value<String> uid = const Value.absent(),
                 Value<int> id = const Value.absent(),
-              }) => AuthorsCompanion(uid: uid, id: id),
+                Value<String> lastNameRu = const Value.absent(),
+                Value<String> lastNameEn = const Value.absent(),
+                Value<String> firstNameRu = const Value.absent(),
+                Value<String> firstNameEn = const Value.absent(),
+                Value<String?> middleNameRu = const Value.absent(),
+                Value<String?> middleNameEn = const Value.absent(),
+                Value<int> organizationId = const Value.absent(),
+                Value<String?> educationLevel = const Value.absent(),
+                Value<String?> post = const Value.absent(),
+                Value<String?> academicDegree = const Value.absent(),
+                Value<String?> academicTitle = const Value.absent(),
+              }) => AuthorsCompanion(
+                uid: uid,
+                id: id,
+                lastNameRu: lastNameRu,
+                lastNameEn: lastNameEn,
+                firstNameRu: firstNameRu,
+                firstNameEn: firstNameEn,
+                middleNameRu: middleNameRu,
+                middleNameEn: middleNameEn,
+                organizationId: organizationId,
+                educationLevel: educationLevel,
+                post: post,
+                academicDegree: academicDegree,
+                academicTitle: academicTitle,
+              ),
           createCompanionCallback:
-              ({required String uid, Value<int> id = const Value.absent()}) =>
-                  AuthorsCompanion.insert(uid: uid, id: id),
+              ({
+                required String uid,
+                Value<int> id = const Value.absent(),
+                required String lastNameRu,
+                required String lastNameEn,
+                required String firstNameRu,
+                required String firstNameEn,
+                Value<String?> middleNameRu = const Value.absent(),
+                Value<String?> middleNameEn = const Value.absent(),
+                required int organizationId,
+                Value<String?> educationLevel = const Value.absent(),
+                Value<String?> post = const Value.absent(),
+                Value<String?> academicDegree = const Value.absent(),
+                Value<String?> academicTitle = const Value.absent(),
+              }) => AuthorsCompanion.insert(
+                uid: uid,
+                id: id,
+                lastNameRu: lastNameRu,
+                lastNameEn: lastNameEn,
+                firstNameRu: firstNameRu,
+                firstNameEn: firstNameEn,
+                middleNameRu: middleNameRu,
+                middleNameEn: middleNameEn,
+                organizationId: organizationId,
+                educationLevel: educationLevel,
+                post: post,
+                academicDegree: academicDegree,
+                academicTitle: academicTitle,
+              ),
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
@@ -4109,7 +5563,12 @@ class $$AuthorsTableTableManager
               )
               .toList(),
           prefetchHooksCallback:
-              ({uid = false, chatsRefs = false, requestsRefs = false}) {
+              ({
+                uid = false,
+                organizationId = false,
+                chatsRefs = false,
+                requestsRefs = false,
+              }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
@@ -4142,6 +5601,19 @@ class $$AuthorsTableTableManager
                                     referencedColumn: $$AuthorsTableReferences
                                         ._uidTable(db)
                                         .uid,
+                                  )
+                                  as T;
+                        }
+                        if (organizationId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.organizationId,
+                                    referencedTable: $$AuthorsTableReferences
+                                        ._organizationIdTable(db),
+                                    referencedColumn: $$AuthorsTableReferences
+                                        ._organizationIdTable(db)
+                                        .id,
                                   )
                                   as T;
                         }
@@ -4204,7 +5676,12 @@ typedef $$AuthorsTableProcessedTableManager =
       $$AuthorsTableUpdateCompanionBuilder,
       (Author, $$AuthorsTableReferences),
       Author,
-      PrefetchHooks Function({bool uid, bool chatsRefs, bool requestsRefs})
+      PrefetchHooks Function({
+        bool uid,
+        bool organizationId,
+        bool chatsRefs,
+        bool requestsRefs,
+      })
     >;
 typedef $$EditorsTableCreateCompanionBuilder =
     EditorsCompanion Function({required String uid, Value<int> id});
@@ -8066,6 +9543,8 @@ class $AppDatabaseManager {
   $AppDatabaseManager(this._db);
   $$UsersTableTableManager get users =>
       $$UsersTableTableManager(_db, _db.users);
+  $$OrganizationTableTableManager get organization =>
+      $$OrganizationTableTableManager(_db, _db.organization);
   $$AuthorsTableTableManager get authors =>
       $$AuthorsTableTableManager(_db, _db.authors);
   $$EditorsTableTableManager get editors =>
