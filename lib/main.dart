@@ -52,7 +52,10 @@ class MyApp extends StatelessWidget {
                 AuthorBloc(authorRepository: dependencies.authorRepository),
           ),
         ],
-        child: MaterialApp.router(routerConfig: router.config()),
+        child: MaterialApp.router(
+          debugShowCheckedModeBanner: false,
+          routerConfig: router.config(),
+        ),
       ),
     );
   }

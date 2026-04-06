@@ -16,7 +16,7 @@ abstract base class BaseRestClient implements RestClient {
   Future<Map<String, Object?>?> sendRequest({
     required String path,
     required String method,
-    Map<String, String?>? queryParams,
+    Map<String, String?>? queryParameters,
     Map<String, String>? headers,
     Map<String, Object?>? body,
   });
@@ -24,13 +24,13 @@ abstract base class BaseRestClient implements RestClient {
   @override
   Future<Map<String, Object?>?> get({
     required String path,
-    Map<String, String?>? queryParams,
+    Map<String, String?>? queryParameters,
     Map<String, String>? headers,
   }) {
     return sendRequest(
       path: path,
       method: 'GET',
-      queryParams: queryParams,
+      queryParameters: queryParameters,
       headers: headers,
     );
   }
@@ -39,13 +39,13 @@ abstract base class BaseRestClient implements RestClient {
   Future<Map<String, Object?>?> post({
     required String path,
     required Map<String, Object?>? body,
-    Map<String, String?>? queryParams,
+    Map<String, String?>? queryParameters,
     Map<String, String>? headers,
   }) {
     return sendRequest(
       path: path,
       method: 'POST',
-      queryParams: queryParams,
+      queryParameters: queryParameters,
       headers: headers,
       body: body,
     );
@@ -55,13 +55,13 @@ abstract base class BaseRestClient implements RestClient {
   Future<Map<String, Object?>?> put({
     required String path,
     required Map<String, Object?>? body,
-    Map<String, String?>? queryParams,
+    Map<String, String?>? queryParameters,
     Map<String, String>? headers,
   }) {
     return sendRequest(
       path: path,
       method: 'PUT',
-      queryParams: queryParams,
+      queryParameters: queryParameters,
       headers: headers,
       body: body,
     );
@@ -70,22 +70,22 @@ abstract base class BaseRestClient implements RestClient {
   @override
   Future<Map<String, Object?>?> delete({
     required String path,
-    Map<String, String?>? queryParams,
+    Map<String, String?>? queryParameters,
     Map<String, String>? headers,
   }) {
     return sendRequest(
       path: path,
       method: 'DELETE',
-      queryParams: queryParams,
+      queryParameters: queryParameters,
       headers: headers,
     );
   }
 
-  Uri createUri({required String path, Map<String, String?>? queryParams}) {
+  Uri createUri({required String path, Map<String, String?>? queryParameters}) {
     final uri = Uri.parse(p.join(_baseUri.path, path));
     return _baseUri.replace(
       path: uri.path,
-      queryParameters: {..._baseUri.queryParameters, ...?queryParams},
+      queryParameters: {..._baseUri.queryParameters, ...?queryParameters},
     );
   }
 

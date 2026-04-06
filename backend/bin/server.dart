@@ -21,13 +21,13 @@ void main([List<String>? args]) async {
       final pipeline = Pipeline()
           .addMiddleware(corsHeaders())
           .addMiddleware(logRequests())
-          .addMiddleware(
-            AuthenticationCheckMiddleware.createAuthenticationCheckMiddleware(
-              firebaseAdminSDKApp: di.firebaseAdminSDKApp,
-              apiServer: di.apiServer,
-              logger: logger,
-            ),
-          )
+          // .addMiddleware(
+          //   AuthenticationCheckMiddleware.createAuthenticationCheckMiddleware(
+          //     firebaseAdminSDKApp: di.firebaseAdminSDKApp,
+          //     apiServer: di.apiServer,
+          //     logger: logger,
+          //   ),
+          // )
           .addMiddleware(
             ErrorMiddleware.createErrorMiddleware(
               logger: logger,

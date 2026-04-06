@@ -1,11 +1,13 @@
-import 'package:backend/app/app.dart';
+import 'package:drift/drift.dart';
 import 'package:logger/logger.dart';
 import '../../../core/database/database.dart';
+import '../../../core/rest_client/api_server.dart';
 import '../../../domain/organization_entity.dart';
 import '../dtos/organization_dto.dart';
 
 abstract interface class IOrganizationRepository {
-  Future<List<OrganizationEntity>?> getOrganizations();
+  Future<List<OrganizationEntity?>> getOrganizations();
+  Future<List<OrganizationEntity>> searchOrganizations({required String query});
 }
 
 class OrganizationRepositoryImpl implements IOrganizationRepository {
@@ -18,19 +20,35 @@ class OrganizationRepositoryImpl implements IOrganizationRepository {
   final Logger logger;
 
   @override
-  Future<List<OrganizationEntity>?> getOrganizations() async {
+  Future<List<OrganizationEntity?>> getOrganizations() async {
     final query = await _appDatabase.select(_appDatabase.organization).get();
-    logger.info(query);
 
     if (query.isEmpty) {
-      return null;
+      throw NotFoundException(message: 'Organizations not found');
     }
 
     final organizations = query
-        .map((i) => OrganizationDto.fromDataBase(i).toEntity())
+        .map((row) => OrganizationDto.fromDataBase(row).toEntity())
         .toList();
-    logger.info(organizations);
 
     return organizations;
+  }
+
+  @override
+  Future<List<OrganizationEntity>> searchOrganizations({
+    required String query,
+  }) async {
+    final pattern = '%$query%';
+    final data =
+        await (_appDatabase.select(_appDatabase.organization)..where((row) {
+              return row.titleRu.like(pattern) | row.titleEn.like(pattern);
+            }))
+            .get();
+
+    final result = data
+        .map((row) => OrganizationDto.fromDataBase(row).toEntity())
+        .toList();
+
+    return result;
   }
 }

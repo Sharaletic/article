@@ -15,6 +15,7 @@ export 'domain/repositories/i_organization_repository.dart';
 // State Management
 export 'state_management/athor/athor_bloc.dart';
 export 'state_management/organizations/organizations_bloc.dart';
+export 'state_management/form/author_form_cubit.dart';
 
 // Presentation
 export 'presentation/widget/add_information.dart';
@@ -22,3 +23,4 @@ export 'presentation/widget/student_form.dart';
 export 'presentation/widget/teacher_form.dart';
 export 'presentation/widget/add_information_header.dart';
 export 'presentation/widget/add_information_button.dart';
+export 'presentation/widget/organization_drop_down_menu.dart';

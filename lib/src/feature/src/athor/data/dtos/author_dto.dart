@@ -24,6 +24,38 @@ EducationLevel _educationLevelFromJson(String? educationLevel) =>
       ),
     };
 
+Post _postFromJson(String? post) => switch (post) {
+  'Студент' => Post.student,
+  'Преподаватель' => Post.teacher,
+  _ => throw StructuredBackendException(
+    error: {'details': 'Invalid post $post received from server.'},
+  ),
+};
+
+AcademicDegree _academicDegreeFromJson(String? academicDegree) =>
+    switch (academicDegree) {
+      'Студент' => AcademicDegree.student,
+      'Преподаватель' => AcademicDegree.teacher,
+      _ => throw StructuredBackendException(
+        error: {
+          'details':
+              'Invalid academic degree $academicDegree received from server.',
+        },
+      ),
+    };
+
+AcademicTitle _academicTitleFromJson(String? academicTitle) =>
+    switch (academicTitle) {
+      'Студент' => AcademicTitle.student,
+      'Преподаватель' => AcademicTitle.teacher,
+      _ => throw StructuredBackendException(
+        error: {
+          'details':
+              'Invalid academic title $academicTitle received from server.',
+        },
+      ),
+    };
+
 class AuthorDto {
   const AuthorDto({
     this.id,
@@ -52,9 +84,9 @@ class AuthorDto {
   final String? middleNameEn;
   final OrganizationDto organization;
   final EducationLevel? educationLevel;
-  final String? post;
-  final String? academicDegree;
-  final String? academicTitle;
+  final Post? post;
+  final AcademicDegree? academicDegree;
+  final AcademicTitle? academicTitle;
 
   factory AuthorDto.fromEntity({required AuthorEntity author}) => AuthorDto(
     id: author.id,
@@ -87,9 +119,9 @@ class AuthorDto {
       json['organization'] as Map<String, Object?>,
     ),
     educationLevel: _educationLevelFromJson(json['education_level'] as String?),
-    post: json['post'] as String?,
-    academicDegree: json['academic_degree'] as String?,
-    academicTitle: json['academic_title'] as String?,
+    post: _postFromJson(json['post'] as String?),
+    academicDegree: _academicDegreeFromJson(json['academic_degree'] as String?),
+    academicTitle: _academicTitleFromJson(json['academic_title'] as String?),
   );
 
   Map<String, Object?> toJson() => {

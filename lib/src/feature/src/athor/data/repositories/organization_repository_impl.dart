@@ -19,7 +19,6 @@ class OrganizationRepositoryImpl implements IOrganizationRepository {
       path: '/organizations',
       headers: {'Authorization': token!},
     );
-    logger.error(body);
 
     if (body case <String, Object?>{
       'organizations': List<Object?> list,
@@ -29,6 +28,37 @@ class OrganizationRepositoryImpl implements IOrganizationRepository {
           .map((e) => OrganizationDto.fromJson(e).toEntity())
           .toList();
       return organizations;
+    } else {
+      throw StructuredBackendException(
+        error: {'details': 'Invalid data received from server.'},
+      );
+    }
+  }
+
+  @override
+  Future<List<OrganizationEntity>?> searchOrganizations({
+    required String query,
+  }) async {
+    final token = await FirebaseAuth.instance.currentUser!.getIdToken();
+
+    final body = await _httpClient.get(
+      path: '/organizations',
+      headers: {'Authorization': token!},
+      queryParameters: {'query': query},
+    );
+
+    if (body case <String, Object?>{
+      'organizations': List<Object?> list,
+    } when list.isNotEmpty) {
+      final organizations = list
+          .whereType<Map<String, Object?>>()
+          .map((e) => OrganizationDto.fromJson(e).toEntity())
+          .toList();
+      return organizations;
+    } else if (body case <String, Object?>{
+      'organizations': List<Object?> list,
+    } when list.isEmpty) {
+      return null;
     } else {
       throw StructuredBackendException(
         error: {'details': 'Invalid data received from server.'},

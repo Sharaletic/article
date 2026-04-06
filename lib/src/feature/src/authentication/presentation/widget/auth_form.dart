@@ -53,7 +53,7 @@ class _AuthFormState extends State<AuthForm> {
         const SizedBox(height: 16),
         UiText.titleMedium('Пароль', style: TextStyle(fontWeight: .w600)),
         const SizedBox(height: 8),
-        ValueListenableBuilder(
+        ValueListenableBuilder<bool>(
           valueListenable: _isVisible,
           builder: (_, value, _) => UiTextField.standard(
             obscureText: value,
@@ -68,7 +68,7 @@ class _AuthFormState extends State<AuthForm> {
           ),
         ),
 
-        ValueListenableBuilder(
+        ValueListenableBuilder<AuthType>(
           valueListenable: _authType,
           builder: (_, value, _) => switch (value) {
             .login => Column(

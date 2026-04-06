@@ -1,10 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:ui_kit/ui_kit.dart';
 
 enum UiDropDownMenuVariant { standard }
 
 class UiDropDownMenu<T extends Object> extends StatefulWidget {
   const UiDropDownMenu.standard({
-    required this.dropdownMenuEntries,
+    this.dropdownMenuEntries,
     this.hintText,
     this.label,
     this.leadingIcon,
@@ -13,6 +14,7 @@ class UiDropDownMenu<T extends Object> extends StatefulWidget {
     this.width,
     this.expandedInsets = .zero,
     this.controller,
+    this.menuHeight,
     this.enabled = true,
     this.enableFilter = true,
     this.enableSearch = true,
@@ -26,7 +28,7 @@ class UiDropDownMenu<T extends Object> extends StatefulWidget {
     super.key,
   }) : variant = UiDropDownMenuVariant.standard;
 
-  final List<T> dropdownMenuEntries;
+  final List<T>? dropdownMenuEntries;
   final String? hintText;
   final Widget? label;
   final Widget? leadingIcon;
@@ -35,6 +37,7 @@ class UiDropDownMenu<T extends Object> extends StatefulWidget {
   final double? width;
   final EdgeInsetsGeometry? expandedInsets;
   final TextEditingController? controller;
+  final double? menuHeight;
   final bool enabled;
   final bool enableSearch;
   final bool enableFilter;
@@ -65,16 +68,18 @@ class _DropDownMenuState<T extends Object> extends State<UiDropDownMenu<T>> {
       ),
     };
 
-    final entries = widget.dropdownMenuEntries
-        .map(
-          (items) => DropdownMenuEntry<T>(
-            label: widget.itemLabelMenuBuilder(items),
-            value: widget.itemValueMenuBuilder(items),
-            leadingIcon: widget.itemIconMenuBuilder?.call(items),
-            style: variantButtonMenyStyle,
-          ),
-        )
-        .toList();
+    final entries =
+        widget.dropdownMenuEntries
+            ?.map(
+              (items) => DropdownMenuEntry<T>(
+                label: widget.itemLabelMenuBuilder(items),
+                value: widget.itemValueMenuBuilder(items),
+                leadingIcon: widget.itemIconMenuBuilder?.call(items),
+                style: variantButtonMenyStyle,
+              ),
+            )
+            .toList() ??
+        const [];
 
     final variantMenyStyle = switch (widget.variant) {
       UiDropDownMenuVariant.standard => _StandardUiDropDownMenuStyle(
@@ -95,11 +100,12 @@ class _DropDownMenuState<T extends Object> extends State<UiDropDownMenu<T>> {
       label: widget.label,
       hintText: widget.hintText,
       leadingIcon: widget.leadingIcon,
-      trailingIcon: widget.trailingIcon,
+      trailingIcon: null,
       selectedTrailingIcon: widget.selectedTrailingIcon,
       width: widget.width,
       expandedInsets: widget.expandedInsets,
       controller: widget.controller,
+      menuHeight: widget.menuHeight,
       enabled: widget.enabled,
       enableFilter: widget.enableFilter,
       enableSearch: widget.enableSearch,

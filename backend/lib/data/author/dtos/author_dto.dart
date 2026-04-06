@@ -123,7 +123,7 @@ class AuthorDto {
         organization: OrganizationDto.fromJson(
           json['organization'] as Map<String, Object?>,
         ),
-        educationLevel: json['educationLevel'] != null
+        educationLevel: json['education_level'] != null
             ? _educationLevelFromJson(json['education_level'] as String)
             : null,
         post: json['post'] as String?,

@@ -1,3 +1,4 @@
+import 'package:backend/domain/organization_entity.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 import '../../core/rest_client/api_server.dart';
@@ -16,30 +17,46 @@ class OrganizationController {
   Handler get handler {
     final router = Router();
 
-    router.get('/organizations', getOrganizations);
+    router.get('/organizations', searchOrganizations);
 
     return router.call;
   }
 
-  Future<Response> getOrganizations(Request request) async {
-    final organizations = await _organizationRepository.getOrganizations();
-    if (organizations == null) {
-      throw NotFoundException(message: 'Organizations not found');
+  Future<Response> searchOrganizations(Request request) async {
+    final query = request.url.queryParameters['query'];
+    List<OrganizationEntity?> organizations = [];
+    if (query != null && query.isNotEmpty) {
+      organizations = await _organizationRepository.searchOrganizations(
+        query: query,
+      );
     }
-    final json = organizations
-        .map((e) => OrganizationDto.fromEntity(e).toJson())
-        .toList();
-
+    final json = organizations.isNotEmpty
+        ? organizations
+              .map((e) => OrganizationDto.fromEntity(e!).toJson())
+              .toList()
+        : organizations;
     return _apiServer.sendResponse(
       200,
       body: {
         'data': {'organizations': json},
       },
     );
-    // return Response.ok(
-    //   jsonEncode({
-    //     'data': {'organizations': json},
-    //   }),
-    // );
   }
+
+  // Future<Response> getOrganizations(Request request) async {
+  //   final organizations = await _organizationRepository.getOrganizations();
+  //   if (organizations == null) {
+  //     throw NotFoundException(message: 'Organizations not found');
+  //   }
+  //   final json = organizations
+  //       .map((e) => OrganizationDto.fromEntity(e).toJson())
+  //       .toList();
+
+  //   return _apiServer.sendResponse(
+  //     200,
+  //     body: {
+  //       'data': {'organizations': json},
+  //     },
+  //   );
+  // }
 }

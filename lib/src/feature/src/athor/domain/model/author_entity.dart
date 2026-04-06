@@ -2,6 +2,14 @@ import '../../../../../app/app.dart';
 import '../../../authentication/authentication.dart';
 import '../../author.dart';
 
+enum AuthorStatus {
+  student('Студент'),
+  teacher('Преподаватель');
+
+  const AuthorStatus(this.value);
+  final String value;
+}
+
 enum EducationLevel {
   bachelor('Бакалавриат'),
   specialist('Специалитет'),
@@ -12,11 +20,27 @@ enum EducationLevel {
   final String value;
 }
 
-enum AuthorStatus {
+enum Post {
   student('Студент'),
   teacher('Преподаватель');
 
-  const AuthorStatus(this.value);
+  const Post(this.value);
+  final String value;
+}
+
+enum AcademicDegree {
+  student('Студент'),
+  teacher('Преподаватель');
+
+  const AcademicDegree(this.value);
+  final String value;
+}
+
+enum AcademicTitle {
+  student('Студент'),
+  teacher('Преподаватель');
+
+  const AcademicTitle(this.value);
   final String value;
 }
 
@@ -48,9 +72,9 @@ class AuthorEntity with EqualsMixin {
   final String? middleNameEn;
   final OrganizationEntity organization;
   final EducationLevel? educationLevel;
-  final String? post;
-  final String? academicDegree;
-  final String? academicTitle;
+  final Post? post;
+  final AcademicDegree? academicDegree;
+  final AcademicTitle? academicTitle;
 
   @override
   String toString() =>

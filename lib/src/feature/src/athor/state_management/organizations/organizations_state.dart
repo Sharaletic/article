@@ -9,7 +9,7 @@ sealed class OrganizationsState {
   const factory OrganizationsState.loading() = _LoadingOrganizationsState;
 
   const factory OrganizationsState.loaded({
-    required List<OrganizationEntity> organizations,
+    required List<OrganizationEntity>? organizations,
   }) = _LoadedOrganizationsState;
 
   const factory OrganizationsState.error({
@@ -70,7 +70,7 @@ final class _LoadingOrganizationsState extends OrganizationsState {
 
 final class _LoadedOrganizationsState extends OrganizationsState {
   const _LoadedOrganizationsState({required this.organizations});
-  final List<OrganizationEntity> organizations;
+  final List<OrganizationEntity>? organizations;
 }
 
 final class _ErrorOrganizationsState extends OrganizationsState {

@@ -3,24 +3,17 @@ part of 'athor_bloc.dart';
 typedef AthorStateMatch<R, S extends AthorState> = R Function(S state);
 
 sealed class AthorState {
-  const AthorState({required this.isEnabled});
+  const AthorState();
 
-  final bool isEnabled;
+  const factory AthorState.initial() = _InitialAthorState;
 
-  const factory AthorState.initial({required bool isEnabled}) =
-      _InitialAthorState;
+  const factory AthorState.createdAthor() = _CreatedAthorState;
 
-  const factory AthorState.createdAthor({required bool isEnabled}) =
-      _CreatedAthorState;
+  const factory AthorState.loading() = _LoadingAthorState;
 
-  const factory AthorState.loading({required bool isEnabled}) =
-      _LoadingAthorState;
-
-  const factory AthorState.enabled({required bool isEnabled}) =
-      _EnabledAthorState;
+  const factory AthorState.enabled() = _EnabledAthorState;
 
   const factory AthorState.error({
-    required bool isEnabled,
     required Object error,
     StackTrace? stackTrace,
   }) = _ErrorAthorState;
@@ -91,27 +84,23 @@ sealed class AthorState {
 }
 
 final class _InitialAthorState extends AthorState {
-  const _InitialAthorState({required super.isEnabled});
+  const _InitialAthorState();
 }
 
 final class _CreatedAthorState extends AthorState {
-  const _CreatedAthorState({required super.isEnabled});
+  const _CreatedAthorState();
 }
 
 final class _LoadingAthorState extends AthorState {
-  const _LoadingAthorState({required super.isEnabled});
+  const _LoadingAthorState();
 }
 
 final class _EnabledAthorState extends AthorState {
-  const _EnabledAthorState({required super.isEnabled});
+  const _EnabledAthorState();
 }
 
 final class _ErrorAthorState extends AthorState {
-  const _ErrorAthorState({
-    required super.isEnabled,
-    required this.error,
-    this.stackTrace,
-  });
+  const _ErrorAthorState({required this.error, this.stackTrace});
   final Object error;
   final StackTrace? stackTrace;
 }

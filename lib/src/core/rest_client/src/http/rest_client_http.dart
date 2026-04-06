@@ -31,12 +31,12 @@ final class RestClientHttp extends BaseRestClient {
   Future<Map<String, Object?>?> sendRequest({
     required String path,
     required String method,
-    Map<String, String?>? queryParams,
+    Map<String, String?>? queryParameters,
     Map<String, String>? headers,
     Map<String, Object?>? body,
   }) async {
     try {
-      final uri = createUri(path: path, queryParams: queryParams);
+      final uri = createUri(path: path, queryParameters: queryParameters);
 
       final request = http.Request(method, uri);
 
