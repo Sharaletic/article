@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
 import '../../../../../core/core.dart';
 import '../../author.dart';
@@ -13,12 +12,7 @@ class OrganizationRepositoryImpl implements IOrganizationRepository {
 
   @override
   Future<List<OrganizationEntity>> getOrganizations() async {
-    final token = await FirebaseAuth.instance.currentUser!.getIdToken();
-
-    final body = await _httpClient.get(
-      path: '/organizations',
-      headers: {'Authorization': token!},
-    );
+    final body = await _httpClient.get(path: '/organizations');
 
     if (body case <String, Object?>{
       'organizations': List<Object?> list,
@@ -39,11 +33,8 @@ class OrganizationRepositoryImpl implements IOrganizationRepository {
   Future<List<OrganizationEntity>?> searchOrganizations({
     required String query,
   }) async {
-    final token = await FirebaseAuth.instance.currentUser!.getIdToken();
-
     final body = await _httpClient.get(
       path: '/organizations',
-      headers: {'Authorization': token!},
       queryParameters: {'query': query},
     );
 

@@ -1,4 +1,5 @@
-import 'dart:convert';
+import 'dart:developer';
+
 import 'package:http/http.dart' as http;
 import '../../rest_client.dart';
 
@@ -10,40 +11,39 @@ final class RestClientHttp extends BaseRestClient {
   RestClientHttp({
     http.Client? httpClient,
     required super.baseUri,
-    required super.logger,
+    super.interceptors,
   }) : _httpClient = httpClient ?? http.Client();
 
   final http.Client _httpClient;
 
   @override
-  Future<Map<String, Object?>?> sendRequest({
-    required String path,
-    required String method,
-    Map<String, String?>? queryParameters,
-    Map<String, String>? headers,
-    Map<String, Object?>? body,
-  }) async {
+  Future<RestClientResponse> sendRequest(RestClientRequest request) async {
     try {
-      final uri = createUri(path: path, queryParameters: queryParameters);
+      log('${request.headers} ${request.uri}');
 
-      final request = http.Request(method, uri);
+      final httpRequest = http.Request(request.method, request.uri);
+      httpRequest.headers.addAll(request.headers);
 
-      if (body != null) {
-        request.headers['Content-Type'] = 'application/json';
-        request.body = jsonEncode(body);
+      if (request.body != null) {
+        httpRequest.bodyBytes = encodeBody(request.body!);
+        httpRequest.headers['content-type'] = 'application/json;charset=utf-8';
       }
 
-      if (headers != null) request.headers.addAll(headers);
-
       final response = await _httpClient
-          .send(request)
+          .send(httpRequest)
           .then(http.Response.fromStream);
 
-      final result = decodeResponse(
+      final body = decodeResponse(
         body: BytesResponseBody(response.bodyBytes),
         statusCode: response.statusCode,
       );
-      return result;
+
+      return RestClientResponse(
+        statusCode: response.statusCode,
+        body: body,
+        request: request,
+        headers: response.headers,
+      );
     } on RestClientException {
       rethrow;
     } on http.ClientException catch (e, stackTrace) {

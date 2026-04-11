@@ -1,25 +1,65 @@
 import 'dart:convert';
-
+import 'dart:developer';
 import 'package:arcticle_app/src/core/core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:logger/logger.dart';
 import 'package:path/path.dart' as p;
 
 abstract base class BaseRestClient implements RestClient {
-  BaseRestClient({required String baseUri, required this.logger})
-    : _baseUri = Uri.parse(baseUri);
+  BaseRestClient({
+    required String baseUri,
+    List<RestClientInterceptor>? interceptors,
+  }) : _baseUri = Uri.parse(baseUri),
+       _interceptors = interceptors ?? const [];
   final Uri _baseUri;
-  final Logger logger;
+  final List<RestClientInterceptor> _interceptors;
 
   static final _jsonUTF8 = json.fuse(utf8);
 
-  Future<Map<String, Object?>?> sendRequest({
+  @protected
+  List<int> encodeBody(Map<String, Object?> body) => _jsonUTF8.encode(body);
+
+  @protected
+  Future<RestClientResponse> sendRequest(RestClientRequest request);
+
+  Future<Map<String, Object?>?> send({
     required String path,
     required String method,
     Map<String, String?>? queryParameters,
     Map<String, String>? headers,
     Map<String, Object?>? body,
-  });
+  }) async {
+    var request = RestClientRequest(
+      uri: createUri(path: path, queryParameters: queryParameters),
+      method: method,
+      body: body,
+      headers: headers ?? {},
+    );
+
+    for (final interceptor in _interceptors) {
+      request = await interceptor.onRequest(request);
+    }
+    try {
+      var response = await sendRequest(request);
+
+      for (final interceptor in _interceptors.reversed) {
+        response = await interceptor.onResponse(response);
+      }
+
+      return response.body;
+    } catch (error, stackTrace) {
+      for (final interceptor in _interceptors.reversed) {
+        try {
+          var response = await interceptor.onError(error, stackTrace, request);
+          return response.body;
+        } catch (newError, newStackTrace) {
+          if (identical(newError, error)) continue;
+          Error.throwWithStackTrace(newError, newStackTrace);
+        }
+      }
+      rethrow;
+    }
+  }
 
   @override
   Future<Map<String, Object?>?> get({
@@ -27,7 +67,7 @@ abstract base class BaseRestClient implements RestClient {
     Map<String, String?>? queryParameters,
     Map<String, String>? headers,
   }) {
-    return sendRequest(
+    return send(
       path: path,
       method: 'GET',
       queryParameters: queryParameters,
@@ -42,7 +82,7 @@ abstract base class BaseRestClient implements RestClient {
     Map<String, String?>? queryParameters,
     Map<String, String>? headers,
   }) {
-    return sendRequest(
+    return send(
       path: path,
       method: 'POST',
       queryParameters: queryParameters,
@@ -58,7 +98,7 @@ abstract base class BaseRestClient implements RestClient {
     Map<String, String?>? queryParameters,
     Map<String, String>? headers,
   }) {
-    return sendRequest(
+    return send(
       path: path,
       method: 'PUT',
       queryParameters: queryParameters,
@@ -73,7 +113,7 @@ abstract base class BaseRestClient implements RestClient {
     Map<String, String?>? queryParameters,
     Map<String, String>? headers,
   }) {
-    return sendRequest(
+    return send(
       path: path,
       method: 'DELETE',
       queryParameters: queryParameters,
@@ -94,6 +134,7 @@ abstract base class BaseRestClient implements RestClient {
     int? statusCode,
   }) {
     if (body == null) return null;
+
     try {
       final decodedBody = switch (body) {
         MapResponseBody(data: final Map<String, Object?> mapData) => mapData,
@@ -101,6 +142,7 @@ abstract base class BaseRestClient implements RestClient {
           json.decode(stringData) as Map<String, Object?>,
         BytesResponseBody(:final List<int> data) => _decodeBytes(data),
       };
+      log('##########$decodedBody');
 
       if (decodedBody case {'error': final Map<String, Object?> error}) {
         throw StructuredBackendException(error: error, statusCode: statusCode);

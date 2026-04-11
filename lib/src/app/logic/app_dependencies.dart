@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:arcticle_app/firebase_options.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:logger/logger.dart';
 import '../../core/core.dart';
@@ -66,7 +69,21 @@ final class AppDependencies implements IAppDependencies {
     RestClient restClientHttp = RestClientHttp(
       httpClient: createDefaultHttpClient(),
       baseUri: 'http://localhost:${config.port}',
-      logger: logger,
+      interceptors: [
+        AuthInterceptor(() async {
+          try {
+            final tokenOrNull = await FirebaseAuth.instance.currentUser
+                ?.getIdToken();
+            if (tokenOrNull == null || tokenOrNull.isEmpty) {
+              throw Exception('Authentication token is null or empty');
+            }
+            return tokenOrNull;
+          } on Object catch (error, stackTrace) {
+            logger.error('Error getting token', error, stackTrace);
+            throw Exception('Authentication token is null or empty');
+          }
+        }),
+      ],
     );
 
     // Authentication
