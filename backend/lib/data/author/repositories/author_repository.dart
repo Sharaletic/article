@@ -28,7 +28,7 @@ class AuthorRepositoryImpl implements IAuthorRepository {
         uid: author.user.uid,
         role: author.user.role.value,
       );
-      print('@@@@@@@@@@@@@@@@@: ${author.educationLevel}');
+
       await _appDatabase
           .into(_appDatabase.authors)
           .insert(AuthorDto.fromEntity(author).toCompanion());

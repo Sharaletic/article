@@ -45,7 +45,10 @@ class _AddInformationState extends State<AddInformation> {
                   valueListenable: _selectedStatus,
                   builder: (_, value, _) => UiSegmentedButton(
                     selected: value,
-                    onSelected: (selected) => _selectedStatus.value = selected,
+                    onSelected: (selected) {
+                      _selectedStatus.value = selected;
+                      _authorFormCubit.statusChanged(selected);
+                    },
                     items: AuthorStatus.values,
                     itemLabelBuilder: (status) =>
                         UiText.titleSmall(status.value),
@@ -57,9 +60,21 @@ class _AddInformationState extends State<AddInformation> {
             ValueListenableBuilder<AuthorStatus>(
               valueListenable: _selectedStatus,
               builder: (_, value, _) => SliverToBoxAdapter(
-                child: IndexedStack(
-                  index: value == AuthorStatus.student ? 0 : 1,
-                  children: const [StudentForm(), TeacherForm()],
+                child: Stack(
+                  children: [
+                    Visibility(
+                      visible: value == AuthorStatus.student,
+                      maintainState: true,
+                      maintainSize: false,
+                      child: const StudentForm(),
+                    ),
+                    Visibility(
+                      visible: value == AuthorStatus.teacher,
+                      maintainState: true,
+                      maintainSize: false,
+                      child: const TeacherForm(),
+                    ),
+                  ],
                 ),
               ),
             ),

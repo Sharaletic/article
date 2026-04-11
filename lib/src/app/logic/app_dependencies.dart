@@ -64,7 +64,7 @@ final class AppDependencies implements IAppDependencies {
 
     // RestClient
     RestClient restClientHttp = RestClientHttp(
-      httpClient: httpClient(),
+      httpClient: createDefaultHttpClient(),
       baseUri: 'http://localhost:${config.port}',
       logger: logger,
     );

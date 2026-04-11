@@ -26,7 +26,7 @@ dependencies:
   # HTTP
   http: ^1.6.0
   cronet_http: ^1.7.0
-  cupertino_http: ^2.4.0
+  # cupertino_http: ^2.4.0
 
   # Utils
   path: ^1.9.1
@@ -45,6 +45,9 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  config:
+    enable-swift-package-manager: false
 
   fonts:
     - family: SfPro

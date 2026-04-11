@@ -1,6 +1,9 @@
 import 'package:drift/drift.dart';
 import 'dart:io';
 import 'package:drift/native.dart';
+
+import '../../data/data.dart';
+import '../../domain/author_entity.dart';
 part 'database.g.dart';
 
 class Users extends Table {
@@ -14,6 +17,7 @@ class Users extends Table {
 class Authors extends Table {
   TextColumn get uid => text().references(Users, #uid)();
   IntColumn get id => integer().autoIncrement()();
+  TextColumn get status => text()();
   TextColumn get lastNameRu => text().named('last_name_ru')();
   TextColumn get lastNameEn => text().named('last_name_en')();
   TextColumn get firstNameRu => text().named('first_name_ru')();
@@ -23,9 +27,9 @@ class Authors extends Table {
   IntColumn get organizationId =>
       integer().named('organization_id').references(Organization, #id)();
   TextColumn get educationLevel => text().named('education_level').nullable()();
-  TextColumn get post => text().nullable()();
+  TextColumn get posts => text().map(PostConverter()).nullable()();
   TextColumn get academicDegree => text().named('academic_degree').nullable()();
-  TextColumn get academicTitle => text().named('academic_degree').nullable()();
+  TextColumn get academicTitle => text().named('academic_title').nullable()();
 }
 
 class Editors extends Table {

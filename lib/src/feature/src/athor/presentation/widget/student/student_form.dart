@@ -1,16 +1,16 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ui_kit/ui_kit.dart';
-import '../../../authentication/authentication.dart';
-import '../../author.dart';
+import '../../../../authentication/authentication.dart';
+import '../../../author.dart';
 
-class TeacherForm extends StatefulWidget {
-  const TeacherForm({super.key});
+class StudentForm extends StatefulWidget {
+  const StudentForm({super.key});
 
   @override
-  State<TeacherForm> createState() => _TeacherFormState();
+  State<StudentForm> createState() => _StudentFormState();
 }
 
-class _TeacherFormState extends State<TeacherForm> {
+class _StudentFormState extends State<StudentForm> {
   late final AuthorFormCubit _authorFormCubit;
 
   @override
@@ -23,10 +23,13 @@ class _TeacherFormState extends State<TeacherForm> {
   Widget build(BuildContext context) {
     return BlocListener<AuthenticationBloc, AuthenticationState>(
       listener: (context, state) => state.mapOrNull(
-        successfull: (state) => _authorFormCubit.submit(
-          user: state.user,
-          status: AuthorStatus.teacher,
-        ),
+        successfull: (authState) {
+          if (_authorFormCubit.state.status == AuthorStatus.student) {
+            final formState = context.read<AuthorFormCubit>().state;
+            AuthorEntity author = _createAuthor(authState, formState);
+            _authorFormCubit.submit(author: author);
+          }
+        },
       ),
       child: BlocConsumer<AuthorFormCubit, AuthorFormState>(
         bloc: _authorFormCubit,
@@ -109,5 +112,27 @@ class _TeacherFormState extends State<TeacherForm> {
         ),
       ),
     );
+  }
+
+  AuthorEntity _createAuthor(
+    AuthenticationState authState,
+    AuthorFormState formState,
+  ) {
+    final author = AuthorEntity(
+      user: authState.user as AuthenticatedUser,
+      status: AuthorStatus.student,
+      lastNameRu: formState.lastNameRu,
+      lastNameEn: formState.lastNameEn,
+      firstNameRu: formState.firstNameRu,
+      firstNameEn: formState.firstNameEn,
+      middleNameRu: formState.middleNameRu,
+      middleNameEn: formState.middleNameEn,
+      organization: formState.organization!,
+      educationLevel: formState.educationLevel,
+      posts: null,
+      academicDegree: null,
+      academicTitle: null,
+    );
+    return author;
   }
 }

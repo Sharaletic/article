@@ -19,8 +19,10 @@ export 'state_management/form/author_form_cubit.dart';
 
 // Presentation
 export 'presentation/widget/add_information.dart';
-export 'presentation/widget/student_form.dart';
-export 'presentation/widget/teacher_form.dart';
+export 'presentation/widget/student/student_form.dart';
+export 'presentation/widget/teacher/teacher_form.dart';
 export 'presentation/widget/add_information_header.dart';
 export 'presentation/widget/add_information_button.dart';
 export 'presentation/widget/organization_drop_down_menu.dart';
+export 'presentation/widget/teacher/add_post_button.dart';
+export 'presentation/widget/teacher/post_drop_down_menu.dart';

@@ -57,7 +57,7 @@ class AuthorEntity with EqualsMixin {
     this.middleNameEn,
     required this.organization,
     this.educationLevel,
-    this.post,
+    this.posts,
     this.academicDegree,
     this.academicTitle,
   });
@@ -72,7 +72,7 @@ class AuthorEntity with EqualsMixin {
   final String? middleNameEn;
   final OrganizationEntity organization;
   final EducationLevel? educationLevel;
-  final Post? post;
+  final List<Post>? posts;
   final AcademicDegree? academicDegree;
   final AcademicTitle? academicTitle;
 
@@ -90,7 +90,7 @@ class AuthorEntity with EqualsMixin {
       middleNameEn: $middleNameEn,
       organization: $organization,
       educationLevel: $educationLevel,
-      post: $post,
+      post: $posts,
       academicDegree: $academicDegree,
       academicTitle: $academicTitle)''';
 
@@ -106,7 +106,7 @@ class AuthorEntity with EqualsMixin {
     middleNameEn,
     organization,
     educationLevel,
-    post,
+    posts,
     academicDegree,
     academicTitle,
   ];

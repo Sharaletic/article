@@ -11,7 +11,7 @@ class AuthorFormState {
     this.middleNameEn,
     this.organization,
     this.educationLevel,
-    this.post,
+    this.posts,
     this.academicDegree,
     this.academicTitle,
     this.isSubmitting = false,
@@ -28,7 +28,7 @@ class AuthorFormState {
   final String? middleNameEn;
   final OrganizationEntity? organization;
   final EducationLevel? educationLevel;
-  final Post? post;
+  final List<Post>? posts;
   final AcademicDegree? academicDegree;
   final AcademicTitle? academicTitle;
   final bool isSubmitting;
@@ -51,12 +51,15 @@ class AuthorFormState {
       firstNameRu.trim().isNotEmpty &&
       firstNameEn.trim().isNotEmpty &&
       organization != null &&
-      post != null &&
+      posts != null &&
       academicDegree != null &&
       academicTitle != null;
 
-  bool get canSubmit =>
-      (isValidForStudent || isValidForTeacher) && !isSubmitting;
+  bool get canStudentSubmit =>
+      status == AuthorStatus.student && isValidForStudent && !isSubmitting;
+
+  bool get canTeacherSubmit =>
+      status == AuthorStatus.teacher && isValidForTeacher && !isSubmitting;
 
   AuthorFormState copyWith({
     AuthorStatus? status,
@@ -84,7 +87,9 @@ class AuthorFormState {
     middleNameEn: middleNameEn ?? this.middleNameEn,
     organization: organization ?? this.organization,
     educationLevel: educationLevel ?? this.educationLevel,
-    post: post ?? this.post,
+    posts: post != null
+        ? (posts != null ? [...posts!.map((e) => e), post] : [post])
+        : posts,
     academicDegree: academicDegree ?? this.academicDegree,
     academicTitle: academicTitle ?? this.academicTitle,
     isSubmitting: isSubmitting ?? this.isSubmitting,

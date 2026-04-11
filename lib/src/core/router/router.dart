@@ -1,6 +1,5 @@
 import 'package:arcticle_app/src/feature/src/athor/author.dart';
 import 'package:auto_route/auto_route.dart';
-
 import '../../feature/src/authentication/authentication.dart';
 
 class AppRouter extends RootStackRouter {

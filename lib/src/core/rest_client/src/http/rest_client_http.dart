@@ -1,31 +1,19 @@
 import 'dart:convert';
-import 'package:cronet_http/cronet_http.dart';
-import 'package:cupertino_http/cupertino_http.dart';
-import 'package:flutter/foundation.dart'
-    show TargetPlatform, defaultTargetPlatform;
 import 'package:http/http.dart' as http;
-import 'package:http/io_client.dart';
 import '../../rest_client.dart';
 
-http.Client httpClient() {
-  if (defaultTargetPlatform == TargetPlatform.android) {
-    return CronetClient.defaultCronetEngine();
-  }
-  if (defaultTargetPlatform == TargetPlatform.iOS ||
-      defaultTargetPlatform == TargetPlatform.macOS) {
-    return CupertinoClient.defaultSessionConfiguration();
-  }
-  return IOClient();
+http.Client createDefaultHttpClient() {
+  return http.Client();
 }
 
 final class RestClientHttp extends BaseRestClient {
   RestClientHttp({
-    required this.httpClient,
+    http.Client? httpClient,
     required super.baseUri,
     required super.logger,
-  });
+  }) : _httpClient = httpClient ?? http.Client();
 
-  final http.Client httpClient;
+  final http.Client _httpClient;
 
   @override
   Future<Map<String, Object?>?> sendRequest({
@@ -47,7 +35,7 @@ final class RestClientHttp extends BaseRestClient {
 
       if (headers != null) request.headers.addAll(headers);
 
-      final response = await httpClient
+      final response = await _httpClient
           .send(request)
           .then(http.Response.fromStream);
 

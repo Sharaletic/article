@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:ui_kit/ui_kit.dart';
 
 enum UiDropDownMenuVariant { standard }
@@ -81,11 +80,14 @@ class _DropDownMenuState<T extends Object> extends State<UiDropDownMenu<T>> {
             .toList() ??
         const [];
 
-    final variantMenyStyle = switch (widget.variant) {
-      UiDropDownMenuVariant.standard => _StandardUiDropDownMenuStyle(
-        palette: palette,
-      ),
-    };
+    MenuStyle getMenuStyle(double width) {
+      return switch (widget.variant) {
+        UiDropDownMenuVariant.standard => _StandardUiDropDownMenuStyle(
+          palette: palette,
+          width: width,
+        ),
+      };
+    }
 
     final variantTextInputStyle = switch (widget.variant) {
       UiDropDownMenuVariant.standard => _buildInputDecorationTheme(
@@ -94,36 +96,45 @@ class _DropDownMenuState<T extends Object> extends State<UiDropDownMenu<T>> {
       ),
     };
 
-    return DropdownMenu<T>(
-      cursorHeight: 16,
-      dropdownMenuEntries: entries,
-      label: widget.label,
-      hintText: widget.hintText,
-      leadingIcon: widget.leadingIcon,
-      trailingIcon: null,
-      selectedTrailingIcon: widget.selectedTrailingIcon,
-      width: widget.width,
-      expandedInsets: widget.expandedInsets,
-      controller: widget.controller,
-      menuHeight: widget.menuHeight,
-      enabled: widget.enabled,
-      enableFilter: widget.enableFilter,
-      enableSearch: widget.enableSearch,
-      requestFocusOnTap: widget.requestFocusOnTap,
-      initialSelection: widget.initialSelection,
-      onSelected: (value) => widget.onSelected?.call(value),
-      textStyle:
-          widget.textStyle ??
-          typography.bodyMedium.copyWith(color: palette.foreground),
-      menuStyle: variantMenyStyle,
-      inputDecorationTheme: variantTextInputStyle,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = widget.width ?? constraints.maxWidth;
+        return DropdownMenu<T>(
+          cursorHeight: 16,
+          dropdownMenuEntries: entries,
+          label: widget.label,
+          hintText: widget.hintText,
+          leadingIcon: widget.leadingIcon,
+          trailingIcon: null,
+          selectedTrailingIcon: widget.selectedTrailingIcon,
+          width: width,
+          expandedInsets: widget.expandedInsets,
+          controller: widget.controller,
+          menuHeight: widget.menuHeight,
+          enabled: widget.enabled,
+          enableFilter: widget.enableFilter,
+          enableSearch: widget.enableSearch,
+          requestFocusOnTap: widget.requestFocusOnTap,
+          initialSelection: widget.initialSelection,
+          onSelected: (value) => widget.onSelected?.call(value),
+          textStyle:
+              widget.textStyle ??
+              typography.bodyMedium.copyWith(color: palette.foreground),
+          menuStyle: getMenuStyle(width),
+          inputDecorationTheme: variantTextInputStyle,
+        );
+      },
     );
   }
 }
 
 class _StandardUiDropDownMenuStyle extends MenuStyle {
-  const _StandardUiDropDownMenuStyle({required this.palette});
+  const _StandardUiDropDownMenuStyle({
+    required this.palette,
+    required this.width,
+  });
   final ColorPalette palette;
+  final double width;
 
   @override
   WidgetStateProperty<Color?>? get backgroundColor =>
@@ -131,7 +142,7 @@ class _StandardUiDropDownMenuStyle extends MenuStyle {
 
   @override
   WidgetStateProperty<Color?>? get shadowColor =>
-      WidgetStatePropertyAll(palette.foreground.withValues(alpha: 0.2));
+      WidgetStatePropertyAll(palette.foreground);
 
   @override
   WidgetStateProperty<Color?>? get surfaceTintColor =>
@@ -139,7 +150,7 @@ class _StandardUiDropDownMenuStyle extends MenuStyle {
 
   @override
   WidgetStateProperty<double?>? get elevation =>
-      const WidgetStatePropertyAll(0);
+      const WidgetStatePropertyAll(1.5);
 
   @override
   WidgetStateProperty<EdgeInsetsGeometry?>? get padding =>
@@ -147,7 +158,7 @@ class _StandardUiDropDownMenuStyle extends MenuStyle {
 
   @override
   WidgetStateProperty<Size?>? get minimumSize =>
-      const WidgetStatePropertyAll(Size(100, 40));
+      WidgetStatePropertyAll(Size(width, 40));
 
   @override
   WidgetStateProperty<Size?>? get fixedSize =>
@@ -155,7 +166,7 @@ class _StandardUiDropDownMenuStyle extends MenuStyle {
 
   @override
   WidgetStateProperty<Size?>? get maximumSize =>
-      const WidgetStatePropertyAll(Size.infinite);
+      WidgetStatePropertyAll(Size(width, .infinity));
 
   @override
   WidgetStateProperty<BorderSide?>? get side => WidgetStatePropertyAll(

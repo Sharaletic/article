@@ -24,13 +24,22 @@ EducationLevel _educationLevelFromJson(String? educationLevel) =>
       ),
     };
 
-Post _postFromJson(String? post) => switch (post) {
-  'Студент' => Post.student,
-  'Преподаватель' => Post.teacher,
-  _ => throw StructuredBackendException(
-    error: {'details': 'Invalid post $post received from server.'},
-  ),
-};
+List<Post>? _postFromJson(List<String?>? posts) {
+  if (posts == null) return null;
+
+  return posts
+      .where((post) => post != null && post.isNotEmpty)
+      .map(
+        (post) => switch (post!.toLowerCase()) {
+          'Студент' => Post.student,
+          'Преподаватель' => Post.teacher,
+          _ => throw StructuredBackendException(
+            error: {'details': 'Invalid post $post received from server.'},
+          ),
+        },
+      )
+      .toList();
+}
 
 AcademicDegree _academicDegreeFromJson(String? academicDegree) =>
     switch (academicDegree) {
@@ -69,7 +78,7 @@ class AuthorDto {
     this.middleNameEn,
     required this.organization,
     required this.educationLevel,
-    this.post,
+    this.posts,
     this.academicDegree,
     this.academicTitle,
   });
@@ -84,7 +93,7 @@ class AuthorDto {
   final String? middleNameEn;
   final OrganizationDto organization;
   final EducationLevel? educationLevel;
-  final Post? post;
+  final List<Post>? posts;
   final AcademicDegree? academicDegree;
   final AcademicTitle? academicTitle;
 
@@ -100,7 +109,7 @@ class AuthorDto {
     middleNameEn: author.middleNameEn,
     organization: OrganizationDto.fromEntity(author.organization),
     educationLevel: author.educationLevel,
-    post: author.post,
+    posts: author.posts,
     academicDegree: author.academicDegree,
     academicTitle: author.academicTitle,
   );
@@ -119,7 +128,7 @@ class AuthorDto {
       json['organization'] as Map<String, Object?>,
     ),
     educationLevel: _educationLevelFromJson(json['education_level'] as String?),
-    post: _postFromJson(json['post'] as String?),
+    posts: _postFromJson(json['posts'] as List<String>?),
     academicDegree: _academicDegreeFromJson(json['academic_degree'] as String?),
     academicTitle: _academicTitleFromJson(json['academic_title'] as String?),
   );
@@ -132,12 +141,12 @@ class AuthorDto {
     'last_name_en': lastNameEn,
     'first_name_ru': firstNameRu,
     'first_name_en': firstNameEn,
-    'middle_name_ru': middleNameRu,
-    'middle_name_en': middleNameEn,
+    if (middleNameRu != null) 'middle_name_ru': middleNameRu,
+    if (middleNameEn != null) 'middle_name_en': middleNameEn,
     'organization': organization.toJson(),
-    'education_level': educationLevel?.value,
-    'post': post,
-    'academic_degree': academicDegree,
-    'academic_title': academicTitle,
+    if (educationLevel != null) 'education_level': educationLevel?.value,
+    if (posts != null) 'posts': posts?.map((post) => post.value).toList(),
+    if (academicDegree != null) 'academic_degree': academicDegree?.value,
+    if (academicTitle != null) 'academic_title': academicTitle?.value,
   };
 }

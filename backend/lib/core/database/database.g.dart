@@ -659,6 +659,15 @@ class $AuthorsTable extends Authors with TableInfo<$AuthorsTable, Author> {
       'PRIMARY KEY AUTOINCREMENT',
     ),
   );
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+    'status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _lastNameRuMeta = const VerificationMeta(
     'lastNameRu',
   );
@@ -750,15 +759,15 @@ class $AuthorsTable extends Authors with TableInfo<$AuthorsTable, Author> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _postMeta = const VerificationMeta('post');
   @override
-  late final GeneratedColumn<String> post = GeneratedColumn<String>(
-    'post',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
+  late final GeneratedColumnWithTypeConverter<List<Post>?, String> posts =
+      GeneratedColumn<String>(
+        'posts',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<List<Post>?>($AuthorsTable.$converterposts);
   static const VerificationMeta _academicDegreeMeta = const VerificationMeta(
     'academicDegree',
   );
@@ -785,6 +794,7 @@ class $AuthorsTable extends Authors with TableInfo<$AuthorsTable, Author> {
   List<GeneratedColumn> get $columns => [
     uid,
     id,
+    status,
     lastNameRu,
     lastNameEn,
     firstNameRu,
@@ -793,7 +803,7 @@ class $AuthorsTable extends Authors with TableInfo<$AuthorsTable, Author> {
     middleNameEn,
     organizationId,
     educationLevel,
-    post,
+    posts,
     academicDegree,
     academicTitle,
   ];
@@ -819,6 +829,14 @@ class $AuthorsTable extends Authors with TableInfo<$AuthorsTable, Author> {
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('status')) {
+      context.handle(
+        _statusMeta,
+        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_statusMeta);
     }
     if (data.containsKey('last_name_ru')) {
       context.handle(
@@ -902,12 +920,6 @@ class $AuthorsTable extends Authors with TableInfo<$AuthorsTable, Author> {
         ),
       );
     }
-    if (data.containsKey('post')) {
-      context.handle(
-        _postMeta,
-        post.isAcceptableOrUnknown(data['post']!, _postMeta),
-      );
-    }
     if (data.containsKey('academic_degree')) {
       context.handle(
         _academicDegreeMeta,
@@ -943,6 +955,10 @@ class $AuthorsTable extends Authors with TableInfo<$AuthorsTable, Author> {
         DriftSqlType.int,
         data['${effectivePrefix}id'],
       )!,
+      status: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}status'],
+      )!,
       lastNameRu: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}last_name_ru'],
@@ -975,9 +991,11 @@ class $AuthorsTable extends Authors with TableInfo<$AuthorsTable, Author> {
         DriftSqlType.string,
         data['${effectivePrefix}education_level'],
       ),
-      post: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}post'],
+      posts: $AuthorsTable.$converterposts.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}posts'],
+        ),
       ),
       academicDegree: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
@@ -994,11 +1012,14 @@ class $AuthorsTable extends Authors with TableInfo<$AuthorsTable, Author> {
   $AuthorsTable createAlias(String alias) {
     return $AuthorsTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<List<Post>?, String?> $converterposts = PostConverter();
 }
 
 class Author extends DataClass implements Insertable<Author> {
   final String uid;
   final int id;
+  final String status;
   final String lastNameRu;
   final String lastNameEn;
   final String firstNameRu;
@@ -1007,12 +1028,13 @@ class Author extends DataClass implements Insertable<Author> {
   final String? middleNameEn;
   final int organizationId;
   final String? educationLevel;
-  final String? post;
+  final List<Post>? posts;
   final String? academicDegree;
   final String? academicTitle;
   const Author({
     required this.uid,
     required this.id,
+    required this.status,
     required this.lastNameRu,
     required this.lastNameEn,
     required this.firstNameRu,
@@ -1021,7 +1043,7 @@ class Author extends DataClass implements Insertable<Author> {
     this.middleNameEn,
     required this.organizationId,
     this.educationLevel,
-    this.post,
+    this.posts,
     this.academicDegree,
     this.academicTitle,
   });
@@ -1030,6 +1052,7 @@ class Author extends DataClass implements Insertable<Author> {
     final map = <String, Expression>{};
     map['uid'] = Variable<String>(uid);
     map['id'] = Variable<int>(id);
+    map['status'] = Variable<String>(status);
     map['last_name_ru'] = Variable<String>(lastNameRu);
     map['last_name_en'] = Variable<String>(lastNameEn);
     map['first_name_ru'] = Variable<String>(firstNameRu);
@@ -1044,8 +1067,10 @@ class Author extends DataClass implements Insertable<Author> {
     if (!nullToAbsent || educationLevel != null) {
       map['education_level'] = Variable<String>(educationLevel);
     }
-    if (!nullToAbsent || post != null) {
-      map['post'] = Variable<String>(post);
+    if (!nullToAbsent || posts != null) {
+      map['posts'] = Variable<String>(
+        $AuthorsTable.$converterposts.toSql(posts),
+      );
     }
     if (!nullToAbsent || academicDegree != null) {
       map['academic_degree'] = Variable<String>(academicDegree);
@@ -1060,6 +1085,7 @@ class Author extends DataClass implements Insertable<Author> {
     return AuthorsCompanion(
       uid: Value(uid),
       id: Value(id),
+      status: Value(status),
       lastNameRu: Value(lastNameRu),
       lastNameEn: Value(lastNameEn),
       firstNameRu: Value(firstNameRu),
@@ -1074,7 +1100,9 @@ class Author extends DataClass implements Insertable<Author> {
       educationLevel: educationLevel == null && nullToAbsent
           ? const Value.absent()
           : Value(educationLevel),
-      post: post == null && nullToAbsent ? const Value.absent() : Value(post),
+      posts: posts == null && nullToAbsent
+          ? const Value.absent()
+          : Value(posts),
       academicDegree: academicDegree == null && nullToAbsent
           ? const Value.absent()
           : Value(academicDegree),
@@ -1092,6 +1120,7 @@ class Author extends DataClass implements Insertable<Author> {
     return Author(
       uid: serializer.fromJson<String>(json['uid']),
       id: serializer.fromJson<int>(json['id']),
+      status: serializer.fromJson<String>(json['status']),
       lastNameRu: serializer.fromJson<String>(json['lastNameRu']),
       lastNameEn: serializer.fromJson<String>(json['lastNameEn']),
       firstNameRu: serializer.fromJson<String>(json['firstNameRu']),
@@ -1100,7 +1129,7 @@ class Author extends DataClass implements Insertable<Author> {
       middleNameEn: serializer.fromJson<String?>(json['middleNameEn']),
       organizationId: serializer.fromJson<int>(json['organizationId']),
       educationLevel: serializer.fromJson<String?>(json['educationLevel']),
-      post: serializer.fromJson<String?>(json['post']),
+      posts: serializer.fromJson<List<Post>?>(json['posts']),
       academicDegree: serializer.fromJson<String?>(json['academicDegree']),
       academicTitle: serializer.fromJson<String?>(json['academicTitle']),
     );
@@ -1111,6 +1140,7 @@ class Author extends DataClass implements Insertable<Author> {
     return <String, dynamic>{
       'uid': serializer.toJson<String>(uid),
       'id': serializer.toJson<int>(id),
+      'status': serializer.toJson<String>(status),
       'lastNameRu': serializer.toJson<String>(lastNameRu),
       'lastNameEn': serializer.toJson<String>(lastNameEn),
       'firstNameRu': serializer.toJson<String>(firstNameRu),
@@ -1119,7 +1149,7 @@ class Author extends DataClass implements Insertable<Author> {
       'middleNameEn': serializer.toJson<String?>(middleNameEn),
       'organizationId': serializer.toJson<int>(organizationId),
       'educationLevel': serializer.toJson<String?>(educationLevel),
-      'post': serializer.toJson<String?>(post),
+      'posts': serializer.toJson<List<Post>?>(posts),
       'academicDegree': serializer.toJson<String?>(academicDegree),
       'academicTitle': serializer.toJson<String?>(academicTitle),
     };
@@ -1128,6 +1158,7 @@ class Author extends DataClass implements Insertable<Author> {
   Author copyWith({
     String? uid,
     int? id,
+    String? status,
     String? lastNameRu,
     String? lastNameEn,
     String? firstNameRu,
@@ -1136,12 +1167,13 @@ class Author extends DataClass implements Insertable<Author> {
     Value<String?> middleNameEn = const Value.absent(),
     int? organizationId,
     Value<String?> educationLevel = const Value.absent(),
-    Value<String?> post = const Value.absent(),
+    Value<List<Post>?> posts = const Value.absent(),
     Value<String?> academicDegree = const Value.absent(),
     Value<String?> academicTitle = const Value.absent(),
   }) => Author(
     uid: uid ?? this.uid,
     id: id ?? this.id,
+    status: status ?? this.status,
     lastNameRu: lastNameRu ?? this.lastNameRu,
     lastNameEn: lastNameEn ?? this.lastNameEn,
     firstNameRu: firstNameRu ?? this.firstNameRu,
@@ -1152,7 +1184,7 @@ class Author extends DataClass implements Insertable<Author> {
     educationLevel: educationLevel.present
         ? educationLevel.value
         : this.educationLevel,
-    post: post.present ? post.value : this.post,
+    posts: posts.present ? posts.value : this.posts,
     academicDegree: academicDegree.present
         ? academicDegree.value
         : this.academicDegree,
@@ -1164,6 +1196,7 @@ class Author extends DataClass implements Insertable<Author> {
     return Author(
       uid: data.uid.present ? data.uid.value : this.uid,
       id: data.id.present ? data.id.value : this.id,
+      status: data.status.present ? data.status.value : this.status,
       lastNameRu: data.lastNameRu.present
           ? data.lastNameRu.value
           : this.lastNameRu,
@@ -1188,7 +1221,7 @@ class Author extends DataClass implements Insertable<Author> {
       educationLevel: data.educationLevel.present
           ? data.educationLevel.value
           : this.educationLevel,
-      post: data.post.present ? data.post.value : this.post,
+      posts: data.posts.present ? data.posts.value : this.posts,
       academicDegree: data.academicDegree.present
           ? data.academicDegree.value
           : this.academicDegree,
@@ -1203,6 +1236,7 @@ class Author extends DataClass implements Insertable<Author> {
     return (StringBuffer('Author(')
           ..write('uid: $uid, ')
           ..write('id: $id, ')
+          ..write('status: $status, ')
           ..write('lastNameRu: $lastNameRu, ')
           ..write('lastNameEn: $lastNameEn, ')
           ..write('firstNameRu: $firstNameRu, ')
@@ -1211,7 +1245,7 @@ class Author extends DataClass implements Insertable<Author> {
           ..write('middleNameEn: $middleNameEn, ')
           ..write('organizationId: $organizationId, ')
           ..write('educationLevel: $educationLevel, ')
-          ..write('post: $post, ')
+          ..write('posts: $posts, ')
           ..write('academicDegree: $academicDegree, ')
           ..write('academicTitle: $academicTitle')
           ..write(')'))
@@ -1222,6 +1256,7 @@ class Author extends DataClass implements Insertable<Author> {
   int get hashCode => Object.hash(
     uid,
     id,
+    status,
     lastNameRu,
     lastNameEn,
     firstNameRu,
@@ -1230,7 +1265,7 @@ class Author extends DataClass implements Insertable<Author> {
     middleNameEn,
     organizationId,
     educationLevel,
-    post,
+    posts,
     academicDegree,
     academicTitle,
   );
@@ -1240,6 +1275,7 @@ class Author extends DataClass implements Insertable<Author> {
       (other is Author &&
           other.uid == this.uid &&
           other.id == this.id &&
+          other.status == this.status &&
           other.lastNameRu == this.lastNameRu &&
           other.lastNameEn == this.lastNameEn &&
           other.firstNameRu == this.firstNameRu &&
@@ -1248,7 +1284,7 @@ class Author extends DataClass implements Insertable<Author> {
           other.middleNameEn == this.middleNameEn &&
           other.organizationId == this.organizationId &&
           other.educationLevel == this.educationLevel &&
-          other.post == this.post &&
+          other.posts == this.posts &&
           other.academicDegree == this.academicDegree &&
           other.academicTitle == this.academicTitle);
 }
@@ -1256,6 +1292,7 @@ class Author extends DataClass implements Insertable<Author> {
 class AuthorsCompanion extends UpdateCompanion<Author> {
   final Value<String> uid;
   final Value<int> id;
+  final Value<String> status;
   final Value<String> lastNameRu;
   final Value<String> lastNameEn;
   final Value<String> firstNameRu;
@@ -1264,12 +1301,13 @@ class AuthorsCompanion extends UpdateCompanion<Author> {
   final Value<String?> middleNameEn;
   final Value<int> organizationId;
   final Value<String?> educationLevel;
-  final Value<String?> post;
+  final Value<List<Post>?> posts;
   final Value<String?> academicDegree;
   final Value<String?> academicTitle;
   const AuthorsCompanion({
     this.uid = const Value.absent(),
     this.id = const Value.absent(),
+    this.status = const Value.absent(),
     this.lastNameRu = const Value.absent(),
     this.lastNameEn = const Value.absent(),
     this.firstNameRu = const Value.absent(),
@@ -1278,13 +1316,14 @@ class AuthorsCompanion extends UpdateCompanion<Author> {
     this.middleNameEn = const Value.absent(),
     this.organizationId = const Value.absent(),
     this.educationLevel = const Value.absent(),
-    this.post = const Value.absent(),
+    this.posts = const Value.absent(),
     this.academicDegree = const Value.absent(),
     this.academicTitle = const Value.absent(),
   });
   AuthorsCompanion.insert({
     required String uid,
     this.id = const Value.absent(),
+    required String status,
     required String lastNameRu,
     required String lastNameEn,
     required String firstNameRu,
@@ -1293,10 +1332,11 @@ class AuthorsCompanion extends UpdateCompanion<Author> {
     this.middleNameEn = const Value.absent(),
     required int organizationId,
     this.educationLevel = const Value.absent(),
-    this.post = const Value.absent(),
+    this.posts = const Value.absent(),
     this.academicDegree = const Value.absent(),
     this.academicTitle = const Value.absent(),
   }) : uid = Value(uid),
+       status = Value(status),
        lastNameRu = Value(lastNameRu),
        lastNameEn = Value(lastNameEn),
        firstNameRu = Value(firstNameRu),
@@ -1305,6 +1345,7 @@ class AuthorsCompanion extends UpdateCompanion<Author> {
   static Insertable<Author> custom({
     Expression<String>? uid,
     Expression<int>? id,
+    Expression<String>? status,
     Expression<String>? lastNameRu,
     Expression<String>? lastNameEn,
     Expression<String>? firstNameRu,
@@ -1313,13 +1354,14 @@ class AuthorsCompanion extends UpdateCompanion<Author> {
     Expression<String>? middleNameEn,
     Expression<int>? organizationId,
     Expression<String>? educationLevel,
-    Expression<String>? post,
+    Expression<String>? posts,
     Expression<String>? academicDegree,
     Expression<String>? academicTitle,
   }) {
     return RawValuesInsertable({
       if (uid != null) 'uid': uid,
       if (id != null) 'id': id,
+      if (status != null) 'status': status,
       if (lastNameRu != null) 'last_name_ru': lastNameRu,
       if (lastNameEn != null) 'last_name_en': lastNameEn,
       if (firstNameRu != null) 'first_name_ru': firstNameRu,
@@ -1328,7 +1370,7 @@ class AuthorsCompanion extends UpdateCompanion<Author> {
       if (middleNameEn != null) 'middle_name_en': middleNameEn,
       if (organizationId != null) 'organization_id': organizationId,
       if (educationLevel != null) 'education_level': educationLevel,
-      if (post != null) 'post': post,
+      if (posts != null) 'posts': posts,
       if (academicDegree != null) 'academic_degree': academicDegree,
       if (academicTitle != null) 'academic_title': academicTitle,
     });
@@ -1337,6 +1379,7 @@ class AuthorsCompanion extends UpdateCompanion<Author> {
   AuthorsCompanion copyWith({
     Value<String>? uid,
     Value<int>? id,
+    Value<String>? status,
     Value<String>? lastNameRu,
     Value<String>? lastNameEn,
     Value<String>? firstNameRu,
@@ -1345,13 +1388,14 @@ class AuthorsCompanion extends UpdateCompanion<Author> {
     Value<String?>? middleNameEn,
     Value<int>? organizationId,
     Value<String?>? educationLevel,
-    Value<String?>? post,
+    Value<List<Post>?>? posts,
     Value<String?>? academicDegree,
     Value<String?>? academicTitle,
   }) {
     return AuthorsCompanion(
       uid: uid ?? this.uid,
       id: id ?? this.id,
+      status: status ?? this.status,
       lastNameRu: lastNameRu ?? this.lastNameRu,
       lastNameEn: lastNameEn ?? this.lastNameEn,
       firstNameRu: firstNameRu ?? this.firstNameRu,
@@ -1360,7 +1404,7 @@ class AuthorsCompanion extends UpdateCompanion<Author> {
       middleNameEn: middleNameEn ?? this.middleNameEn,
       organizationId: organizationId ?? this.organizationId,
       educationLevel: educationLevel ?? this.educationLevel,
-      post: post ?? this.post,
+      posts: posts ?? this.posts,
       academicDegree: academicDegree ?? this.academicDegree,
       academicTitle: academicTitle ?? this.academicTitle,
     );
@@ -1374,6 +1418,9 @@ class AuthorsCompanion extends UpdateCompanion<Author> {
     }
     if (id.present) {
       map['id'] = Variable<int>(id.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
     }
     if (lastNameRu.present) {
       map['last_name_ru'] = Variable<String>(lastNameRu.value);
@@ -1399,8 +1446,10 @@ class AuthorsCompanion extends UpdateCompanion<Author> {
     if (educationLevel.present) {
       map['education_level'] = Variable<String>(educationLevel.value);
     }
-    if (post.present) {
-      map['post'] = Variable<String>(post.value);
+    if (posts.present) {
+      map['posts'] = Variable<String>(
+        $AuthorsTable.$converterposts.toSql(posts.value),
+      );
     }
     if (academicDegree.present) {
       map['academic_degree'] = Variable<String>(academicDegree.value);
@@ -1416,6 +1465,7 @@ class AuthorsCompanion extends UpdateCompanion<Author> {
     return (StringBuffer('AuthorsCompanion(')
           ..write('uid: $uid, ')
           ..write('id: $id, ')
+          ..write('status: $status, ')
           ..write('lastNameRu: $lastNameRu, ')
           ..write('lastNameEn: $lastNameEn, ')
           ..write('firstNameRu: $firstNameRu, ')
@@ -1424,7 +1474,7 @@ class AuthorsCompanion extends UpdateCompanion<Author> {
           ..write('middleNameEn: $middleNameEn, ')
           ..write('organizationId: $organizationId, ')
           ..write('educationLevel: $educationLevel, ')
-          ..write('post: $post, ')
+          ..write('posts: $posts, ')
           ..write('academicDegree: $academicDegree, ')
           ..write('academicTitle: $academicTitle')
           ..write(')'))
@@ -4926,6 +4976,7 @@ typedef $$AuthorsTableCreateCompanionBuilder =
     AuthorsCompanion Function({
       required String uid,
       Value<int> id,
+      required String status,
       required String lastNameRu,
       required String lastNameEn,
       required String firstNameRu,
@@ -4934,7 +4985,7 @@ typedef $$AuthorsTableCreateCompanionBuilder =
       Value<String?> middleNameEn,
       required int organizationId,
       Value<String?> educationLevel,
-      Value<String?> post,
+      Value<List<Post>?> posts,
       Value<String?> academicDegree,
       Value<String?> academicTitle,
     });
@@ -4942,6 +4993,7 @@ typedef $$AuthorsTableUpdateCompanionBuilder =
     AuthorsCompanion Function({
       Value<String> uid,
       Value<int> id,
+      Value<String> status,
       Value<String> lastNameRu,
       Value<String> lastNameEn,
       Value<String> firstNameRu,
@@ -4950,7 +5002,7 @@ typedef $$AuthorsTableUpdateCompanionBuilder =
       Value<String?> middleNameEn,
       Value<int> organizationId,
       Value<String?> educationLevel,
-      Value<String?> post,
+      Value<List<Post>?> posts,
       Value<String?> academicDegree,
       Value<String?> academicTitle,
     });
@@ -5048,6 +5100,11 @@ class $$AuthorsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<String> get lastNameRu => $composableBuilder(
     column: $table.lastNameRu,
     builder: (column) => ColumnFilters(column),
@@ -5083,10 +5140,11 @@ class $$AuthorsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get post => $composableBuilder(
-    column: $table.post,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<List<Post>?, List<Post>, String> get posts =>
+      $composableBuilder(
+        column: $table.posts,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<String> get academicDegree => $composableBuilder(
     column: $table.academicDegree,
@@ -5209,6 +5267,11 @@ class $$AuthorsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get lastNameRu => $composableBuilder(
     column: $table.lastNameRu,
     builder: (column) => ColumnOrderings(column),
@@ -5244,8 +5307,8 @@ class $$AuthorsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get post => $composableBuilder(
-    column: $table.post,
+  ColumnOrderings<String> get posts => $composableBuilder(
+    column: $table.posts,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -5318,6 +5381,9 @@ class $$AuthorsTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
+  GeneratedColumn<String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+
   GeneratedColumn<String> get lastNameRu => $composableBuilder(
     column: $table.lastNameRu,
     builder: (column) => column,
@@ -5353,8 +5419,8 @@ class $$AuthorsTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get post =>
-      $composableBuilder(column: $table.post, builder: (column) => column);
+  GeneratedColumnWithTypeConverter<List<Post>?, String> get posts =>
+      $composableBuilder(column: $table.posts, builder: (column) => column);
 
   GeneratedColumn<String> get academicDegree => $composableBuilder(
     column: $table.academicDegree,
@@ -5498,6 +5564,7 @@ class $$AuthorsTableTableManager
               ({
                 Value<String> uid = const Value.absent(),
                 Value<int> id = const Value.absent(),
+                Value<String> status = const Value.absent(),
                 Value<String> lastNameRu = const Value.absent(),
                 Value<String> lastNameEn = const Value.absent(),
                 Value<String> firstNameRu = const Value.absent(),
@@ -5506,12 +5573,13 @@ class $$AuthorsTableTableManager
                 Value<String?> middleNameEn = const Value.absent(),
                 Value<int> organizationId = const Value.absent(),
                 Value<String?> educationLevel = const Value.absent(),
-                Value<String?> post = const Value.absent(),
+                Value<List<Post>?> posts = const Value.absent(),
                 Value<String?> academicDegree = const Value.absent(),
                 Value<String?> academicTitle = const Value.absent(),
               }) => AuthorsCompanion(
                 uid: uid,
                 id: id,
+                status: status,
                 lastNameRu: lastNameRu,
                 lastNameEn: lastNameEn,
                 firstNameRu: firstNameRu,
@@ -5520,7 +5588,7 @@ class $$AuthorsTableTableManager
                 middleNameEn: middleNameEn,
                 organizationId: organizationId,
                 educationLevel: educationLevel,
-                post: post,
+                posts: posts,
                 academicDegree: academicDegree,
                 academicTitle: academicTitle,
               ),
@@ -5528,6 +5596,7 @@ class $$AuthorsTableTableManager
               ({
                 required String uid,
                 Value<int> id = const Value.absent(),
+                required String status,
                 required String lastNameRu,
                 required String lastNameEn,
                 required String firstNameRu,
@@ -5536,12 +5605,13 @@ class $$AuthorsTableTableManager
                 Value<String?> middleNameEn = const Value.absent(),
                 required int organizationId,
                 Value<String?> educationLevel = const Value.absent(),
-                Value<String?> post = const Value.absent(),
+                Value<List<Post>?> posts = const Value.absent(),
                 Value<String?> academicDegree = const Value.absent(),
                 Value<String?> academicTitle = const Value.absent(),
               }) => AuthorsCompanion.insert(
                 uid: uid,
                 id: id,
+                status: status,
                 lastNameRu: lastNameRu,
                 lastNameEn: lastNameEn,
                 firstNameRu: firstNameRu,
@@ -5550,7 +5620,7 @@ class $$AuthorsTableTableManager
                 middleNameEn: middleNameEn,
                 organizationId: organizationId,
                 educationLevel: educationLevel,
-                post: post,
+                posts: posts,
                 academicDegree: academicDegree,
                 academicTitle: academicTitle,
               ),

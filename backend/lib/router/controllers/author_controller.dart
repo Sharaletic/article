@@ -25,7 +25,6 @@ class AuthorController {
   Future<Response> createAuthor(Request request) async {
     final body = await request.readAsString();
     final json = jsonDecode(body);
-    print('****************$json');
     final author = AuthorDto.fromJson(json).toEntity();
     print(author.educationLevel);
 

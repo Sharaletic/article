@@ -19,6 +19,30 @@ enum AuthorStatus {
   final String value;
 }
 
+enum Post {
+  student('Студент'),
+  teacher('Преподаватель');
+
+  const Post(this.value);
+  final String value;
+}
+
+enum AcademicDegree {
+  student('Студент'),
+  teacher('Преподаватель');
+
+  const AcademicDegree(this.value);
+  final String value;
+}
+
+enum AcademicTitle {
+  student('Студент'),
+  teacher('Преподаватель');
+
+  const AcademicTitle(this.value);
+  final String value;
+}
+
 class AuthorEntity {
   const AuthorEntity({
     this.id,
@@ -32,7 +56,7 @@ class AuthorEntity {
     this.middleNameEn,
     required this.organization,
     this.educationLevel,
-    this.post,
+    this.posts,
     this.academicDegree,
     this.academicTitle,
   });
@@ -47,7 +71,7 @@ class AuthorEntity {
   final String? middleNameEn;
   final OrganizationEntity organization;
   final EducationLevel? educationLevel;
-  final String? post;
-  final String? academicDegree;
-  final String? academicTitle;
+  final List<Post>? posts;
+  final AcademicDegree? academicDegree;
+  final AcademicTitle? academicTitle;
 }

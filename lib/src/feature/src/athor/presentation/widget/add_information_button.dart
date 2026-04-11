@@ -10,7 +10,7 @@ class AddInformationButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return UiButton.filledPrimary(
-      onPressed: () => state.canSubmit
+      onPressed: () => state.canStudentSubmit || state.canTeacherSubmit
           ? context.read<AuthenticationBloc>().add(
               AuthenticationEvent.updateDisplayName(
                 name: _createDisplayName(state),
@@ -18,7 +18,7 @@ class AddInformationButton extends StatelessWidget {
             )
           : null,
       label: const Text('Добавить'),
-      enabled: state.canSubmit,
+      enabled: state.canStudentSubmit || state.canTeacherSubmit,
     );
   }
 

@@ -312,7 +312,7 @@ class _TextButtonStyle extends _UiBaseButtonStyle {
   WidgetStateProperty<Color?>? get foregroundColor =>
       WidgetStateProperty.resolveWith((Set<WidgetState> states) {
         if (states.contains(WidgetState.disabled)) {
-          return colorPalette.mutedForeground;
+          return colorPalette.muted;
         }
         return colorPalette.primary;
       });

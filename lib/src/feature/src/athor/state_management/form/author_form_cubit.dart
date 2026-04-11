@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../authentication/authentication.dart';
 import '../../author.dart';
 part 'author_form_state.dart';
 
@@ -12,6 +11,8 @@ class AuthorFormCubit extends Cubit<AuthorFormState> {
 
   final AuthorBloc _authorBloc;
 
+  void statusChanged(AuthorStatus? value) =>
+      emit(state.copyWith(status: value));
   void lastNameRuChanged(String? value) =>
       emit(state.copyWith(lastNameRu: value));
   void lastNameEnChanged(String? value) =>
@@ -28,47 +29,17 @@ class AuthorFormCubit extends Cubit<AuthorFormState> {
       emit(state.copyWith(organization: value));
   void educationLevelChanged(EducationLevel? value) =>
       emit(state.copyWith(educationLevel: value));
-  void postChanged(Post value) => emit(state.copyWith(post: value));
-  void academicDegree(AcademicDegree value) =>
+  void postChanged(Post? value) => emit(state.copyWith(post: value));
+  void academicDegree(AcademicDegree? value) =>
       emit(state.copyWith(academicDegree: value));
-  void academicTitle(AcademicTitle value) =>
+  void academicTitle(AcademicTitle? value) =>
       emit(state.copyWith(academicTitle: value));
 
-  Future<void> submit({
-    required UserEntity user,
-    required AuthorStatus status,
-  }) async {
+  Future<void> submit({required AuthorEntity author}) async {
     try {
       if (state.isValidForStudent || state.isValidForTeacher) {
         emit(state.copyWith(isSubmitting: true));
-
-        log('{"educationLevel!!!!!!!!": "${state.educationLevel}"}');
-
-        _authorBloc.add(
-          AuthorEvent.createAuthor(
-            author: AuthorEntity(
-              user: user as AuthenticatedUser,
-              status: status,
-              lastNameRu: state.lastNameRu,
-              lastNameEn: state.lastNameEn,
-              firstNameRu: state.firstNameRu,
-              firstNameEn: state.firstNameEn,
-              middleNameRu: state.middleNameRu,
-              middleNameEn: state.middleNameEn,
-              organization: state.organization!,
-              educationLevel: status == AuthorStatus.student
-                  ? state.educationLevel
-                  : null,
-              post: status == AuthorStatus.teacher ? state.post : null,
-              academicDegree: status == AuthorStatus.teacher
-                  ? state.academicDegree
-                  : null,
-              academicTitle: status == AuthorStatus.teacher
-                  ? state.academicTitle
-                  : null,
-            ),
-          ),
-        );
+        _authorBloc.add(AuthorEvent.createAuthor(author: author));
         emit(state.copyWith(isSubmitting: false, isSuccess: true));
       }
     } on Object catch (e, stackTrace) {
