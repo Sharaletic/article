@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:http/http.dart' as http;
 import '../../rest_client.dart';
 
@@ -19,8 +17,6 @@ final class RestClientHttp extends BaseRestClient {
   @override
   Future<RestClientResponse> sendRequest(RestClientRequest request) async {
     try {
-      log('${request.headers} ${request.uri}');
-
       final httpRequest = http.Request(request.method, request.uri);
       httpRequest.headers.addAll(request.headers);
 

@@ -5,12 +5,8 @@ import '../../feature/src/authentication/authentication.dart';
 class AppRouter extends RootStackRouter {
   @override
   List<AutoRoute> get routes => [
-    .named('AuthRoute', (context, data) => const Auth()),
-    .named(
-      'AddInformationRoute',
-      initial: true,
-      (context, data) => const AddInformation(),
-    ),
+    .named('AuthRoute', initial: true, (context, data) => const Auth()),
+    .named('AddInformationRoute', (context, data) => const AddInformation()),
 
     // AutoRoute(
     //   path: '/dashboard',

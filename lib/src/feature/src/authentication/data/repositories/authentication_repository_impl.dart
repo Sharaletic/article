@@ -21,10 +21,6 @@ class AuthenticationRepositoryImpl implements IAuthenticationRepository {
         user: userCredential.user!,
         role: UserRole.author,
       );
-
-      // final idTokenResult = await userCredential.user!.getIdTokenResult();
-      // print(idTokenResult.token);
-      // await createUser(userDto: userDto, jwtToken: idTokenResult.token!);
       return userDto.toEntity();
     } on Object catch (error) {
       throw Exception(error);
@@ -40,11 +36,10 @@ class AuthenticationRepositoryImpl implements IAuthenticationRepository {
       final userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: emailAddress, password: password);
       final user = userCredential.user;
-      final idTokenResult = await user!.getIdTokenResult();
-      print('idTokenResult: ${idTokenResult.token}');
+      final idTokenResult = await user!.getIdTokenResult(true);
+      final role = idTokenResult.claims!['role'];
 
-      print('Custom Claims: ${idTokenResult.claims}');
-      return UserDto.fromFirebase(user: user, role: UserRole.author).toEntity();
+      return UserDto.fromFirebase(user: user, role: role).toEntity();
     } on Object catch (error) {
       throw Exception(error);
     }

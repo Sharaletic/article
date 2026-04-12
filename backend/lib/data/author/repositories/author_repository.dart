@@ -24,6 +24,8 @@ class AuthorRepositoryImpl implements IAuthorRepository {
           .into(_appDatabase.users)
           .insert(UserDto.fromEntity(author.user).toCompanion());
 
+      print('_claimsService');
+
       await _claimsService.setUserRole(
         uid: author.user.uid,
         role: author.user.role.value,
