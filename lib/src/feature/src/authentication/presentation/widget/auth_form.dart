@@ -100,11 +100,16 @@ class _AuthFormState extends State<AuthForm> {
           },
         ),
         const SizedBox(height: 60),
-        HaveAccountButton(
-          authType: _authType.value,
-          onPressed: () => _authType.value == .login
-              ? _authType.value = .register
-              : _authType.value = .login,
+        ValueListenableBuilder(
+          valueListenable: _authType,
+          builder: (context, value, child) {
+            return HaveAccountButton(
+              authType: value,
+              onPressed: () => _authType.value == .login
+                  ? _authType.value = .register
+                  : _authType.value = .login,
+            );
+          },
         ),
       ],
     );

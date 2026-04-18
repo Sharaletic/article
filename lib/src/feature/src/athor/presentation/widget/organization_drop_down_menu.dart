@@ -25,7 +25,6 @@ class _OrganizationDropDownMenuState extends State<OrganizationDropDownMenu> {
     final dependencies = DependenciesScope.of(context);
     _organizationBloc = OrganizationsBloc(
       organizationRepository: dependencies.organizationRepository,
-      logger: dependencies.logger,
     );
 
     _organizationController.addListener(() {

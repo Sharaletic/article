@@ -19,7 +19,7 @@ Future<void> main() async {
           router: router,
         );
         Bloc.observer = AppBlocObserver(logger: logger);
-        runApp(MyApp(dependencies: dependencies, router: router));
+        runApp(MyApp(dependencies: dependencies));
       } on Object catch (error, stackTrace) {
         logger.severe('Initialization failed', error, stackTrace);
         runApp(FailedApp());
@@ -32,9 +32,8 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({required this.dependencies, required this.router, super.key});
+  const MyApp({required this.dependencies, super.key});
   final IAppDependencies dependencies;
-  final AppRouter router;
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +51,13 @@ class MyApp extends StatelessWidget {
                 AuthorBloc(authorRepository: dependencies.authorRepository),
           ),
         ],
-        child: MaterialApp.router(
-          debugShowCheckedModeBanner: false,
-          routerConfig: router.config(),
+        child: Builder(
+          builder: (context) {
+            return MaterialApp.router(
+              debugShowCheckedModeBanner: false,
+              routerConfig: dependencies.router.config(),
+            );
+          },
         ),
       ),
     );

@@ -1,18 +1,28 @@
 import 'package:firebase_auth/firebase_auth.dart';
-
+import '../../../../../core/core.dart';
 import '../../authentication.dart';
+
+UserRole _roleFromStringToUserRole(String role) => switch (role) {
+  'author' => UserRole.author,
+  'reviewer' => UserRole.reviewer,
+  'editor' => UserRole.editor,
+  'admin' => UserRole.admin,
+  _ => throw StructuredBackendException(
+    error: {'details': 'Invalid role $role received.'},
+  ),
+};
 
 class UserDto {
   UserDto({
     required this.uid,
     required this.emailAddress,
-    required this.role,
+    this.role,
     this.displayName,
     this.photoUrl,
   });
   final String uid;
   final String emailAddress;
-  final UserRole role;
+  final UserRole? role;
   final String? displayName;
   final String? photoUrl;
 
@@ -27,7 +37,7 @@ class UserDto {
   Map<String, Object?> toJson() => {
     'uid': uid,
     'email_address': emailAddress,
-    'role': role.value,
+    'role': role?.value,
     'display_name': displayName,
     'photo_url': photoUrl,
   };
@@ -43,12 +53,12 @@ class UserDto {
   factory UserDto.fromJson({required Map<String, Object?> json}) => UserDto(
     uid: json['uid'] as String,
     emailAddress: json['email_address'] as String,
-    role: UserRole.values[json['role'] as int],
+    role: _roleFromStringToUserRole(json['role'] as String),
     displayName: json['display_name'] as String?,
     photoUrl: json['photo_url'] as String?,
   );
 
-  factory UserDto.fromFirebase({required User user, required UserRole role}) {
+  factory UserDto.fromFirebase({required User user, UserRole? role}) {
     return UserDto(
       uid: user.uid,
       emailAddress: user.email!,

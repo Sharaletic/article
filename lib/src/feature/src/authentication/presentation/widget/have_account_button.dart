@@ -14,23 +14,23 @@ class HaveAccountButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final palette = Theme.of(context).colorPalette;
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: .center,
       children: [
         UiText.titleSmall(
-          authType == AuthType.login ? 'Нет аккаунта?' : 'Есть аккаунт?',
+          authType == .login ? 'Нет аккаунта?' : 'Есть аккаунт?',
         ),
         const SizedBox(width: 4),
         TextButton(
           onPressed: onPressed,
           style: TextButton.styleFrom(
-            minimumSize: Size.zero,
-            padding: EdgeInsets.zero,
-            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            minimumSize: .zero,
+            padding: .zero,
+            tapTargetSize: .shrinkWrap,
           ),
           child: UiText.titleSmall(
-            authType == AuthType.login ? 'Зарегистрируйтесь' : 'Войдите',
+            authType == .login ? 'Зарегистрируйтесь' : 'Войдите',
             color: palette.primary,
-            style: TextStyle(fontWeight: FontWeight.w600),
+            style: TextStyle(fontWeight: .w600),
           ),
         ),
       ],

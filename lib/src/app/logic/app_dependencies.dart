@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:arcticle_app/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -60,7 +58,7 @@ final class AppDependencies implements IAppDependencies {
     final initLogger = logger;
 
     // Router
-    final initRouter = router;
+    AppRouter initRouter = router;
 
     // Config
     ApplicationConfig config = const ApplicationConfig();
@@ -100,11 +98,11 @@ final class AppDependencies implements IAppDependencies {
 
     return AppDependencies._(
       logger: initLogger,
-      router: initRouter,
       restClientHttp: restClientHttp,
       authenticationRepository: authenticationRepository,
       authorRepository: authorRepository,
       organizationRepository: organizationRepository,
+      router: initRouter,
     );
   }
 

@@ -14,7 +14,7 @@ abstract class UserEntity {
   const factory UserEntity.authenticatedUser({
     required String uid,
     required String emailAddress,
-    required UserRole role,
+    UserRole? role,
     String? displayName,
     String? photoUrl,
   }) = AuthenticatedUser;
@@ -61,14 +61,14 @@ class AuthenticatedUser implements UserEntity {
   const AuthenticatedUser({
     required this.uid,
     required this.emailAddress,
-    required this.role,
+    this.role,
     this.displayName,
     this.photoUrl,
   });
 
   final String uid;
   final String emailAddress;
-  final UserRole role;
+  final UserRole? role;
   final String? displayName;
   final String? photoUrl;
 

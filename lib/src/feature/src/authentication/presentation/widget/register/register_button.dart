@@ -23,7 +23,7 @@ class _RegisterButtonState extends State<RegisterButton> {
     return BlocListener<AuthenticationBloc, AuthenticationState>(
       listener: (context, state) {
         state.mapOrNull(
-          successfull: (_) =>
+          authenticated: (_) =>
               context.router.replace(NamedRoute('AddInformationRoute')),
           error: (state) => ErrorUtil.displayErrorSnackBar(
             context,
