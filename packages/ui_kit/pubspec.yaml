@@ -21,5 +21,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  assets:
-    - fonts/
+
+  fonts:
+    - family: ArticleIcons
+      fonts:
+        - asset: fonts/Article-icons.ttf

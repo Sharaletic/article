@@ -1,4 +1,4 @@
-import '../../ui_kit.dart';
+import 'package:ui_kit/ui_kit.dart';
 
 class ButtonsPreview extends StatelessWidget {
   const ButtonsPreview({super.key});

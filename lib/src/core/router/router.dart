@@ -9,29 +9,21 @@ class AppRouter extends RootStackRouter {
   AppRouter();
 
   static const List<NestedRoute> nestedRoutes = [
-    NestedRoute(
-      name: 'HomeRoute',
-      title: 'Home',
-      icon: Icons.home_outlined,
-      activeIcon: Icons.home,
-    ),
+    NestedRoute(name: 'HomeRoute', title: 'Главная', icon: ArticleIcons.home),
     NestedRoute(
       name: 'ArticleRoute',
-      title: 'Article',
-      icon: Icons.article_outlined,
-      activeIcon: Icons.article,
+      title: 'Статья',
+      icon: ArticleIcons.article,
     ),
     NestedRoute(
       name: 'HistoryRoute',
-      title: 'History',
-      icon: Icons.history_outlined,
-      activeIcon: Icons.history,
+      title: 'История',
+      icon: ArticleIcons.history,
     ),
     NestedRoute(
       name: 'ProfileRoute',
-      title: 'Profile',
-      icon: Icons.person_outline,
-      activeIcon: Icons.person,
+      title: 'Профиль',
+      icon: ArticleIcons.person,
     ),
   ];
 

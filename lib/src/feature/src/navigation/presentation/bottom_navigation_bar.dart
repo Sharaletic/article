@@ -6,13 +6,11 @@ class NestedRoute {
     required this.name,
     required this.title,
     required this.icon,
-    required this.activeIcon,
   });
 
   final String name;
   final String title;
   final IconData icon;
-  final IconData activeIcon;
 }
 
 class NavigationPanel extends StatelessWidget {
@@ -20,22 +18,31 @@ class NavigationPanel extends StatelessWidget {
   final List<NestedRoute> nestedRoutes;
 
   @override
-  Widget build(BuildContext context) => SizedBox(
-    height: 80.0,
-    child: Row(
-      mainAxisAlignment: .spaceEvenly,
-      crossAxisAlignment: .center,
-      children: List.generate(nestedRoutes.length, (index) {
-        final page = nestedRoutes[index];
-        return TabItem(
-          index: index,
-          title: page.title,
-          icon: page.icon,
-          activeIcon: page.activeIcon,
-        );
-      }),
-    ),
-  );
+  Widget build(BuildContext context) {
+    final palette = Theme.of(context).colorPalette;
+    return Container(
+      height: 84,
+      decoration: BoxDecoration(
+        color: palette.background,
+        boxShadow: [
+          BoxShadow(
+            offset: Offset(0, 0),
+            color: palette.secondary,
+            blurRadius: 4,
+            spreadRadius: 1,
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: .spaceEvenly,
+        crossAxisAlignment: .center,
+        children: List.generate(nestedRoutes.length, (index) {
+          final page = nestedRoutes[index];
+          return TabItem(index: index, title: page.title, icon: page.icon);
+        }),
+      ),
+    );
+  }
 }
 
 class TabItem extends StatefulWidget {
@@ -44,13 +51,11 @@ class TabItem extends StatefulWidget {
     required this.index,
     required this.title,
     required this.icon,
-    required this.activeIcon,
   });
 
   final int index;
   final String title;
   final IconData icon;
-  final IconData activeIcon;
 
   @override
   State<TabItem> createState() => _TabItemState();
@@ -68,24 +73,22 @@ class _TabItemState extends State<TabItem> {
 
   @override
   Widget build(BuildContext context) {
-    final colorPalette = Theme.of(context).colorPalette;
+    final palette = Theme.of(context).colorPalette;
     return GestureDetector(
       onTap: () => AutoTabsRouter.of(context).setActiveIndex(widget.index),
       child: Column(
-        mainAxisAlignment: .center,
         crossAxisAlignment: .center,
         children: [
+          const SizedBox(height: 12),
           Icon(
-            _isActive ? widget.activeIcon : widget.icon,
-            color: _isActive
-                ? colorPalette.foreground
-                : colorPalette.mutedForeground,
+            widget.icon,
+            color: _isActive ? palette.primary : palette.foreground,
           ),
+          const SizedBox(height: 4),
           UiText.bodySmall(
             widget.title,
-            color: _isActive
-                ? colorPalette.foreground
-                : colorPalette.mutedForeground,
+            color: _isActive ? palette.primary : palette.foreground,
+            style: TextStyle(fontWeight: .w600),
           ),
         ],
       ),

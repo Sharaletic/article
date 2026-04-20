@@ -104,6 +104,15 @@ class UiPreview extends StatelessWidget {
                 const SizedBox(height: 8),
                 const DropDownMenuPreview(),
                 const SizedBox(height: 24),
+                Align(
+                  alignment: Alignment.center,
+                  child: UiText.titleMedium(
+                    'Icons',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const IconsPreview(),
               ],
             ),
           ),
