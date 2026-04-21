@@ -1,12 +1,66 @@
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ui_kit/ui_kit.dart';
 import '../../../../authentication/authentication.dart';
 import '../../../author.dart';
 
+class PostFieldState {
+  PostFieldState(this.selectedPost) : id = UniqueKey().toString();
+  final String id;
+  final Post? selectedPost;
+}
+
 class PostCounter {
-  final ValueNotifier<int> _postCount = ValueNotifier<int>(1);
-  ValueNotifier<int> get postCount => _postCount;
-  void increment() => _postCount.value++;
+  PostCounter(this.authorFormCubit);
+  final AuthorFormCubit? authorFormCubit;
+
+  final ValueNotifier<List<PostFieldState>> _posts =
+      ValueNotifier<List<PostFieldState>>([PostFieldState(null)]);
+
+  ValueNotifier<List<PostFieldState>> get posts => _posts;
+
+  void removePost(int index) {
+    if (index != 0) {
+      var newList = List<PostFieldState>.from(_posts.value)..removeAt(index);
+      _posts.value = newList;
+
+      authorFormCubit?.postChanged(
+        _posts.value
+            .where((postOrNull) => postOrNull.selectedPost != null)
+            .map((e) => e.selectedPost!)
+            .toList(),
+      );
+    }
+  }
+
+  void addEmptyPost() {
+    _posts.value = [..._posts.value, PostFieldState(null)];
+    log(_posts.value.map((e) => e.selectedPost).toString());
+  }
+
+  void updatePost(Post? post, int index) {
+    var newList = List<PostFieldState>.from(_posts.value);
+    newList[index] = PostFieldState(post);
+
+    _posts.value = newList;
+
+    // var newList = _posts.value..insert(index, PostFieldState(post));
+    // _posts.value = newList;
+    // _posts.value = [..._posts.value, PostFieldState(post)];
+
+    log(_posts.value.map((e) => e.selectedPost).toString());
+    _notifyCubit();
+  }
+
+  void _notifyCubit() {
+    authorFormCubit?.postChanged(
+      _posts.value
+          .where((postOrNull) => postOrNull.selectedPost != null)
+          .map((post) => post.selectedPost!)
+          .toList(),
+    );
+  }
 }
 
 class TeacherForm extends StatefulWidget {
@@ -18,12 +72,13 @@ class TeacherForm extends StatefulWidget {
 
 class _TeacherFormState extends State<TeacherForm> {
   late final AuthorFormCubit _authorFormCubit;
-  PostCounter postCounter = PostCounter();
+  late final PostCounter postCounter;
 
   @override
   void initState() {
     super.initState();
     _authorFormCubit = context.read<AuthorFormCubit>();
+    postCounter = PostCounter(_authorFormCubit);
   }
 
   @override
@@ -103,7 +158,7 @@ class _TeacherFormState extends State<TeacherForm> {
                 style: TextStyle(fontWeight: .w600),
               ),
               const SizedBox(height: 8),
-              PostDropDownMenu(postCounter: postCounter),
+              PostDropDownMenus(postCounter: postCounter),
               const SizedBox(height: 8),
               AddPostButton(postCounter: postCounter),
               const SizedBox(height: 16),

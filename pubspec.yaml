@@ -59,3 +59,7 @@ flutter:
           weight: 700
         - asset: packages/ui_kit/fonts/SF-Pro-Display-Heavy.otf
           weight: 800
+
+    - family: ArticleIcons
+      fonts:
+        - asset: packages/ui_kit/fonts/Article-icons.otf

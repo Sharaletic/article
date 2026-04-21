@@ -311,7 +311,7 @@ class _UiBaseMenuButtonStyle extends ButtonStyle {
   final AppTypography typography;
 
   @override
-  AlignmentGeometry? get alignment => Alignment.center;
+  AlignmentGeometry? get alignment => .center;
 
   @override
   Duration? get animationDuration => const Duration(milliseconds: 0);
@@ -323,7 +323,7 @@ class _UiBaseMenuButtonStyle extends ButtonStyle {
       );
 
   @override
-  MaterialTapTargetSize? get tapTargetSize => MaterialTapTargetSize.shrinkWrap;
+  MaterialTapTargetSize? get tapTargetSize => .shrinkWrap;
 
   @override
   WidgetStateProperty<EdgeInsetsGeometry?>? get padding =>
@@ -346,7 +346,7 @@ class _UiBaseMenuButtonStyle extends ButtonStyle {
       const WidgetStatePropertyAll<Color>(Colors.transparent);
 
   @override
-  VisualDensity? get visualDensity => VisualDensity.adaptivePlatformDensity;
+  VisualDensity? get visualDensity => .adaptivePlatformDensity;
 
   @override
   WidgetStateProperty<Color>? get surfaceTintColor =>

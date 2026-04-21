@@ -10,7 +10,7 @@ class AddPostButton extends StatelessWidget {
     return Align(
       alignment: Alignment.centerLeft,
       child: ValueListenableBuilder(
-        valueListenable: postCounter.postCount,
+        valueListenable: postCounter.posts,
         builder: (_, value, _) {
           return UiButton.text(
             icon: Icon(Icons.hdr_plus),
@@ -20,8 +20,8 @@ class AddPostButton extends StatelessWidget {
               padding: .zero,
               tapTargetSize: .shrinkWrap,
             ),
-            onPressed: () => postCounter.increment(),
-            enabled: value < 3,
+            onPressed: postCounter.addEmptyPost,
+            enabled: value.length < 3,
           );
         },
       ),

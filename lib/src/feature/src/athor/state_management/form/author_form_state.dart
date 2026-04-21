@@ -51,7 +51,7 @@ class AuthorFormState {
       firstNameRu.trim().isNotEmpty &&
       firstNameEn.trim().isNotEmpty &&
       organization != null &&
-      posts != null &&
+      (posts != null && posts!.isNotEmpty) &&
       academicDegree != null &&
       academicTitle != null;
 
@@ -72,28 +72,33 @@ class AuthorFormState {
     OrganizationEntity? organization,
     EducationLevel? educationLevel,
     Post? post,
+    List<Post>? posts,
     AcademicDegree? academicDegree,
     AcademicTitle? academicTitle,
     bool? isSubmitting,
     bool? isSuccess,
     String? errorMessage,
-  }) => AuthorFormState(
-    status: status ?? this.status,
-    lastNameRu: lastNameRu ?? this.lastNameRu,
-    lastNameEn: lastNameEn ?? this.lastNameEn,
-    firstNameRu: firstNameRu ?? this.firstNameRu,
-    firstNameEn: firstNameEn ?? this.firstNameEn,
-    middleNameRu: middleNameRu ?? this.middleNameRu,
-    middleNameEn: middleNameEn ?? this.middleNameEn,
-    organization: organization ?? this.organization,
-    educationLevel: educationLevel ?? this.educationLevel,
-    posts: post != null
-        ? (posts != null ? [...posts!.map((e) => e), post] : [post])
-        : posts,
-    academicDegree: academicDegree ?? this.academicDegree,
-    academicTitle: academicTitle ?? this.academicTitle,
-    isSubmitting: isSubmitting ?? this.isSubmitting,
-    isSuccess: isSuccess ?? this.isSuccess,
-    errorMessage: errorMessage ?? this.errorMessage,
-  );
+  }) {
+    // log(posts == null ? 'null' : posts.map((e) => e.value).toList().toString());
+    return AuthorFormState(
+      status: status ?? this.status,
+      lastNameRu: lastNameRu ?? this.lastNameRu,
+      lastNameEn: lastNameEn ?? this.lastNameEn,
+      firstNameRu: firstNameRu ?? this.firstNameRu,
+      firstNameEn: firstNameEn ?? this.firstNameEn,
+      middleNameRu: middleNameRu ?? this.middleNameRu,
+      middleNameEn: middleNameEn ?? this.middleNameEn,
+      organization: organization ?? this.organization,
+      educationLevel: educationLevel ?? this.educationLevel,
+      // posts: post != null
+      //     ? (posts != null ? [...posts!.map((e) => e), post] : [post])
+      //     : posts,
+      posts: posts ?? this.posts,
+      academicDegree: academicDegree ?? this.academicDegree,
+      academicTitle: academicTitle ?? this.academicTitle,
+      isSubmitting: isSubmitting ?? this.isSubmitting,
+      isSuccess: isSuccess ?? this.isSuccess,
+      errorMessage: errorMessage ?? this.errorMessage,
+    );
+  }
 }

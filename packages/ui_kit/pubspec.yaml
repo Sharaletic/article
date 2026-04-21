@@ -23,6 +23,16 @@ flutter:
   uses-material-design: true
 
   fonts:
+    - family: SfPro
+      fonts:
+        - asset: fonts/SF-Pro-Display-Regular.otf
+        - asset: fonts/SF-Pro-Display-Semibold.otf
+          weight: 600
+        - asset: fonts/SF-Pro-Display-Bold.otf
+          weight: 700
+        - asset: fonts/SF-Pro-Display-Heavy.otf
+          weight: 800
+
     - family: ArticleIcons
       fonts:
-        - asset: fonts/Article-icons.ttf
+        - asset: fonts/Article-icons.otf

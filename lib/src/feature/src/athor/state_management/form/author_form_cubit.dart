@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../author.dart';
 part 'author_form_state.dart';
@@ -29,7 +27,15 @@ class AuthorFormCubit extends Cubit<AuthorFormState> {
       emit(state.copyWith(organization: value));
   void educationLevelChanged(EducationLevel? value) =>
       emit(state.copyWith(educationLevel: value));
-  void postChanged(Post? value) => emit(state.copyWith(post: value));
+  void postChangedByAdd(Post? value) => emit(
+    state.copyWith(
+      posts: state.posts == null ? [value!] : state.posts!
+        ..add(value!),
+    ),
+  );
+  void postChanged(List<Post>? value) => emit(state.copyWith(posts: value));
+  void postChangedByRemove(Post value) =>
+      emit(state.copyWith(posts: state.posts?..remove(value)));
   void academicDegree(AcademicDegree? value) =>
       emit(state.copyWith(academicDegree: value));
   void academicTitle(AcademicTitle? value) =>
