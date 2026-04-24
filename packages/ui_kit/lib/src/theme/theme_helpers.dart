@@ -72,7 +72,7 @@ final _lightColorPalette = ColorPalette(
   background: Color(0xFFFFFFFF),
   foreground: Color(0xFF000000),
   muted: Color(0xFF2761CA).withValues(alpha: 0.7),
-  mutedForeground: Color(0xFFDEDEDE).withValues(alpha: 0.7),
+  mutedForeground: Color(0xFFC0C0C0).withValues(alpha: 0.7),
   primary: Color(0xFF2761CA),
   primaryForeground: Color(0xFFFFFFFF),
   secondary: Color(0xFFF2F2F2),

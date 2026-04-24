@@ -42,13 +42,16 @@ class UserDto {
     'photo_url': photoUrl,
   };
 
-  factory UserDto.fromEntity({required AuthenticatedUser user}) => UserDto(
-    uid: user.uid,
-    emailAddress: user.emailAddress,
-    role: user.role,
-    displayName: user.displayName,
-    photoUrl: user.photoUrl,
-  );
+  factory UserDto.fromEntity({required UserEntity entity}) {
+    final authenticatedUser = entity as AuthenticatedUser;
+    return UserDto(
+      uid: authenticatedUser.uid,
+      emailAddress: authenticatedUser.emailAddress,
+      role: authenticatedUser.role,
+      displayName: authenticatedUser.displayName,
+      photoUrl: authenticatedUser.photoUrl,
+    );
+  }
 
   factory UserDto.fromJson({required Map<String, Object?> json}) => UserDto(
     uid: json['uid'] as String,

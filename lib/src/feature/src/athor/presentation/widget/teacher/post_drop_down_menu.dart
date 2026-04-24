@@ -24,7 +24,7 @@ class PostDropDownMenus extends StatelessWidget {
                     ),
                   ),
                   if (i != 0)
-                    IconButton(
+                    UiButton.icon(
                       onPressed: () => postCounter.removePost(i),
                       icon: Icon(Icons.close),
                     ),

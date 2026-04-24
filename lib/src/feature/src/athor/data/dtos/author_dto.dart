@@ -97,24 +97,41 @@ class AuthorDto {
   final AcademicDegree? academicDegree;
   final AcademicTitle? academicTitle;
 
-  factory AuthorDto.fromEntity({required AuthorEntity author}) => AuthorDto(
-    id: author.id,
-    user: UserDto.fromEntity(user: author.user),
-    status: author.status,
-    lastNameRu: author.lastNameRu,
-    lastNameEn: author.lastNameEn,
-    firstNameRu: author.firstNameRu,
-    firstNameEn: author.firstNameEn,
-    middleNameRu: author.middleNameRu,
-    middleNameEn: author.middleNameEn,
-    organization: OrganizationDto.fromEntity(author.organization),
-    educationLevel: author.educationLevel,
-    posts: author.posts,
-    academicDegree: author.academicDegree,
-    academicTitle: author.academicTitle,
+  factory AuthorDto.fromEntity(AuthorEntity entity) => AuthorDto(
+    id: entity.id,
+    user: UserDto.fromEntity(entity: entity.user),
+    status: entity.status,
+    lastNameRu: entity.lastNameRu,
+    lastNameEn: entity.lastNameEn,
+    firstNameRu: entity.firstNameRu,
+    firstNameEn: entity.firstNameEn,
+    middleNameRu: entity.middleNameRu,
+    middleNameEn: entity.middleNameEn,
+    organization: OrganizationDto.fromEntity(entity.organization),
+    educationLevel: entity.educationLevel,
+    posts: entity.posts,
+    academicDegree: entity.academicDegree,
+    academicTitle: entity.academicTitle,
   );
 
-  factory AuthorDto.fromJson({required Map<String, Object?> json}) => AuthorDto(
+  AuthorEntity toEntity() => AuthorEntity(
+    id: id!,
+    user: user.toEntity(),
+    status: status,
+    lastNameRu: lastNameRu,
+    lastNameEn: lastNameEn,
+    firstNameRu: firstNameRu,
+    firstNameEn: firstNameEn,
+    middleNameRu: middleNameRu,
+    middleNameEn: middleNameEn,
+    organization: organization.toEntity(),
+    educationLevel: educationLevel,
+    posts: posts,
+    academicDegree: academicDegree,
+    academicTitle: academicTitle,
+  );
+
+  factory AuthorDto.fromJson(Map<String, Object?> json) => AuthorDto(
     id: json['id'] as int,
     user: UserDto.fromJson(json: json['user'] as Map<String, Object?>),
     status: _statusFromJson(json['status'] as String),

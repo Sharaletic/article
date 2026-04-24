@@ -62,7 +62,7 @@ class AuthorEntity with EqualsMixin {
     this.academicTitle,
   });
   final int? id;
-  final AuthenticatedUser user;
+  final UserEntity user;
   final AuthorStatus status;
   final String lastNameRu;
   final String lastNameEn;

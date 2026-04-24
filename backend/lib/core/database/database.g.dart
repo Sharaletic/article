@@ -2854,16 +2854,14 @@ class $RequestsTable extends Requests with TableInfo<$RequestsTable, Request> {
   late final GeneratedColumn<String> coAuthors = GeneratedColumn<String>(
     'co_athors',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
-  static const VerificationMeta _articleTitleMeta = const VerificationMeta(
-    'articleTitle',
-  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
-  late final GeneratedColumn<String> articleTitle = GeneratedColumn<String>(
-    'arcticle_title',
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
     aliasedName,
     false,
     type: DriftSqlType.string,
@@ -2878,23 +2876,25 @@ class $RequestsTable extends Requests with TableInfo<$RequestsTable, Request> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _commetMeta = const VerificationMeta('commet');
+  static const VerificationMeta _commentMeta = const VerificationMeta(
+    'comment',
+  );
   @override
-  late final GeneratedColumn<String> commet = GeneratedColumn<String>(
-    'commet',
+  late final GeneratedColumn<String> comment = GeneratedColumn<String>(
+    'comment',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _chatIdMeta = const VerificationMeta('chatId');
   @override
   late final GeneratedColumn<int> chatId = GeneratedColumn<int>(
     'chat_id',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.int,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
       'REFERENCES chats (id)',
     ),
@@ -2917,9 +2917,9 @@ class $RequestsTable extends Requests with TableInfo<$RequestsTable, Request> {
     conferenceId,
     sectionId,
     coAuthors,
-    articleTitle,
+    title,
     status,
-    commet,
+    comment,
     chatId,
     createdAt,
   ];
@@ -2970,19 +2970,14 @@ class $RequestsTable extends Requests with TableInfo<$RequestsTable, Request> {
         _coAuthorsMeta,
         coAuthors.isAcceptableOrUnknown(data['co_athors']!, _coAuthorsMeta),
       );
-    } else if (isInserting) {
-      context.missing(_coAuthorsMeta);
     }
-    if (data.containsKey('arcticle_title')) {
+    if (data.containsKey('title')) {
       context.handle(
-        _articleTitleMeta,
-        articleTitle.isAcceptableOrUnknown(
-          data['arcticle_title']!,
-          _articleTitleMeta,
-        ),
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
       );
     } else if (isInserting) {
-      context.missing(_articleTitleMeta);
+      context.missing(_titleMeta);
     }
     if (data.containsKey('status')) {
       context.handle(
@@ -2992,21 +2987,17 @@ class $RequestsTable extends Requests with TableInfo<$RequestsTable, Request> {
     } else if (isInserting) {
       context.missing(_statusMeta);
     }
-    if (data.containsKey('commet')) {
+    if (data.containsKey('comment')) {
       context.handle(
-        _commetMeta,
-        commet.isAcceptableOrUnknown(data['commet']!, _commetMeta),
+        _commentMeta,
+        comment.isAcceptableOrUnknown(data['comment']!, _commentMeta),
       );
-    } else if (isInserting) {
-      context.missing(_commetMeta);
     }
     if (data.containsKey('chat_id')) {
       context.handle(
         _chatIdMeta,
         chatId.isAcceptableOrUnknown(data['chat_id']!, _chatIdMeta),
       );
-    } else if (isInserting) {
-      context.missing(_chatIdMeta);
     }
     if (data.containsKey('created_at')) {
       context.handle(
@@ -3044,23 +3035,23 @@ class $RequestsTable extends Requests with TableInfo<$RequestsTable, Request> {
       coAuthors: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}co_athors'],
-      )!,
-      articleTitle: attachedDatabase.typeMapping.read(
+      ),
+      title: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}arcticle_title'],
+        data['${effectivePrefix}title'],
       )!,
       status: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}status'],
       )!,
-      commet: attachedDatabase.typeMapping.read(
+      comment: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}commet'],
-      )!,
+        data['${effectivePrefix}comment'],
+      ),
       chatId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}chat_id'],
-      )!,
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -3079,22 +3070,22 @@ class Request extends DataClass implements Insertable<Request> {
   final int authorId;
   final int conferenceId;
   final int sectionId;
-  final String coAuthors;
-  final String articleTitle;
+  final String? coAuthors;
+  final String title;
   final String status;
-  final String commet;
-  final int chatId;
+  final String? comment;
+  final int? chatId;
   final DateTime createdAt;
   const Request({
     required this.id,
     required this.authorId,
     required this.conferenceId,
     required this.sectionId,
-    required this.coAuthors,
-    required this.articleTitle,
+    this.coAuthors,
+    required this.title,
     required this.status,
-    required this.commet,
-    required this.chatId,
+    this.comment,
+    this.chatId,
     required this.createdAt,
   });
   @override
@@ -3104,11 +3095,17 @@ class Request extends DataClass implements Insertable<Request> {
     map['author_id'] = Variable<int>(authorId);
     map['conference_id'] = Variable<int>(conferenceId);
     map['section_id'] = Variable<int>(sectionId);
-    map['co_athors'] = Variable<String>(coAuthors);
-    map['arcticle_title'] = Variable<String>(articleTitle);
+    if (!nullToAbsent || coAuthors != null) {
+      map['co_athors'] = Variable<String>(coAuthors);
+    }
+    map['title'] = Variable<String>(title);
     map['status'] = Variable<String>(status);
-    map['commet'] = Variable<String>(commet);
-    map['chat_id'] = Variable<int>(chatId);
+    if (!nullToAbsent || comment != null) {
+      map['comment'] = Variable<String>(comment);
+    }
+    if (!nullToAbsent || chatId != null) {
+      map['chat_id'] = Variable<int>(chatId);
+    }
     map['created_at'] = Variable<DateTime>(createdAt);
     return map;
   }
@@ -3119,11 +3116,17 @@ class Request extends DataClass implements Insertable<Request> {
       authorId: Value(authorId),
       conferenceId: Value(conferenceId),
       sectionId: Value(sectionId),
-      coAuthors: Value(coAuthors),
-      articleTitle: Value(articleTitle),
+      coAuthors: coAuthors == null && nullToAbsent
+          ? const Value.absent()
+          : Value(coAuthors),
+      title: Value(title),
       status: Value(status),
-      commet: Value(commet),
-      chatId: Value(chatId),
+      comment: comment == null && nullToAbsent
+          ? const Value.absent()
+          : Value(comment),
+      chatId: chatId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(chatId),
       createdAt: Value(createdAt),
     );
   }
@@ -3138,11 +3141,11 @@ class Request extends DataClass implements Insertable<Request> {
       authorId: serializer.fromJson<int>(json['authorId']),
       conferenceId: serializer.fromJson<int>(json['conferenceId']),
       sectionId: serializer.fromJson<int>(json['sectionId']),
-      coAuthors: serializer.fromJson<String>(json['coAuthors']),
-      articleTitle: serializer.fromJson<String>(json['articleTitle']),
+      coAuthors: serializer.fromJson<String?>(json['coAuthors']),
+      title: serializer.fromJson<String>(json['title']),
       status: serializer.fromJson<String>(json['status']),
-      commet: serializer.fromJson<String>(json['commet']),
-      chatId: serializer.fromJson<int>(json['chatId']),
+      comment: serializer.fromJson<String?>(json['comment']),
+      chatId: serializer.fromJson<int?>(json['chatId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
@@ -3154,11 +3157,11 @@ class Request extends DataClass implements Insertable<Request> {
       'authorId': serializer.toJson<int>(authorId),
       'conferenceId': serializer.toJson<int>(conferenceId),
       'sectionId': serializer.toJson<int>(sectionId),
-      'coAuthors': serializer.toJson<String>(coAuthors),
-      'articleTitle': serializer.toJson<String>(articleTitle),
+      'coAuthors': serializer.toJson<String?>(coAuthors),
+      'title': serializer.toJson<String>(title),
       'status': serializer.toJson<String>(status),
-      'commet': serializer.toJson<String>(commet),
-      'chatId': serializer.toJson<int>(chatId),
+      'comment': serializer.toJson<String?>(comment),
+      'chatId': serializer.toJson<int?>(chatId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
@@ -3168,22 +3171,22 @@ class Request extends DataClass implements Insertable<Request> {
     int? authorId,
     int? conferenceId,
     int? sectionId,
-    String? coAuthors,
-    String? articleTitle,
+    Value<String?> coAuthors = const Value.absent(),
+    String? title,
     String? status,
-    String? commet,
-    int? chatId,
+    Value<String?> comment = const Value.absent(),
+    Value<int?> chatId = const Value.absent(),
     DateTime? createdAt,
   }) => Request(
     id: id ?? this.id,
     authorId: authorId ?? this.authorId,
     conferenceId: conferenceId ?? this.conferenceId,
     sectionId: sectionId ?? this.sectionId,
-    coAuthors: coAuthors ?? this.coAuthors,
-    articleTitle: articleTitle ?? this.articleTitle,
+    coAuthors: coAuthors.present ? coAuthors.value : this.coAuthors,
+    title: title ?? this.title,
     status: status ?? this.status,
-    commet: commet ?? this.commet,
-    chatId: chatId ?? this.chatId,
+    comment: comment.present ? comment.value : this.comment,
+    chatId: chatId.present ? chatId.value : this.chatId,
     createdAt: createdAt ?? this.createdAt,
   );
   Request copyWithCompanion(RequestsCompanion data) {
@@ -3195,11 +3198,9 @@ class Request extends DataClass implements Insertable<Request> {
           : this.conferenceId,
       sectionId: data.sectionId.present ? data.sectionId.value : this.sectionId,
       coAuthors: data.coAuthors.present ? data.coAuthors.value : this.coAuthors,
-      articleTitle: data.articleTitle.present
-          ? data.articleTitle.value
-          : this.articleTitle,
+      title: data.title.present ? data.title.value : this.title,
       status: data.status.present ? data.status.value : this.status,
-      commet: data.commet.present ? data.commet.value : this.commet,
+      comment: data.comment.present ? data.comment.value : this.comment,
       chatId: data.chatId.present ? data.chatId.value : this.chatId,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
@@ -3213,9 +3214,9 @@ class Request extends DataClass implements Insertable<Request> {
           ..write('conferenceId: $conferenceId, ')
           ..write('sectionId: $sectionId, ')
           ..write('coAuthors: $coAuthors, ')
-          ..write('articleTitle: $articleTitle, ')
+          ..write('title: $title, ')
           ..write('status: $status, ')
-          ..write('commet: $commet, ')
+          ..write('comment: $comment, ')
           ..write('chatId: $chatId, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
@@ -3229,9 +3230,9 @@ class Request extends DataClass implements Insertable<Request> {
     conferenceId,
     sectionId,
     coAuthors,
-    articleTitle,
+    title,
     status,
-    commet,
+    comment,
     chatId,
     createdAt,
   );
@@ -3244,9 +3245,9 @@ class Request extends DataClass implements Insertable<Request> {
           other.conferenceId == this.conferenceId &&
           other.sectionId == this.sectionId &&
           other.coAuthors == this.coAuthors &&
-          other.articleTitle == this.articleTitle &&
+          other.title == this.title &&
           other.status == this.status &&
-          other.commet == this.commet &&
+          other.comment == this.comment &&
           other.chatId == this.chatId &&
           other.createdAt == this.createdAt);
 }
@@ -3256,11 +3257,11 @@ class RequestsCompanion extends UpdateCompanion<Request> {
   final Value<int> authorId;
   final Value<int> conferenceId;
   final Value<int> sectionId;
-  final Value<String> coAuthors;
-  final Value<String> articleTitle;
+  final Value<String?> coAuthors;
+  final Value<String> title;
   final Value<String> status;
-  final Value<String> commet;
-  final Value<int> chatId;
+  final Value<String?> comment;
+  final Value<int?> chatId;
   final Value<DateTime> createdAt;
   const RequestsCompanion({
     this.id = const Value.absent(),
@@ -3268,9 +3269,9 @@ class RequestsCompanion extends UpdateCompanion<Request> {
     this.conferenceId = const Value.absent(),
     this.sectionId = const Value.absent(),
     this.coAuthors = const Value.absent(),
-    this.articleTitle = const Value.absent(),
+    this.title = const Value.absent(),
     this.status = const Value.absent(),
-    this.commet = const Value.absent(),
+    this.comment = const Value.absent(),
     this.chatId = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
@@ -3279,20 +3280,17 @@ class RequestsCompanion extends UpdateCompanion<Request> {
     required int authorId,
     required int conferenceId,
     required int sectionId,
-    required String coAuthors,
-    required String articleTitle,
+    this.coAuthors = const Value.absent(),
+    required String title,
     required String status,
-    required String commet,
-    required int chatId,
+    this.comment = const Value.absent(),
+    this.chatId = const Value.absent(),
     required DateTime createdAt,
   }) : authorId = Value(authorId),
        conferenceId = Value(conferenceId),
        sectionId = Value(sectionId),
-       coAuthors = Value(coAuthors),
-       articleTitle = Value(articleTitle),
+       title = Value(title),
        status = Value(status),
-       commet = Value(commet),
-       chatId = Value(chatId),
        createdAt = Value(createdAt);
   static Insertable<Request> custom({
     Expression<int>? id,
@@ -3300,9 +3298,9 @@ class RequestsCompanion extends UpdateCompanion<Request> {
     Expression<int>? conferenceId,
     Expression<int>? sectionId,
     Expression<String>? coAuthors,
-    Expression<String>? articleTitle,
+    Expression<String>? title,
     Expression<String>? status,
-    Expression<String>? commet,
+    Expression<String>? comment,
     Expression<int>? chatId,
     Expression<DateTime>? createdAt,
   }) {
@@ -3312,9 +3310,9 @@ class RequestsCompanion extends UpdateCompanion<Request> {
       if (conferenceId != null) 'conference_id': conferenceId,
       if (sectionId != null) 'section_id': sectionId,
       if (coAuthors != null) 'co_athors': coAuthors,
-      if (articleTitle != null) 'arcticle_title': articleTitle,
+      if (title != null) 'title': title,
       if (status != null) 'status': status,
-      if (commet != null) 'commet': commet,
+      if (comment != null) 'comment': comment,
       if (chatId != null) 'chat_id': chatId,
       if (createdAt != null) 'created_at': createdAt,
     });
@@ -3325,11 +3323,11 @@ class RequestsCompanion extends UpdateCompanion<Request> {
     Value<int>? authorId,
     Value<int>? conferenceId,
     Value<int>? sectionId,
-    Value<String>? coAuthors,
-    Value<String>? articleTitle,
+    Value<String?>? coAuthors,
+    Value<String>? title,
     Value<String>? status,
-    Value<String>? commet,
-    Value<int>? chatId,
+    Value<String?>? comment,
+    Value<int?>? chatId,
     Value<DateTime>? createdAt,
   }) {
     return RequestsCompanion(
@@ -3338,9 +3336,9 @@ class RequestsCompanion extends UpdateCompanion<Request> {
       conferenceId: conferenceId ?? this.conferenceId,
       sectionId: sectionId ?? this.sectionId,
       coAuthors: coAuthors ?? this.coAuthors,
-      articleTitle: articleTitle ?? this.articleTitle,
+      title: title ?? this.title,
       status: status ?? this.status,
-      commet: commet ?? this.commet,
+      comment: comment ?? this.comment,
       chatId: chatId ?? this.chatId,
       createdAt: createdAt ?? this.createdAt,
     );
@@ -3364,14 +3362,14 @@ class RequestsCompanion extends UpdateCompanion<Request> {
     if (coAuthors.present) {
       map['co_athors'] = Variable<String>(coAuthors.value);
     }
-    if (articleTitle.present) {
-      map['arcticle_title'] = Variable<String>(articleTitle.value);
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
     }
     if (status.present) {
       map['status'] = Variable<String>(status.value);
     }
-    if (commet.present) {
-      map['commet'] = Variable<String>(commet.value);
+    if (comment.present) {
+      map['comment'] = Variable<String>(comment.value);
     }
     if (chatId.present) {
       map['chat_id'] = Variable<int>(chatId.value);
@@ -3390,9 +3388,9 @@ class RequestsCompanion extends UpdateCompanion<Request> {
           ..write('conferenceId: $conferenceId, ')
           ..write('sectionId: $sectionId, ')
           ..write('coAuthors: $coAuthors, ')
-          ..write('articleTitle: $articleTitle, ')
+          ..write('title: $title, ')
           ..write('status: $status, ')
-          ..write('commet: $commet, ')
+          ..write('comment: $comment, ')
           ..write('chatId: $chatId, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
@@ -7978,11 +7976,11 @@ typedef $$RequestsTableCreateCompanionBuilder =
       required int authorId,
       required int conferenceId,
       required int sectionId,
-      required String coAuthors,
-      required String articleTitle,
+      Value<String?> coAuthors,
+      required String title,
       required String status,
-      required String commet,
-      required int chatId,
+      Value<String?> comment,
+      Value<int?> chatId,
       required DateTime createdAt,
     });
 typedef $$RequestsTableUpdateCompanionBuilder =
@@ -7991,11 +7989,11 @@ typedef $$RequestsTableUpdateCompanionBuilder =
       Value<int> authorId,
       Value<int> conferenceId,
       Value<int> sectionId,
-      Value<String> coAuthors,
-      Value<String> articleTitle,
+      Value<String?> coAuthors,
+      Value<String> title,
       Value<String> status,
-      Value<String> commet,
-      Value<int> chatId,
+      Value<String?> comment,
+      Value<int?> chatId,
       Value<DateTime> createdAt,
     });
 
@@ -8060,9 +8058,9 @@ final class $$RequestsTableReferences
     $_aliasNameGenerator(db.requests.chatId, db.chats.id),
   );
 
-  $$ChatsTableProcessedTableManager get chatId {
-    final $_column = $_itemColumn<int>('chat_id')!;
-
+  $$ChatsTableProcessedTableManager? get chatId {
+    final $_column = $_itemColumn<int>('chat_id');
+    if ($_column == null) return null;
     final manager = $$ChatsTableTableManager(
       $_db,
       $_db.chats,
@@ -8112,8 +8110,8 @@ class $$RequestsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get articleTitle => $composableBuilder(
-    column: $table.articleTitle,
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -8122,8 +8120,8 @@ class $$RequestsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get commet => $composableBuilder(
-    column: $table.commet,
+  ColumnFilters<String> get comment => $composableBuilder(
+    column: $table.comment,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -8269,8 +8267,8 @@ class $$RequestsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get articleTitle => $composableBuilder(
-    column: $table.articleTitle,
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -8279,8 +8277,8 @@ class $$RequestsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get commet => $composableBuilder(
-    column: $table.commet,
+  ColumnOrderings<String> get comment => $composableBuilder(
+    column: $table.comment,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -8397,16 +8395,14 @@ class $$RequestsTableAnnotationComposer
   GeneratedColumn<String> get coAuthors =>
       $composableBuilder(column: $table.coAuthors, builder: (column) => column);
 
-  GeneratedColumn<String> get articleTitle => $composableBuilder(
-    column: $table.articleTitle,
-    builder: (column) => column,
-  );
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
 
   GeneratedColumn<String> get status =>
       $composableBuilder(column: $table.status, builder: (column) => column);
 
-  GeneratedColumn<String> get commet =>
-      $composableBuilder(column: $table.commet, builder: (column) => column);
+  GeneratedColumn<String> get comment =>
+      $composableBuilder(column: $table.comment, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -8567,11 +8563,11 @@ class $$RequestsTableTableManager
                 Value<int> authorId = const Value.absent(),
                 Value<int> conferenceId = const Value.absent(),
                 Value<int> sectionId = const Value.absent(),
-                Value<String> coAuthors = const Value.absent(),
-                Value<String> articleTitle = const Value.absent(),
+                Value<String?> coAuthors = const Value.absent(),
+                Value<String> title = const Value.absent(),
                 Value<String> status = const Value.absent(),
-                Value<String> commet = const Value.absent(),
-                Value<int> chatId = const Value.absent(),
+                Value<String?> comment = const Value.absent(),
+                Value<int?> chatId = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
               }) => RequestsCompanion(
                 id: id,
@@ -8579,9 +8575,9 @@ class $$RequestsTableTableManager
                 conferenceId: conferenceId,
                 sectionId: sectionId,
                 coAuthors: coAuthors,
-                articleTitle: articleTitle,
+                title: title,
                 status: status,
-                commet: commet,
+                comment: comment,
                 chatId: chatId,
                 createdAt: createdAt,
               ),
@@ -8591,11 +8587,11 @@ class $$RequestsTableTableManager
                 required int authorId,
                 required int conferenceId,
                 required int sectionId,
-                required String coAuthors,
-                required String articleTitle,
+                Value<String?> coAuthors = const Value.absent(),
+                required String title,
                 required String status,
-                required String commet,
-                required int chatId,
+                Value<String?> comment = const Value.absent(),
+                Value<int?> chatId = const Value.absent(),
                 required DateTime createdAt,
               }) => RequestsCompanion.insert(
                 id: id,
@@ -8603,9 +8599,9 @@ class $$RequestsTableTableManager
                 conferenceId: conferenceId,
                 sectionId: sectionId,
                 coAuthors: coAuthors,
-                articleTitle: articleTitle,
+                title: title,
                 status: status,
-                commet: commet,
+                comment: comment,
                 chatId: chatId,
                 createdAt: createdAt,
               ),

@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:io' as io;
 import 'package:backend/app/app.dart';
-import 'package:backend/router/router.dart';
+import 'package:backend/core/middleware/error_middleware.dart';
+import 'package:backend/features/auth/auth.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
 import 'package:shelf_cors_headers/shelf_cors_headers.dart';
@@ -16,6 +17,7 @@ void main([List<String>? args]) async {
       final handler = Cascade()
           .add(composition.dependencies.authorController.handler)
           .add(composition.dependencies.organizationController.handler)
+          .add(composition.dependencies.requestController.handler)
           .handler;
 
       final pipeline = Pipeline()

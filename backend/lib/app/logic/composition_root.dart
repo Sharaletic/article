@@ -2,12 +2,14 @@ import 'package:firebase_admin/firebase_admin.dart';
 import 'package:logger/logger.dart';
 import '../../auth/claims_service.dart';
 import '../../core/rest_client/api_server.dart';
+import '../../features/auth/auth.dart';
+import '../../features/author/author.dart';
+import '../../features/organization/organization.dart';
+import '../../features/request/request.dart';
 import '../logging/logger.dart';
 import '../model/application_config.dart';
 import '../model/dependencies_container.dart';
 import '../../core/database/database.dart';
-import '../../router/router.dart';
-import '../../data/data.dart';
 
 final class CompositionResult {
   const CompositionResult({required this.dependencies});
@@ -83,6 +85,16 @@ Future<DependenciesContainer> createDependenciesContainer({
     apiServer: apiServer,
   );
 
+  // Request
+  final IRequestRepository requestRepository = RequestRepositoryImpl(
+    appDatabase: appDatabase,
+  );
+
+  final requestController = RequestController(
+    requestRepository: requestRepository,
+    apiServer: apiServer,
+  );
+
   return DependenciesContainer(
     logger: logger,
     apiServer: apiServer,
@@ -91,5 +103,6 @@ Future<DependenciesContainer> createDependenciesContainer({
     userController: userController,
     authorController: authorController,
     organizationController: organizationController,
+    requestController: requestController,
   );
 }

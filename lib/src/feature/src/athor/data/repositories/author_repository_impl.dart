@@ -8,7 +8,7 @@ class AuthorRepositoryImpl implements IAuthorRepository {
 
   @override
   Future<void> createAthor({required AuthorEntity author}) async {
-    final authorDto = AuthorDto.fromEntity(author: author);
+    final authorDto = AuthorDto.fromEntity(author);
     await _httpClient.post(path: '/author', body: authorDto.toJson());
   }
 }

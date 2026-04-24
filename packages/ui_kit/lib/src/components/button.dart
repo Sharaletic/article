@@ -1,6 +1,6 @@
 import '../../ui_kit.dart';
 
-enum ButtonVariant { filledPrimary, filledSecondary, text, segmented }
+enum ButtonVariant { filledPrimary, filledSecondary, text, icon, segmented }
 
 class UiButton extends ButtonStyleButton {
   final ButtonVariant variant;
@@ -86,6 +86,28 @@ class UiButton extends ButtonStyleButton {
          onLongPress: enabled ? onLongPress : null,
        );
 
+  const UiButton.icon({
+    required VoidCallback? onPressed,
+    bool enabled = true,
+    IconAlignment iconAlignment = IconAlignment.start,
+    Widget? icon,
+    VoidCallback? onLongPress,
+    super.autofocus = false,
+    super.onHover,
+    super.onFocusChange,
+    super.style,
+    super.focusNode,
+    super.clipBehavior,
+    super.statesController,
+    super.isSemanticButton,
+    super.key,
+  }) : variant = ButtonVariant.icon,
+       super(
+         child: icon,
+         onPressed: enabled ? onPressed : null,
+         onLongPress: enabled ? onLongPress : null,
+       );
+
   UiButton.segmented({
     required VoidCallback onPressed,
     bool enabled = true,
@@ -125,6 +147,10 @@ class UiButton extends ButtonStyleButton {
         typography: typography,
       ),
       .filledSecondary => _FilledButtonSecondaryStyle(
+        colorPalette: colors,
+        typography: typography,
+      ),
+      .icon => _IconButtonStandardStyle(
         colorPalette: colors,
         typography: typography,
       ),
@@ -296,6 +322,84 @@ class _FilledButtonSecondaryStyle extends _UiBaseButtonStyle {
   WidgetStateProperty<Color>? get shadowColor => WidgetStatePropertyAll<Color>(
     colorPalette.foreground.withValues(alpha: .18),
   );
+}
+
+class _IconButtonStandardStyle extends _IconButtonBaseStyle {
+  const _IconButtonStandardStyle({
+    required super.colorPalette,
+    required super.typography,
+  });
+
+  @override
+  WidgetStateProperty<Color?>? get foregroundColor =>
+      .resolveWith((Set<WidgetState> states) {
+        if (states.contains(WidgetState.disabled)) {
+          return colorPalette.mutedForeground;
+        }
+        return colorPalette.secondaryForeground;
+      });
+
+  @override
+  WidgetStateProperty<Color?>? get overlayColor =>
+      .resolveWith((Set<WidgetState> states) {
+        if (states.contains(WidgetState.pressed)) {
+          return colorPalette.foreground.withValues(alpha: 0.1);
+        }
+        if (states.contains(WidgetState.hovered)) {
+          return colorPalette.foreground.withValues(alpha: 0.08);
+        }
+        if (states.contains(WidgetState.focused)) {
+          return colorPalette.foreground.withValues(alpha: 0.1);
+        }
+        return null;
+      });
+}
+
+class _IconButtonBaseStyle extends _UiBaseButtonStyle {
+  const _IconButtonBaseStyle({
+    required super.colorPalette,
+    required super.typography,
+  });
+
+  @override
+  WidgetStateProperty<Color?>? get backgroundColor =>
+      const WidgetStatePropertyAll(Colors.transparent);
+
+  @override
+  WidgetStateProperty<Color?>? get foregroundColor =>
+      .resolveWith((Set<WidgetState> states) {
+        if (states.contains(WidgetState.disabled)) {
+          return colorPalette.foreground.withValues(alpha: 0.38);
+        }
+        return colorPalette.foreground;
+      });
+
+  @override
+  WidgetStateProperty<Color?>? get overlayColor =>
+      WidgetStateProperty.resolveWith((Set<WidgetState> states) {
+        if (states.contains(WidgetState.pressed)) {
+          return colorPalette.foreground.withValues(alpha: 0.1);
+        }
+        if (states.contains(WidgetState.hovered)) {
+          return colorPalette.foreground.withValues(alpha: 0.08);
+        }
+        if (states.contains(WidgetState.focused)) {
+          return colorPalette.foreground.withValues(alpha: 0.1);
+        }
+        return null;
+      });
+
+  @override
+  WidgetStateProperty<EdgeInsetsGeometry>? get padding =>
+      const WidgetStatePropertyAll<EdgeInsetsGeometry>(EdgeInsets.all(8.0));
+
+  @override
+  WidgetStateProperty<Size>? get minimumSize =>
+      const WidgetStatePropertyAll<Size>(Size.square(48));
+
+  @override
+  WidgetStateProperty<double>? get iconSize =>
+      const WidgetStatePropertyAll<double>(24.0);
 }
 
 class _TextButtonStyle extends _UiBaseButtonStyle {

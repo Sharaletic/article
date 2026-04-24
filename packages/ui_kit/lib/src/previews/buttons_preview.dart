@@ -11,7 +11,7 @@ class ButtonsPreview extends StatelessWidget {
         child: Wrap(
           spacing: 16,
           runSpacing: 16,
-          children: [_FilledPrimaryButton(), _TextButton()],
+          children: [_FilledPrimaryButton(), _TextButton(), _IconButton()],
         ),
       ),
     );
@@ -88,6 +88,28 @@ class _TextButton extends StatelessWidget {
       UiButton.text(
         onPressed: () {},
         label: const Text('disabled'),
+        enabled: false,
+      ),
+    ],
+  );
+}
+
+class _IconButton extends StatelessWidget {
+  const _IconButton();
+
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      Align(
+        alignment: Alignment.center,
+        child: UiText.titleSmall('Icon Button'),
+      ),
+      const SizedBox(height: 16),
+      UiButton.icon(onPressed: () {}, icon: const Icon(Icons.add_rounded)),
+      const SizedBox(height: 4),
+      UiButton.icon(
+        onPressed: () {},
+        icon: const Icon(Icons.add_rounded),
         enabled: false,
       ),
     ],

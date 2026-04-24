@@ -2,8 +2,7 @@ import 'package:drift/drift.dart';
 import 'dart:io';
 import 'package:drift/native.dart';
 
-import '../../data/data.dart';
-import '../../domain/author_entity.dart';
+import '../../features/author/author.dart';
 part 'database.g.dart';
 
 class Users extends Table {
@@ -61,11 +60,12 @@ class Requests extends Table {
       integer().named('conference_id').references(Conferences, #id)();
   IntColumn get sectionId =>
       integer().named('section_id').references(Sections, #id)();
-  TextColumn get coAuthors => text().named('co_athors')();
-  TextColumn get articleTitle => text().named('arcticle_title')();
+  TextColumn get coAuthors => text().named('co_athors').nullable()();
+  TextColumn get title => text().named('title')();
   TextColumn get status => text()();
-  TextColumn get commet => text()();
-  IntColumn get chatId => integer().named('chat_id').references(Chats, #id)();
+  TextColumn get comment => text().nullable()();
+  IntColumn get chatId =>
+      integer().named('chat_id').references(Chats, #id).nullable()();
   Column<DateTime> get createdAt => dateTime()();
 }
 

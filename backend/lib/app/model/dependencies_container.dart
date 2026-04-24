@@ -1,7 +1,10 @@
 import 'package:firebase_admin/firebase_admin.dart';
 import 'package:logger/web.dart';
 import '../../core/rest_client/api_server.dart';
-import '../../router/router.dart';
+import '../../features/auth/auth.dart';
+import '../../features/author/author.dart';
+import '../../features/organization/organization.dart';
+import '../../features/request/request.dart';
 import 'application_config.dart';
 
 class DependenciesContainer {
@@ -13,6 +16,7 @@ class DependenciesContainer {
     required this.userController,
     required this.authorController,
     required this.organizationController,
+    required this.requestController,
   });
   final Logger logger;
   final ApiServer apiServer;
@@ -21,4 +25,5 @@ class DependenciesContainer {
   final UserController userController;
   final AuthorController authorController;
   final OrganizationController organizationController;
+  final RequestController requestController;
 }
