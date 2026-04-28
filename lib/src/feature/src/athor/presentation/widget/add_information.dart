@@ -34,13 +34,14 @@ class _AddInformationState extends State<AddInformation> {
       value: _authorFormCubit,
       child: Scaffold(
         backgroundColor: palette.background,
-        body: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(child: const SizedBox(height: 84)),
-            SliverToBoxAdapter(child: const AddInformationHeader()),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const .symmetric(horizontal: 24),
+        body: Padding(
+          padding: const .symmetric(horizontal: 24),
+          child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(child: const SizedBox(height: 84)),
+              SliverToBoxAdapter(child: const AddInformationHeader()),
+              SliverToBoxAdapter(child: const SizedBox(height: 24)),
+              SliverToBoxAdapter(
                 child: ValueListenableBuilder<AuthorStatus>(
                   valueListenable: _selectedStatus,
                   builder: (_, value, _) => UiSegmentedButton(
@@ -55,30 +56,30 @@ class _AddInformationState extends State<AddInformation> {
                   ),
                 ),
               ),
-            ),
-            SliverToBoxAdapter(child: const SizedBox(height: 16)),
-            ValueListenableBuilder<AuthorStatus>(
-              valueListenable: _selectedStatus,
-              builder: (_, value, _) => SliverToBoxAdapter(
-                child: Stack(
-                  children: [
-                    Visibility(
-                      visible: value == AuthorStatus.student,
-                      maintainState: true,
-                      maintainSize: false,
-                      child: const StudentForm(),
-                    ),
-                    Visibility(
-                      visible: value == AuthorStatus.teacher,
-                      maintainState: true,
-                      maintainSize: false,
-                      child: const TeacherForm(),
-                    ),
-                  ],
+              SliverToBoxAdapter(child: const SizedBox(height: 16)),
+              ValueListenableBuilder<AuthorStatus>(
+                valueListenable: _selectedStatus,
+                builder: (_, value, _) => SliverToBoxAdapter(
+                  child: Stack(
+                    children: [
+                      Visibility(
+                        visible: value == AuthorStatus.student,
+                        maintainState: true,
+                        maintainSize: false,
+                        child: const StudentForm(),
+                      ),
+                      Visibility(
+                        visible: value == AuthorStatus.teacher,
+                        maintainState: true,
+                        maintainSize: false,
+                        child: const TeacherForm(),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

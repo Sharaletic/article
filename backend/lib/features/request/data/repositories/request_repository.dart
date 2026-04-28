@@ -13,7 +13,7 @@ class RequestRepositoryImpl implements IRequestRepository {
   @override
   Future<void> createRequest({required RequestEntity request}) async {
     await _appDatabase
-        .into(_appDatabase.requests)
+        .into(_appDatabase.request)
         .insert(RequestDto.fromEntity(request).toCompanion());
   }
 }

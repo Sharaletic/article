@@ -4,7 +4,6 @@ import '../../auth/claims_service.dart';
 import '../../core/rest_client/api_server.dart';
 import '../../features/auth/auth.dart';
 import '../../features/author/author.dart';
-import '../../features/organization/organization.dart';
 import '../../features/request/request.dart';
 import '../logging/logger.dart';
 import '../model/application_config.dart';
@@ -39,6 +38,26 @@ Future<DependenciesContainer> createDependenciesContainer({
 
   // Database
   final appDatabase = AppDatabase();
+
+  // appDatabase
+  //     .into(appDatabase.conference)
+  //     .insert(
+  //       ConferenceCompanion(
+  //         title: const Value('Конференция 1'),
+  //         shortDescription: const Value('Краткое описание конференции 1'),
+  //         startConferenceDate: Value(DateTime(2023, 10, 1)),
+  //         endConferenceDate: Value(DateTime(2023, 10, 5)),
+  //         address: const Value('Адрес конференции 1'),
+  //         conferenceFormat: const Value([ConferenceFormat.online]),
+  //         submissionStartDate: Value(DateTime(2023, 8, 1)),
+  //         submissionEndDate: Value(DateTime(2023, 8, 31)),
+  //         quantityOfPages: const Value(10),
+  //         fileFormat: const Value([FileFormat.pdf]),
+  //         requirements: const Value(
+  //           'Требования к заявкам на участие в конференции 1',
+  //         ),
+  //       ),
+  //     );
 
   // Firebase
   final firebaseAdminSDKApp = FirebaseAdmin.instance.initializeApp(

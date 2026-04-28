@@ -3,11 +3,11 @@
 part of 'database.dart';
 
 // ignore_for_file: type=lint
-class $UsersTable extends Users with TableInfo<$UsersTable, User> {
+class $UserTable extends User with TableInfo<$UserTable, UserData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $UsersTable(this.attachedDatabase, [this._alias]);
+  $UserTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _uidMeta = const VerificationMeta('uid');
   @override
   late final GeneratedColumn<String> uid = GeneratedColumn<String>(
@@ -71,10 +71,10 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'users';
+  static const String $name = 'user';
   @override
   VerificationContext validateIntegrity(
-    Insertable<User> instance, {
+    Insertable<UserData> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -129,9 +129,9 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   @override
   Set<GeneratedColumn> get $primaryKey => const {};
   @override
-  User map(Map<String, dynamic> data, {String? tablePrefix}) {
+  UserData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return User(
+    return UserData(
       uid: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}uid'],
@@ -156,18 +156,18 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   }
 
   @override
-  $UsersTable createAlias(String alias) {
-    return $UsersTable(attachedDatabase, alias);
+  $UserTable createAlias(String alias) {
+    return $UserTable(attachedDatabase, alias);
   }
 }
 
-class User extends DataClass implements Insertable<User> {
+class UserData extends DataClass implements Insertable<UserData> {
   final String uid;
   final String emailAddress;
   final String role;
   final String displayName;
   final String? photoUrl;
-  const User({
+  const UserData({
     required this.uid,
     required this.emailAddress,
     required this.role,
@@ -187,8 +187,8 @@ class User extends DataClass implements Insertable<User> {
     return map;
   }
 
-  UsersCompanion toCompanion(bool nullToAbsent) {
-    return UsersCompanion(
+  UserCompanion toCompanion(bool nullToAbsent) {
+    return UserCompanion(
       uid: Value(uid),
       emailAddress: Value(emailAddress),
       role: Value(role),
@@ -199,12 +199,12 @@ class User extends DataClass implements Insertable<User> {
     );
   }
 
-  factory User.fromJson(
+  factory UserData.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return User(
+    return UserData(
       uid: serializer.fromJson<String>(json['uid']),
       emailAddress: serializer.fromJson<String>(json['emailAddress']),
       role: serializer.fromJson<String>(json['role']),
@@ -224,21 +224,21 @@ class User extends DataClass implements Insertable<User> {
     };
   }
 
-  User copyWith({
+  UserData copyWith({
     String? uid,
     String? emailAddress,
     String? role,
     String? displayName,
     Value<String?> photoUrl = const Value.absent(),
-  }) => User(
+  }) => UserData(
     uid: uid ?? this.uid,
     emailAddress: emailAddress ?? this.emailAddress,
     role: role ?? this.role,
     displayName: displayName ?? this.displayName,
     photoUrl: photoUrl.present ? photoUrl.value : this.photoUrl,
   );
-  User copyWithCompanion(UsersCompanion data) {
-    return User(
+  UserData copyWithCompanion(UserCompanion data) {
+    return UserData(
       uid: data.uid.present ? data.uid.value : this.uid,
       emailAddress: data.emailAddress.present
           ? data.emailAddress.value
@@ -253,7 +253,7 @@ class User extends DataClass implements Insertable<User> {
 
   @override
   String toString() {
-    return (StringBuffer('User(')
+    return (StringBuffer('UserData(')
           ..write('uid: $uid, ')
           ..write('emailAddress: $emailAddress, ')
           ..write('role: $role, ')
@@ -269,7 +269,7 @@ class User extends DataClass implements Insertable<User> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is User &&
+      (other is UserData &&
           other.uid == this.uid &&
           other.emailAddress == this.emailAddress &&
           other.role == this.role &&
@@ -277,14 +277,14 @@ class User extends DataClass implements Insertable<User> {
           other.photoUrl == this.photoUrl);
 }
 
-class UsersCompanion extends UpdateCompanion<User> {
+class UserCompanion extends UpdateCompanion<UserData> {
   final Value<String> uid;
   final Value<String> emailAddress;
   final Value<String> role;
   final Value<String> displayName;
   final Value<String?> photoUrl;
   final Value<int> rowid;
-  const UsersCompanion({
+  const UserCompanion({
     this.uid = const Value.absent(),
     this.emailAddress = const Value.absent(),
     this.role = const Value.absent(),
@@ -292,7 +292,7 @@ class UsersCompanion extends UpdateCompanion<User> {
     this.photoUrl = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  UsersCompanion.insert({
+  UserCompanion.insert({
     required String uid,
     required String emailAddress,
     required String role,
@@ -303,7 +303,7 @@ class UsersCompanion extends UpdateCompanion<User> {
        emailAddress = Value(emailAddress),
        role = Value(role),
        displayName = Value(displayName);
-  static Insertable<User> custom({
+  static Insertable<UserData> custom({
     Expression<String>? uid,
     Expression<String>? emailAddress,
     Expression<String>? role,
@@ -321,7 +321,7 @@ class UsersCompanion extends UpdateCompanion<User> {
     });
   }
 
-  UsersCompanion copyWith({
+  UserCompanion copyWith({
     Value<String>? uid,
     Value<String>? emailAddress,
     Value<String>? role,
@@ -329,7 +329,7 @@ class UsersCompanion extends UpdateCompanion<User> {
     Value<String?>? photoUrl,
     Value<int>? rowid,
   }) {
-    return UsersCompanion(
+    return UserCompanion(
       uid: uid ?? this.uid,
       emailAddress: emailAddress ?? this.emailAddress,
       role: role ?? this.role,
@@ -365,7 +365,7 @@ class UsersCompanion extends UpdateCompanion<User> {
 
   @override
   String toString() {
-    return (StringBuffer('UsersCompanion(')
+    return (StringBuffer('UserCompanion(')
           ..write('uid: $uid, ')
           ..write('emailAddress: $emailAddress, ')
           ..write('role: $role, ')
@@ -629,11 +629,11 @@ class OrganizationCompanion extends UpdateCompanion<OrganizationData> {
   }
 }
 
-class $AuthorsTable extends Authors with TableInfo<$AuthorsTable, Author> {
+class $AuthorTable extends Author with TableInfo<$AuthorTable, AuthorData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $AuthorsTable(this.attachedDatabase, [this._alias]);
+  $AuthorTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _uidMeta = const VerificationMeta('uid');
   @override
   late final GeneratedColumn<String> uid = GeneratedColumn<String>(
@@ -643,7 +643,7 @@ class $AuthorsTable extends Authors with TableInfo<$AuthorsTable, Author> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES users (uid)',
+      'REFERENCES user (uid)',
     ),
   );
   static const VerificationMeta _idMeta = const VerificationMeta('id');
@@ -767,7 +767,7 @@ class $AuthorsTable extends Authors with TableInfo<$AuthorsTable, Author> {
         true,
         type: DriftSqlType.string,
         requiredDuringInsert: false,
-      ).withConverter<List<Post>?>($AuthorsTable.$converterposts);
+      ).withConverter<List<Post>?>($AuthorTable.$converterposts);
   static const VerificationMeta _academicDegreeMeta = const VerificationMeta(
     'academicDegree',
   );
@@ -811,10 +811,10 @@ class $AuthorsTable extends Authors with TableInfo<$AuthorsTable, Author> {
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'authors';
+  static const String $name = 'author';
   @override
   VerificationContext validateIntegrity(
-    Insertable<Author> instance, {
+    Insertable<AuthorData> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -944,9 +944,9 @@ class $AuthorsTable extends Authors with TableInfo<$AuthorsTable, Author> {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Author map(Map<String, dynamic> data, {String? tablePrefix}) {
+  AuthorData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Author(
+    return AuthorData(
       uid: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}uid'],
@@ -991,7 +991,7 @@ class $AuthorsTable extends Authors with TableInfo<$AuthorsTable, Author> {
         DriftSqlType.string,
         data['${effectivePrefix}education_level'],
       ),
-      posts: $AuthorsTable.$converterposts.fromSql(
+      posts: $AuthorTable.$converterposts.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}posts'],
@@ -1009,14 +1009,14 @@ class $AuthorsTable extends Authors with TableInfo<$AuthorsTable, Author> {
   }
 
   @override
-  $AuthorsTable createAlias(String alias) {
-    return $AuthorsTable(attachedDatabase, alias);
+  $AuthorTable createAlias(String alias) {
+    return $AuthorTable(attachedDatabase, alias);
   }
 
   static TypeConverter<List<Post>?, String?> $converterposts = PostConverter();
 }
 
-class Author extends DataClass implements Insertable<Author> {
+class AuthorData extends DataClass implements Insertable<AuthorData> {
   final String uid;
   final int id;
   final String status;
@@ -1031,7 +1031,7 @@ class Author extends DataClass implements Insertable<Author> {
   final List<Post>? posts;
   final String? academicDegree;
   final String? academicTitle;
-  const Author({
+  const AuthorData({
     required this.uid,
     required this.id,
     required this.status,
@@ -1069,7 +1069,7 @@ class Author extends DataClass implements Insertable<Author> {
     }
     if (!nullToAbsent || posts != null) {
       map['posts'] = Variable<String>(
-        $AuthorsTable.$converterposts.toSql(posts),
+        $AuthorTable.$converterposts.toSql(posts),
       );
     }
     if (!nullToAbsent || academicDegree != null) {
@@ -1081,8 +1081,8 @@ class Author extends DataClass implements Insertable<Author> {
     return map;
   }
 
-  AuthorsCompanion toCompanion(bool nullToAbsent) {
-    return AuthorsCompanion(
+  AuthorCompanion toCompanion(bool nullToAbsent) {
+    return AuthorCompanion(
       uid: Value(uid),
       id: Value(id),
       status: Value(status),
@@ -1112,12 +1112,12 @@ class Author extends DataClass implements Insertable<Author> {
     );
   }
 
-  factory Author.fromJson(
+  factory AuthorData.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Author(
+    return AuthorData(
       uid: serializer.fromJson<String>(json['uid']),
       id: serializer.fromJson<int>(json['id']),
       status: serializer.fromJson<String>(json['status']),
@@ -1155,7 +1155,7 @@ class Author extends DataClass implements Insertable<Author> {
     };
   }
 
-  Author copyWith({
+  AuthorData copyWith({
     String? uid,
     int? id,
     String? status,
@@ -1170,7 +1170,7 @@ class Author extends DataClass implements Insertable<Author> {
     Value<List<Post>?> posts = const Value.absent(),
     Value<String?> academicDegree = const Value.absent(),
     Value<String?> academicTitle = const Value.absent(),
-  }) => Author(
+  }) => AuthorData(
     uid: uid ?? this.uid,
     id: id ?? this.id,
     status: status ?? this.status,
@@ -1192,8 +1192,8 @@ class Author extends DataClass implements Insertable<Author> {
         ? academicTitle.value
         : this.academicTitle,
   );
-  Author copyWithCompanion(AuthorsCompanion data) {
-    return Author(
+  AuthorData copyWithCompanion(AuthorCompanion data) {
+    return AuthorData(
       uid: data.uid.present ? data.uid.value : this.uid,
       id: data.id.present ? data.id.value : this.id,
       status: data.status.present ? data.status.value : this.status,
@@ -1233,7 +1233,7 @@ class Author extends DataClass implements Insertable<Author> {
 
   @override
   String toString() {
-    return (StringBuffer('Author(')
+    return (StringBuffer('AuthorData(')
           ..write('uid: $uid, ')
           ..write('id: $id, ')
           ..write('status: $status, ')
@@ -1272,7 +1272,7 @@ class Author extends DataClass implements Insertable<Author> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Author &&
+      (other is AuthorData &&
           other.uid == this.uid &&
           other.id == this.id &&
           other.status == this.status &&
@@ -1289,7 +1289,7 @@ class Author extends DataClass implements Insertable<Author> {
           other.academicTitle == this.academicTitle);
 }
 
-class AuthorsCompanion extends UpdateCompanion<Author> {
+class AuthorCompanion extends UpdateCompanion<AuthorData> {
   final Value<String> uid;
   final Value<int> id;
   final Value<String> status;
@@ -1304,7 +1304,7 @@ class AuthorsCompanion extends UpdateCompanion<Author> {
   final Value<List<Post>?> posts;
   final Value<String?> academicDegree;
   final Value<String?> academicTitle;
-  const AuthorsCompanion({
+  const AuthorCompanion({
     this.uid = const Value.absent(),
     this.id = const Value.absent(),
     this.status = const Value.absent(),
@@ -1320,7 +1320,7 @@ class AuthorsCompanion extends UpdateCompanion<Author> {
     this.academicDegree = const Value.absent(),
     this.academicTitle = const Value.absent(),
   });
-  AuthorsCompanion.insert({
+  AuthorCompanion.insert({
     required String uid,
     this.id = const Value.absent(),
     required String status,
@@ -1342,7 +1342,7 @@ class AuthorsCompanion extends UpdateCompanion<Author> {
        firstNameRu = Value(firstNameRu),
        firstNameEn = Value(firstNameEn),
        organizationId = Value(organizationId);
-  static Insertable<Author> custom({
+  static Insertable<AuthorData> custom({
     Expression<String>? uid,
     Expression<int>? id,
     Expression<String>? status,
@@ -1376,7 +1376,7 @@ class AuthorsCompanion extends UpdateCompanion<Author> {
     });
   }
 
-  AuthorsCompanion copyWith({
+  AuthorCompanion copyWith({
     Value<String>? uid,
     Value<int>? id,
     Value<String>? status,
@@ -1392,7 +1392,7 @@ class AuthorsCompanion extends UpdateCompanion<Author> {
     Value<String?>? academicDegree,
     Value<String?>? academicTitle,
   }) {
-    return AuthorsCompanion(
+    return AuthorCompanion(
       uid: uid ?? this.uid,
       id: id ?? this.id,
       status: status ?? this.status,
@@ -1448,7 +1448,7 @@ class AuthorsCompanion extends UpdateCompanion<Author> {
     }
     if (posts.present) {
       map['posts'] = Variable<String>(
-        $AuthorsTable.$converterposts.toSql(posts.value),
+        $AuthorTable.$converterposts.toSql(posts.value),
       );
     }
     if (academicDegree.present) {
@@ -1462,7 +1462,7 @@ class AuthorsCompanion extends UpdateCompanion<Author> {
 
   @override
   String toString() {
-    return (StringBuffer('AuthorsCompanion(')
+    return (StringBuffer('AuthorCompanion(')
           ..write('uid: $uid, ')
           ..write('id: $id, ')
           ..write('status: $status, ')
@@ -1482,11 +1482,11 @@ class AuthorsCompanion extends UpdateCompanion<Author> {
   }
 }
 
-class $EditorsTable extends Editors with TableInfo<$EditorsTable, Editor> {
+class $EditorTable extends Editor with TableInfo<$EditorTable, EditorData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $EditorsTable(this.attachedDatabase, [this._alias]);
+  $EditorTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _uidMeta = const VerificationMeta('uid');
   @override
   late final GeneratedColumn<String> uid = GeneratedColumn<String>(
@@ -1496,7 +1496,7 @@ class $EditorsTable extends Editors with TableInfo<$EditorsTable, Editor> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES users (uid)',
+      'REFERENCES user (uid)',
     ),
   );
   static const VerificationMeta _idMeta = const VerificationMeta('id');
@@ -1518,10 +1518,10 @@ class $EditorsTable extends Editors with TableInfo<$EditorsTable, Editor> {
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'editors';
+  static const String $name = 'editor';
   @override
   VerificationContext validateIntegrity(
-    Insertable<Editor> instance, {
+    Insertable<EditorData> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -1543,9 +1543,9 @@ class $EditorsTable extends Editors with TableInfo<$EditorsTable, Editor> {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Editor map(Map<String, dynamic> data, {String? tablePrefix}) {
+  EditorData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Editor(
+    return EditorData(
       uid: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}uid'],
@@ -1558,15 +1558,15 @@ class $EditorsTable extends Editors with TableInfo<$EditorsTable, Editor> {
   }
 
   @override
-  $EditorsTable createAlias(String alias) {
-    return $EditorsTable(attachedDatabase, alias);
+  $EditorTable createAlias(String alias) {
+    return $EditorTable(attachedDatabase, alias);
   }
 }
 
-class Editor extends DataClass implements Insertable<Editor> {
+class EditorData extends DataClass implements Insertable<EditorData> {
   final String uid;
   final int id;
-  const Editor({required this.uid, required this.id});
+  const EditorData({required this.uid, required this.id});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -1575,16 +1575,16 @@ class Editor extends DataClass implements Insertable<Editor> {
     return map;
   }
 
-  EditorsCompanion toCompanion(bool nullToAbsent) {
-    return EditorsCompanion(uid: Value(uid), id: Value(id));
+  EditorCompanion toCompanion(bool nullToAbsent) {
+    return EditorCompanion(uid: Value(uid), id: Value(id));
   }
 
-  factory Editor.fromJson(
+  factory EditorData.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Editor(
+    return EditorData(
       uid: serializer.fromJson<String>(json['uid']),
       id: serializer.fromJson<int>(json['id']),
     );
@@ -1598,10 +1598,10 @@ class Editor extends DataClass implements Insertable<Editor> {
     };
   }
 
-  Editor copyWith({String? uid, int? id}) =>
-      Editor(uid: uid ?? this.uid, id: id ?? this.id);
-  Editor copyWithCompanion(EditorsCompanion data) {
-    return Editor(
+  EditorData copyWith({String? uid, int? id}) =>
+      EditorData(uid: uid ?? this.uid, id: id ?? this.id);
+  EditorData copyWithCompanion(EditorCompanion data) {
+    return EditorData(
       uid: data.uid.present ? data.uid.value : this.uid,
       id: data.id.present ? data.id.value : this.id,
     );
@@ -1609,7 +1609,7 @@ class Editor extends DataClass implements Insertable<Editor> {
 
   @override
   String toString() {
-    return (StringBuffer('Editor(')
+    return (StringBuffer('EditorData(')
           ..write('uid: $uid, ')
           ..write('id: $id')
           ..write(')'))
@@ -1621,19 +1621,19 @@ class Editor extends DataClass implements Insertable<Editor> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Editor && other.uid == this.uid && other.id == this.id);
+      (other is EditorData && other.uid == this.uid && other.id == this.id);
 }
 
-class EditorsCompanion extends UpdateCompanion<Editor> {
+class EditorCompanion extends UpdateCompanion<EditorData> {
   final Value<String> uid;
   final Value<int> id;
-  const EditorsCompanion({
+  const EditorCompanion({
     this.uid = const Value.absent(),
     this.id = const Value.absent(),
   });
-  EditorsCompanion.insert({required String uid, this.id = const Value.absent()})
+  EditorCompanion.insert({required String uid, this.id = const Value.absent()})
     : uid = Value(uid);
-  static Insertable<Editor> custom({
+  static Insertable<EditorData> custom({
     Expression<String>? uid,
     Expression<int>? id,
   }) {
@@ -1643,8 +1643,8 @@ class EditorsCompanion extends UpdateCompanion<Editor> {
     });
   }
 
-  EditorsCompanion copyWith({Value<String>? uid, Value<int>? id}) {
-    return EditorsCompanion(uid: uid ?? this.uid, id: id ?? this.id);
+  EditorCompanion copyWith({Value<String>? uid, Value<int>? id}) {
+    return EditorCompanion(uid: uid ?? this.uid, id: id ?? this.id);
   }
 
   @override
@@ -1661,7 +1661,7 @@ class EditorsCompanion extends UpdateCompanion<Editor> {
 
   @override
   String toString() {
-    return (StringBuffer('EditorsCompanion(')
+    return (StringBuffer('EditorCompanion(')
           ..write('uid: $uid, ')
           ..write('id: $id')
           ..write(')'))
@@ -1669,12 +1669,12 @@ class EditorsCompanion extends UpdateCompanion<Editor> {
   }
 }
 
-class $ReviewersTable extends Reviewers
-    with TableInfo<$ReviewersTable, Reviewer> {
+class $ReviewerTable extends Reviewer
+    with TableInfo<$ReviewerTable, ReviewerData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $ReviewersTable(this.attachedDatabase, [this._alias]);
+  $ReviewerTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _uidMeta = const VerificationMeta('uid');
   @override
   late final GeneratedColumn<String> uid = GeneratedColumn<String>(
@@ -1684,7 +1684,7 @@ class $ReviewersTable extends Reviewers
     type: DriftSqlType.string,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES users (uid)',
+      'REFERENCES user (uid)',
     ),
   );
   static const VerificationMeta _idMeta = const VerificationMeta('id');
@@ -1706,10 +1706,10 @@ class $ReviewersTable extends Reviewers
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'reviewers';
+  static const String $name = 'reviewer';
   @override
   VerificationContext validateIntegrity(
-    Insertable<Reviewer> instance, {
+    Insertable<ReviewerData> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -1731,9 +1731,9 @@ class $ReviewersTable extends Reviewers
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Reviewer map(Map<String, dynamic> data, {String? tablePrefix}) {
+  ReviewerData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Reviewer(
+    return ReviewerData(
       uid: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}uid'],
@@ -1746,15 +1746,15 @@ class $ReviewersTable extends Reviewers
   }
 
   @override
-  $ReviewersTable createAlias(String alias) {
-    return $ReviewersTable(attachedDatabase, alias);
+  $ReviewerTable createAlias(String alias) {
+    return $ReviewerTable(attachedDatabase, alias);
   }
 }
 
-class Reviewer extends DataClass implements Insertable<Reviewer> {
+class ReviewerData extends DataClass implements Insertable<ReviewerData> {
   final String uid;
   final int id;
-  const Reviewer({required this.uid, required this.id});
+  const ReviewerData({required this.uid, required this.id});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -1763,16 +1763,16 @@ class Reviewer extends DataClass implements Insertable<Reviewer> {
     return map;
   }
 
-  ReviewersCompanion toCompanion(bool nullToAbsent) {
-    return ReviewersCompanion(uid: Value(uid), id: Value(id));
+  ReviewerCompanion toCompanion(bool nullToAbsent) {
+    return ReviewerCompanion(uid: Value(uid), id: Value(id));
   }
 
-  factory Reviewer.fromJson(
+  factory ReviewerData.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Reviewer(
+    return ReviewerData(
       uid: serializer.fromJson<String>(json['uid']),
       id: serializer.fromJson<int>(json['id']),
     );
@@ -1786,10 +1786,10 @@ class Reviewer extends DataClass implements Insertable<Reviewer> {
     };
   }
 
-  Reviewer copyWith({String? uid, int? id}) =>
-      Reviewer(uid: uid ?? this.uid, id: id ?? this.id);
-  Reviewer copyWithCompanion(ReviewersCompanion data) {
-    return Reviewer(
+  ReviewerData copyWith({String? uid, int? id}) =>
+      ReviewerData(uid: uid ?? this.uid, id: id ?? this.id);
+  ReviewerData copyWithCompanion(ReviewerCompanion data) {
+    return ReviewerData(
       uid: data.uid.present ? data.uid.value : this.uid,
       id: data.id.present ? data.id.value : this.id,
     );
@@ -1797,7 +1797,7 @@ class Reviewer extends DataClass implements Insertable<Reviewer> {
 
   @override
   String toString() {
-    return (StringBuffer('Reviewer(')
+    return (StringBuffer('ReviewerData(')
           ..write('uid: $uid, ')
           ..write('id: $id')
           ..write(')'))
@@ -1809,21 +1809,21 @@ class Reviewer extends DataClass implements Insertable<Reviewer> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Reviewer && other.uid == this.uid && other.id == this.id);
+      (other is ReviewerData && other.uid == this.uid && other.id == this.id);
 }
 
-class ReviewersCompanion extends UpdateCompanion<Reviewer> {
+class ReviewerCompanion extends UpdateCompanion<ReviewerData> {
   final Value<String> uid;
   final Value<int> id;
-  const ReviewersCompanion({
+  const ReviewerCompanion({
     this.uid = const Value.absent(),
     this.id = const Value.absent(),
   });
-  ReviewersCompanion.insert({
+  ReviewerCompanion.insert({
     required String uid,
     this.id = const Value.absent(),
   }) : uid = Value(uid);
-  static Insertable<Reviewer> custom({
+  static Insertable<ReviewerData> custom({
     Expression<String>? uid,
     Expression<int>? id,
   }) {
@@ -1833,8 +1833,8 @@ class ReviewersCompanion extends UpdateCompanion<Reviewer> {
     });
   }
 
-  ReviewersCompanion copyWith({Value<String>? uid, Value<int>? id}) {
-    return ReviewersCompanion(uid: uid ?? this.uid, id: id ?? this.id);
+  ReviewerCompanion copyWith({Value<String>? uid, Value<int>? id}) {
+    return ReviewerCompanion(uid: uid ?? this.uid, id: id ?? this.id);
   }
 
   @override
@@ -1851,7 +1851,7 @@ class ReviewersCompanion extends UpdateCompanion<Reviewer> {
 
   @override
   String toString() {
-    return (StringBuffer('ReviewersCompanion(')
+    return (StringBuffer('ReviewerCompanion(')
           ..write('uid: $uid, ')
           ..write('id: $id')
           ..write(')'))
@@ -1873,7 +1873,7 @@ class $AdminTable extends Admin with TableInfo<$AdminTable, AdminData> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES users (uid)',
+      'REFERENCES user (uid)',
     ),
   );
   static const VerificationMeta _idMeta = const VerificationMeta('id');
@@ -2046,12 +2046,12 @@ class AdminCompanion extends UpdateCompanion<AdminData> {
   }
 }
 
-class $ConferencesTable extends Conferences
-    with TableInfo<$ConferencesTable, Conference> {
+class $ConferenceTable extends Conference
+    with TableInfo<$ConferenceTable, ConferenceData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $ConferencesTable(this.attachedDatabase, [this._alias]);
+  $ConferenceTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -2074,27 +2074,140 @@ class $ConferencesTable extends Conferences
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _endDateMeta = const VerificationMeta(
-    'endDate',
+  static const VerificationMeta _shortDescriptionMeta = const VerificationMeta(
+    'shortDescription',
   );
   @override
-  late final GeneratedColumn<DateTime> endDate = GeneratedColumn<DateTime>(
-    'end_date',
+  late final GeneratedColumn<String> shortDescription = GeneratedColumn<String>(
+    'short_description',
     aliasedName,
     false,
-    type: DriftSqlType.dateTime,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _startConferenceDateMeta =
+      const VerificationMeta('startConferenceDate');
+  @override
+  late final GeneratedColumn<DateTime> startConferenceDate =
+      GeneratedColumn<DateTime>(
+        'start_conference_date',
+        aliasedName,
+        false,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _endConferenceDateMeta = const VerificationMeta(
+    'endConferenceDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> endConferenceDate =
+      GeneratedColumn<DateTime>(
+        'end_conference_date',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _addressMeta = const VerificationMeta(
+    'address',
+  );
+  @override
+  late final GeneratedColumn<String> address = GeneratedColumn<String>(
+    'address',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
   @override
-  List<GeneratedColumn> get $columns => [id, title, endDate];
+  late final GeneratedColumnWithTypeConverter<List<ConferenceFormat>?, String>
+  conferenceFormat =
+      GeneratedColumn<String>(
+        'conference_format',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<List<ConferenceFormat>?>(
+        $ConferenceTable.$converterconferenceFormat,
+      );
+  static const VerificationMeta _submissionStartDateMeta =
+      const VerificationMeta('submissionStartDate');
+  @override
+  late final GeneratedColumn<DateTime> submissionStartDate =
+      GeneratedColumn<DateTime>(
+        'submission_start_date',
+        aliasedName,
+        false,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _submissionEndDateMeta = const VerificationMeta(
+    'submissionEndDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> submissionEndDate =
+      GeneratedColumn<DateTime>(
+        'submission_end_date',
+        aliasedName,
+        false,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: true,
+      );
+  static const VerificationMeta _quantityOfPagesMeta = const VerificationMeta(
+    'quantityOfPages',
+  );
+  @override
+  late final GeneratedColumn<int> quantityOfPages = GeneratedColumn<int>(
+    'quantity_of_pages',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<List<FileFormat>?, String>
+  fileFormat = GeneratedColumn<String>(
+    'file_format',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  ).withConverter<List<FileFormat>?>($ConferenceTable.$converterfileFormat);
+  static const VerificationMeta _requirementsMeta = const VerificationMeta(
+    'requirements',
+  );
+  @override
+  late final GeneratedColumn<String> requirements = GeneratedColumn<String>(
+    'requirements',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    title,
+    shortDescription,
+    startConferenceDate,
+    endConferenceDate,
+    address,
+    conferenceFormat,
+    submissionStartDate,
+    submissionEndDate,
+    quantityOfPages,
+    fileFormat,
+    requirements,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'conferences';
+  static const String $name = 'conference';
   @override
   VerificationContext validateIntegrity(
-    Insertable<Conference> instance, {
+    Insertable<ConferenceData> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -2110,13 +2223,88 @@ class $ConferencesTable extends Conferences
     } else if (isInserting) {
       context.missing(_titleMeta);
     }
-    if (data.containsKey('end_date')) {
+    if (data.containsKey('short_description')) {
       context.handle(
-        _endDateMeta,
-        endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta),
+        _shortDescriptionMeta,
+        shortDescription.isAcceptableOrUnknown(
+          data['short_description']!,
+          _shortDescriptionMeta,
+        ),
       );
     } else if (isInserting) {
-      context.missing(_endDateMeta);
+      context.missing(_shortDescriptionMeta);
+    }
+    if (data.containsKey('start_conference_date')) {
+      context.handle(
+        _startConferenceDateMeta,
+        startConferenceDate.isAcceptableOrUnknown(
+          data['start_conference_date']!,
+          _startConferenceDateMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_startConferenceDateMeta);
+    }
+    if (data.containsKey('end_conference_date')) {
+      context.handle(
+        _endConferenceDateMeta,
+        endConferenceDate.isAcceptableOrUnknown(
+          data['end_conference_date']!,
+          _endConferenceDateMeta,
+        ),
+      );
+    }
+    if (data.containsKey('address')) {
+      context.handle(
+        _addressMeta,
+        address.isAcceptableOrUnknown(data['address']!, _addressMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_addressMeta);
+    }
+    if (data.containsKey('submission_start_date')) {
+      context.handle(
+        _submissionStartDateMeta,
+        submissionStartDate.isAcceptableOrUnknown(
+          data['submission_start_date']!,
+          _submissionStartDateMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_submissionStartDateMeta);
+    }
+    if (data.containsKey('submission_end_date')) {
+      context.handle(
+        _submissionEndDateMeta,
+        submissionEndDate.isAcceptableOrUnknown(
+          data['submission_end_date']!,
+          _submissionEndDateMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_submissionEndDateMeta);
+    }
+    if (data.containsKey('quantity_of_pages')) {
+      context.handle(
+        _quantityOfPagesMeta,
+        quantityOfPages.isAcceptableOrUnknown(
+          data['quantity_of_pages']!,
+          _quantityOfPagesMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_quantityOfPagesMeta);
+    }
+    if (data.containsKey('requirements')) {
+      context.handle(
+        _requirementsMeta,
+        requirements.isAcceptableOrUnknown(
+          data['requirements']!,
+          _requirementsMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_requirementsMeta);
     }
     return context;
   }
@@ -2124,9 +2312,9 @@ class $ConferencesTable extends Conferences
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Conference map(Map<String, dynamic> data, {String? tablePrefix}) {
+  ConferenceData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Conference(
+    return ConferenceData(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -2135,54 +2323,170 @@ class $ConferencesTable extends Conferences
         DriftSqlType.string,
         data['${effectivePrefix}title'],
       )!,
-      endDate: attachedDatabase.typeMapping.read(
+      shortDescription: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}short_description'],
+      )!,
+      startConferenceDate: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
-        data['${effectivePrefix}end_date'],
+        data['${effectivePrefix}start_conference_date'],
+      )!,
+      endConferenceDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}end_conference_date'],
+      ),
+      address: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}address'],
+      )!,
+      conferenceFormat: $ConferenceTable.$converterconferenceFormat.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}conference_format'],
+        ),
+      ),
+      submissionStartDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}submission_start_date'],
+      )!,
+      submissionEndDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}submission_end_date'],
+      )!,
+      quantityOfPages: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}quantity_of_pages'],
+      )!,
+      fileFormat: $ConferenceTable.$converterfileFormat.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}file_format'],
+        ),
+      ),
+      requirements: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}requirements'],
       )!,
     );
   }
 
   @override
-  $ConferencesTable createAlias(String alias) {
-    return $ConferencesTable(attachedDatabase, alias);
+  $ConferenceTable createAlias(String alias) {
+    return $ConferenceTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<List<ConferenceFormat>?, String?>
+  $converterconferenceFormat = ConferenceFormatConverter();
+  static TypeConverter<List<FileFormat>?, String?> $converterfileFormat =
+      FileFormatConverter();
 }
 
-class Conference extends DataClass implements Insertable<Conference> {
+class ConferenceData extends DataClass implements Insertable<ConferenceData> {
   final int id;
   final String title;
-  final DateTime endDate;
-  const Conference({
+  final String shortDescription;
+  final DateTime startConferenceDate;
+  final DateTime? endConferenceDate;
+  final String address;
+  final List<ConferenceFormat>? conferenceFormat;
+  final DateTime submissionStartDate;
+  final DateTime submissionEndDate;
+  final int quantityOfPages;
+  final List<FileFormat>? fileFormat;
+  final String requirements;
+  const ConferenceData({
     required this.id,
     required this.title,
-    required this.endDate,
+    required this.shortDescription,
+    required this.startConferenceDate,
+    this.endConferenceDate,
+    required this.address,
+    this.conferenceFormat,
+    required this.submissionStartDate,
+    required this.submissionEndDate,
+    required this.quantityOfPages,
+    this.fileFormat,
+    required this.requirements,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['title'] = Variable<String>(title);
-    map['end_date'] = Variable<DateTime>(endDate);
+    map['short_description'] = Variable<String>(shortDescription);
+    map['start_conference_date'] = Variable<DateTime>(startConferenceDate);
+    if (!nullToAbsent || endConferenceDate != null) {
+      map['end_conference_date'] = Variable<DateTime>(endConferenceDate);
+    }
+    map['address'] = Variable<String>(address);
+    if (!nullToAbsent || conferenceFormat != null) {
+      map['conference_format'] = Variable<String>(
+        $ConferenceTable.$converterconferenceFormat.toSql(conferenceFormat),
+      );
+    }
+    map['submission_start_date'] = Variable<DateTime>(submissionStartDate);
+    map['submission_end_date'] = Variable<DateTime>(submissionEndDate);
+    map['quantity_of_pages'] = Variable<int>(quantityOfPages);
+    if (!nullToAbsent || fileFormat != null) {
+      map['file_format'] = Variable<String>(
+        $ConferenceTable.$converterfileFormat.toSql(fileFormat),
+      );
+    }
+    map['requirements'] = Variable<String>(requirements);
     return map;
   }
 
-  ConferencesCompanion toCompanion(bool nullToAbsent) {
-    return ConferencesCompanion(
+  ConferenceCompanion toCompanion(bool nullToAbsent) {
+    return ConferenceCompanion(
       id: Value(id),
       title: Value(title),
-      endDate: Value(endDate),
+      shortDescription: Value(shortDescription),
+      startConferenceDate: Value(startConferenceDate),
+      endConferenceDate: endConferenceDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(endConferenceDate),
+      address: Value(address),
+      conferenceFormat: conferenceFormat == null && nullToAbsent
+          ? const Value.absent()
+          : Value(conferenceFormat),
+      submissionStartDate: Value(submissionStartDate),
+      submissionEndDate: Value(submissionEndDate),
+      quantityOfPages: Value(quantityOfPages),
+      fileFormat: fileFormat == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fileFormat),
+      requirements: Value(requirements),
     );
   }
 
-  factory Conference.fromJson(
+  factory ConferenceData.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Conference(
+    return ConferenceData(
       id: serializer.fromJson<int>(json['id']),
       title: serializer.fromJson<String>(json['title']),
-      endDate: serializer.fromJson<DateTime>(json['endDate']),
+      shortDescription: serializer.fromJson<String>(json['shortDescription']),
+      startConferenceDate: serializer.fromJson<DateTime>(
+        json['startConferenceDate'],
+      ),
+      endConferenceDate: serializer.fromJson<DateTime?>(
+        json['endConferenceDate'],
+      ),
+      address: serializer.fromJson<String>(json['address']),
+      conferenceFormat: serializer.fromJson<List<ConferenceFormat>?>(
+        json['conferenceFormat'],
+      ),
+      submissionStartDate: serializer.fromJson<DateTime>(
+        json['submissionStartDate'],
+      ),
+      submissionEndDate: serializer.fromJson<DateTime>(
+        json['submissionEndDate'],
+      ),
+      quantityOfPages: serializer.fromJson<int>(json['quantityOfPages']),
+      fileFormat: serializer.fromJson<List<FileFormat>?>(json['fileFormat']),
+      requirements: serializer.fromJson<String>(json['requirements']),
     );
   }
   @override
@@ -2191,81 +2495,246 @@ class Conference extends DataClass implements Insertable<Conference> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'title': serializer.toJson<String>(title),
-      'endDate': serializer.toJson<DateTime>(endDate),
+      'shortDescription': serializer.toJson<String>(shortDescription),
+      'startConferenceDate': serializer.toJson<DateTime>(startConferenceDate),
+      'endConferenceDate': serializer.toJson<DateTime?>(endConferenceDate),
+      'address': serializer.toJson<String>(address),
+      'conferenceFormat': serializer.toJson<List<ConferenceFormat>?>(
+        conferenceFormat,
+      ),
+      'submissionStartDate': serializer.toJson<DateTime>(submissionStartDate),
+      'submissionEndDate': serializer.toJson<DateTime>(submissionEndDate),
+      'quantityOfPages': serializer.toJson<int>(quantityOfPages),
+      'fileFormat': serializer.toJson<List<FileFormat>?>(fileFormat),
+      'requirements': serializer.toJson<String>(requirements),
     };
   }
 
-  Conference copyWith({int? id, String? title, DateTime? endDate}) =>
-      Conference(
-        id: id ?? this.id,
-        title: title ?? this.title,
-        endDate: endDate ?? this.endDate,
-      );
-  Conference copyWithCompanion(ConferencesCompanion data) {
-    return Conference(
+  ConferenceData copyWith({
+    int? id,
+    String? title,
+    String? shortDescription,
+    DateTime? startConferenceDate,
+    Value<DateTime?> endConferenceDate = const Value.absent(),
+    String? address,
+    Value<List<ConferenceFormat>?> conferenceFormat = const Value.absent(),
+    DateTime? submissionStartDate,
+    DateTime? submissionEndDate,
+    int? quantityOfPages,
+    Value<List<FileFormat>?> fileFormat = const Value.absent(),
+    String? requirements,
+  }) => ConferenceData(
+    id: id ?? this.id,
+    title: title ?? this.title,
+    shortDescription: shortDescription ?? this.shortDescription,
+    startConferenceDate: startConferenceDate ?? this.startConferenceDate,
+    endConferenceDate: endConferenceDate.present
+        ? endConferenceDate.value
+        : this.endConferenceDate,
+    address: address ?? this.address,
+    conferenceFormat: conferenceFormat.present
+        ? conferenceFormat.value
+        : this.conferenceFormat,
+    submissionStartDate: submissionStartDate ?? this.submissionStartDate,
+    submissionEndDate: submissionEndDate ?? this.submissionEndDate,
+    quantityOfPages: quantityOfPages ?? this.quantityOfPages,
+    fileFormat: fileFormat.present ? fileFormat.value : this.fileFormat,
+    requirements: requirements ?? this.requirements,
+  );
+  ConferenceData copyWithCompanion(ConferenceCompanion data) {
+    return ConferenceData(
       id: data.id.present ? data.id.value : this.id,
       title: data.title.present ? data.title.value : this.title,
-      endDate: data.endDate.present ? data.endDate.value : this.endDate,
+      shortDescription: data.shortDescription.present
+          ? data.shortDescription.value
+          : this.shortDescription,
+      startConferenceDate: data.startConferenceDate.present
+          ? data.startConferenceDate.value
+          : this.startConferenceDate,
+      endConferenceDate: data.endConferenceDate.present
+          ? data.endConferenceDate.value
+          : this.endConferenceDate,
+      address: data.address.present ? data.address.value : this.address,
+      conferenceFormat: data.conferenceFormat.present
+          ? data.conferenceFormat.value
+          : this.conferenceFormat,
+      submissionStartDate: data.submissionStartDate.present
+          ? data.submissionStartDate.value
+          : this.submissionStartDate,
+      submissionEndDate: data.submissionEndDate.present
+          ? data.submissionEndDate.value
+          : this.submissionEndDate,
+      quantityOfPages: data.quantityOfPages.present
+          ? data.quantityOfPages.value
+          : this.quantityOfPages,
+      fileFormat: data.fileFormat.present
+          ? data.fileFormat.value
+          : this.fileFormat,
+      requirements: data.requirements.present
+          ? data.requirements.value
+          : this.requirements,
     );
   }
 
   @override
   String toString() {
-    return (StringBuffer('Conference(')
+    return (StringBuffer('ConferenceData(')
           ..write('id: $id, ')
           ..write('title: $title, ')
-          ..write('endDate: $endDate')
+          ..write('shortDescription: $shortDescription, ')
+          ..write('startConferenceDate: $startConferenceDate, ')
+          ..write('endConferenceDate: $endConferenceDate, ')
+          ..write('address: $address, ')
+          ..write('conferenceFormat: $conferenceFormat, ')
+          ..write('submissionStartDate: $submissionStartDate, ')
+          ..write('submissionEndDate: $submissionEndDate, ')
+          ..write('quantityOfPages: $quantityOfPages, ')
+          ..write('fileFormat: $fileFormat, ')
+          ..write('requirements: $requirements')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, title, endDate);
+  int get hashCode => Object.hash(
+    id,
+    title,
+    shortDescription,
+    startConferenceDate,
+    endConferenceDate,
+    address,
+    conferenceFormat,
+    submissionStartDate,
+    submissionEndDate,
+    quantityOfPages,
+    fileFormat,
+    requirements,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Conference &&
+      (other is ConferenceData &&
           other.id == this.id &&
           other.title == this.title &&
-          other.endDate == this.endDate);
+          other.shortDescription == this.shortDescription &&
+          other.startConferenceDate == this.startConferenceDate &&
+          other.endConferenceDate == this.endConferenceDate &&
+          other.address == this.address &&
+          other.conferenceFormat == this.conferenceFormat &&
+          other.submissionStartDate == this.submissionStartDate &&
+          other.submissionEndDate == this.submissionEndDate &&
+          other.quantityOfPages == this.quantityOfPages &&
+          other.fileFormat == this.fileFormat &&
+          other.requirements == this.requirements);
 }
 
-class ConferencesCompanion extends UpdateCompanion<Conference> {
+class ConferenceCompanion extends UpdateCompanion<ConferenceData> {
   final Value<int> id;
   final Value<String> title;
-  final Value<DateTime> endDate;
-  const ConferencesCompanion({
+  final Value<String> shortDescription;
+  final Value<DateTime> startConferenceDate;
+  final Value<DateTime?> endConferenceDate;
+  final Value<String> address;
+  final Value<List<ConferenceFormat>?> conferenceFormat;
+  final Value<DateTime> submissionStartDate;
+  final Value<DateTime> submissionEndDate;
+  final Value<int> quantityOfPages;
+  final Value<List<FileFormat>?> fileFormat;
+  final Value<String> requirements;
+  const ConferenceCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
-    this.endDate = const Value.absent(),
+    this.shortDescription = const Value.absent(),
+    this.startConferenceDate = const Value.absent(),
+    this.endConferenceDate = const Value.absent(),
+    this.address = const Value.absent(),
+    this.conferenceFormat = const Value.absent(),
+    this.submissionStartDate = const Value.absent(),
+    this.submissionEndDate = const Value.absent(),
+    this.quantityOfPages = const Value.absent(),
+    this.fileFormat = const Value.absent(),
+    this.requirements = const Value.absent(),
   });
-  ConferencesCompanion.insert({
+  ConferenceCompanion.insert({
     this.id = const Value.absent(),
     required String title,
-    required DateTime endDate,
+    required String shortDescription,
+    required DateTime startConferenceDate,
+    this.endConferenceDate = const Value.absent(),
+    required String address,
+    this.conferenceFormat = const Value.absent(),
+    required DateTime submissionStartDate,
+    required DateTime submissionEndDate,
+    required int quantityOfPages,
+    this.fileFormat = const Value.absent(),
+    required String requirements,
   }) : title = Value(title),
-       endDate = Value(endDate);
-  static Insertable<Conference> custom({
+       shortDescription = Value(shortDescription),
+       startConferenceDate = Value(startConferenceDate),
+       address = Value(address),
+       submissionStartDate = Value(submissionStartDate),
+       submissionEndDate = Value(submissionEndDate),
+       quantityOfPages = Value(quantityOfPages),
+       requirements = Value(requirements);
+  static Insertable<ConferenceData> custom({
     Expression<int>? id,
     Expression<String>? title,
-    Expression<DateTime>? endDate,
+    Expression<String>? shortDescription,
+    Expression<DateTime>? startConferenceDate,
+    Expression<DateTime>? endConferenceDate,
+    Expression<String>? address,
+    Expression<String>? conferenceFormat,
+    Expression<DateTime>? submissionStartDate,
+    Expression<DateTime>? submissionEndDate,
+    Expression<int>? quantityOfPages,
+    Expression<String>? fileFormat,
+    Expression<String>? requirements,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (title != null) 'title': title,
-      if (endDate != null) 'end_date': endDate,
+      if (shortDescription != null) 'short_description': shortDescription,
+      if (startConferenceDate != null)
+        'start_conference_date': startConferenceDate,
+      if (endConferenceDate != null) 'end_conference_date': endConferenceDate,
+      if (address != null) 'address': address,
+      if (conferenceFormat != null) 'conference_format': conferenceFormat,
+      if (submissionStartDate != null)
+        'submission_start_date': submissionStartDate,
+      if (submissionEndDate != null) 'submission_end_date': submissionEndDate,
+      if (quantityOfPages != null) 'quantity_of_pages': quantityOfPages,
+      if (fileFormat != null) 'file_format': fileFormat,
+      if (requirements != null) 'requirements': requirements,
     });
   }
 
-  ConferencesCompanion copyWith({
+  ConferenceCompanion copyWith({
     Value<int>? id,
     Value<String>? title,
-    Value<DateTime>? endDate,
+    Value<String>? shortDescription,
+    Value<DateTime>? startConferenceDate,
+    Value<DateTime?>? endConferenceDate,
+    Value<String>? address,
+    Value<List<ConferenceFormat>?>? conferenceFormat,
+    Value<DateTime>? submissionStartDate,
+    Value<DateTime>? submissionEndDate,
+    Value<int>? quantityOfPages,
+    Value<List<FileFormat>?>? fileFormat,
+    Value<String>? requirements,
   }) {
-    return ConferencesCompanion(
+    return ConferenceCompanion(
       id: id ?? this.id,
       title: title ?? this.title,
-      endDate: endDate ?? this.endDate,
+      shortDescription: shortDescription ?? this.shortDescription,
+      startConferenceDate: startConferenceDate ?? this.startConferenceDate,
+      endConferenceDate: endConferenceDate ?? this.endConferenceDate,
+      address: address ?? this.address,
+      conferenceFormat: conferenceFormat ?? this.conferenceFormat,
+      submissionStartDate: submissionStartDate ?? this.submissionStartDate,
+      submissionEndDate: submissionEndDate ?? this.submissionEndDate,
+      quantityOfPages: quantityOfPages ?? this.quantityOfPages,
+      fileFormat: fileFormat ?? this.fileFormat,
+      requirements: requirements ?? this.requirements,
     );
   }
 
@@ -2278,28 +2747,74 @@ class ConferencesCompanion extends UpdateCompanion<Conference> {
     if (title.present) {
       map['title'] = Variable<String>(title.value);
     }
-    if (endDate.present) {
-      map['end_date'] = Variable<DateTime>(endDate.value);
+    if (shortDescription.present) {
+      map['short_description'] = Variable<String>(shortDescription.value);
+    }
+    if (startConferenceDate.present) {
+      map['start_conference_date'] = Variable<DateTime>(
+        startConferenceDate.value,
+      );
+    }
+    if (endConferenceDate.present) {
+      map['end_conference_date'] = Variable<DateTime>(endConferenceDate.value);
+    }
+    if (address.present) {
+      map['address'] = Variable<String>(address.value);
+    }
+    if (conferenceFormat.present) {
+      map['conference_format'] = Variable<String>(
+        $ConferenceTable.$converterconferenceFormat.toSql(
+          conferenceFormat.value,
+        ),
+      );
+    }
+    if (submissionStartDate.present) {
+      map['submission_start_date'] = Variable<DateTime>(
+        submissionStartDate.value,
+      );
+    }
+    if (submissionEndDate.present) {
+      map['submission_end_date'] = Variable<DateTime>(submissionEndDate.value);
+    }
+    if (quantityOfPages.present) {
+      map['quantity_of_pages'] = Variable<int>(quantityOfPages.value);
+    }
+    if (fileFormat.present) {
+      map['file_format'] = Variable<String>(
+        $ConferenceTable.$converterfileFormat.toSql(fileFormat.value),
+      );
+    }
+    if (requirements.present) {
+      map['requirements'] = Variable<String>(requirements.value);
     }
     return map;
   }
 
   @override
   String toString() {
-    return (StringBuffer('ConferencesCompanion(')
+    return (StringBuffer('ConferenceCompanion(')
           ..write('id: $id, ')
           ..write('title: $title, ')
-          ..write('endDate: $endDate')
+          ..write('shortDescription: $shortDescription, ')
+          ..write('startConferenceDate: $startConferenceDate, ')
+          ..write('endConferenceDate: $endConferenceDate, ')
+          ..write('address: $address, ')
+          ..write('conferenceFormat: $conferenceFormat, ')
+          ..write('submissionStartDate: $submissionStartDate, ')
+          ..write('submissionEndDate: $submissionEndDate, ')
+          ..write('quantityOfPages: $quantityOfPages, ')
+          ..write('fileFormat: $fileFormat, ')
+          ..write('requirements: $requirements')
           ..write(')'))
         .toString();
   }
 }
 
-class $SectionsTable extends Sections with TableInfo<$SectionsTable, Section> {
+class $SectionTable extends Section with TableInfo<$SectionTable, SectionData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $SectionsTable(this.attachedDatabase, [this._alias]);
+  $SectionTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -2328,10 +2843,10 @@ class $SectionsTable extends Sections with TableInfo<$SectionsTable, Section> {
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'sections';
+  static const String $name = 'section';
   @override
   VerificationContext validateIntegrity(
-    Insertable<Section> instance, {
+    Insertable<SectionData> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -2353,9 +2868,9 @@ class $SectionsTable extends Sections with TableInfo<$SectionsTable, Section> {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Section map(Map<String, dynamic> data, {String? tablePrefix}) {
+  SectionData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Section(
+    return SectionData(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -2368,15 +2883,15 @@ class $SectionsTable extends Sections with TableInfo<$SectionsTable, Section> {
   }
 
   @override
-  $SectionsTable createAlias(String alias) {
-    return $SectionsTable(attachedDatabase, alias);
+  $SectionTable createAlias(String alias) {
+    return $SectionTable(attachedDatabase, alias);
   }
 }
 
-class Section extends DataClass implements Insertable<Section> {
+class SectionData extends DataClass implements Insertable<SectionData> {
   final int id;
   final String title;
-  const Section({required this.id, required this.title});
+  const SectionData({required this.id, required this.title});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -2385,16 +2900,16 @@ class Section extends DataClass implements Insertable<Section> {
     return map;
   }
 
-  SectionsCompanion toCompanion(bool nullToAbsent) {
-    return SectionsCompanion(id: Value(id), title: Value(title));
+  SectionCompanion toCompanion(bool nullToAbsent) {
+    return SectionCompanion(id: Value(id), title: Value(title));
   }
 
-  factory Section.fromJson(
+  factory SectionData.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Section(
+    return SectionData(
       id: serializer.fromJson<int>(json['id']),
       title: serializer.fromJson<String>(json['title']),
     );
@@ -2408,10 +2923,10 @@ class Section extends DataClass implements Insertable<Section> {
     };
   }
 
-  Section copyWith({int? id, String? title}) =>
-      Section(id: id ?? this.id, title: title ?? this.title);
-  Section copyWithCompanion(SectionsCompanion data) {
-    return Section(
+  SectionData copyWith({int? id, String? title}) =>
+      SectionData(id: id ?? this.id, title: title ?? this.title);
+  SectionData copyWithCompanion(SectionCompanion data) {
+    return SectionData(
       id: data.id.present ? data.id.value : this.id,
       title: data.title.present ? data.title.value : this.title,
     );
@@ -2419,7 +2934,7 @@ class Section extends DataClass implements Insertable<Section> {
 
   @override
   String toString() {
-    return (StringBuffer('Section(')
+    return (StringBuffer('SectionData(')
           ..write('id: $id, ')
           ..write('title: $title')
           ..write(')'))
@@ -2431,21 +2946,23 @@ class Section extends DataClass implements Insertable<Section> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Section && other.id == this.id && other.title == this.title);
+      (other is SectionData &&
+          other.id == this.id &&
+          other.title == this.title);
 }
 
-class SectionsCompanion extends UpdateCompanion<Section> {
+class SectionCompanion extends UpdateCompanion<SectionData> {
   final Value<int> id;
   final Value<String> title;
-  const SectionsCompanion({
+  const SectionCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
   });
-  SectionsCompanion.insert({
+  SectionCompanion.insert({
     this.id = const Value.absent(),
     required String title,
   }) : title = Value(title);
-  static Insertable<Section> custom({
+  static Insertable<SectionData> custom({
     Expression<int>? id,
     Expression<String>? title,
   }) {
@@ -2455,8 +2972,8 @@ class SectionsCompanion extends UpdateCompanion<Section> {
     });
   }
 
-  SectionsCompanion copyWith({Value<int>? id, Value<String>? title}) {
-    return SectionsCompanion(id: id ?? this.id, title: title ?? this.title);
+  SectionCompanion copyWith({Value<int>? id, Value<String>? title}) {
+    return SectionCompanion(id: id ?? this.id, title: title ?? this.title);
   }
 
   @override
@@ -2473,7 +2990,7 @@ class SectionsCompanion extends UpdateCompanion<Section> {
 
   @override
   String toString() {
-    return (StringBuffer('SectionsCompanion(')
+    return (StringBuffer('SectionCompanion(')
           ..write('id: $id, ')
           ..write('title: $title')
           ..write(')'))
@@ -2481,11 +2998,11 @@ class SectionsCompanion extends UpdateCompanion<Section> {
   }
 }
 
-class $ChatsTable extends Chats with TableInfo<$ChatsTable, Chat> {
+class $ChatTable extends Chat with TableInfo<$ChatTable, ChatData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $ChatsTable(this.attachedDatabase, [this._alias]);
+  $ChatTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -2510,7 +3027,7 @@ class $ChatsTable extends Chats with TableInfo<$ChatsTable, Chat> {
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES authors (id)',
+      'REFERENCES author (id)',
     ),
   );
   static const VerificationMeta _editorIdMeta = const VerificationMeta(
@@ -2524,7 +3041,7 @@ class $ChatsTable extends Chats with TableInfo<$ChatsTable, Chat> {
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES editors (id)',
+      'REFERENCES editor (id)',
     ),
   );
   static const VerificationMeta _reviewerIdMeta = const VerificationMeta(
@@ -2538,7 +3055,7 @@ class $ChatsTable extends Chats with TableInfo<$ChatsTable, Chat> {
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES reviewers (id)',
+      'REFERENCES reviewer (id)',
     ),
   );
   @override
@@ -2547,10 +3064,10 @@ class $ChatsTable extends Chats with TableInfo<$ChatsTable, Chat> {
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'chats';
+  static const String $name = 'chat';
   @override
   VerificationContext validateIntegrity(
-    Insertable<Chat> instance, {
+    Insertable<ChatData> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -2588,9 +3105,9 @@ class $ChatsTable extends Chats with TableInfo<$ChatsTable, Chat> {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Chat map(Map<String, dynamic> data, {String? tablePrefix}) {
+  ChatData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Chat(
+    return ChatData(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -2611,17 +3128,17 @@ class $ChatsTable extends Chats with TableInfo<$ChatsTable, Chat> {
   }
 
   @override
-  $ChatsTable createAlias(String alias) {
-    return $ChatsTable(attachedDatabase, alias);
+  $ChatTable createAlias(String alias) {
+    return $ChatTable(attachedDatabase, alias);
   }
 }
 
-class Chat extends DataClass implements Insertable<Chat> {
+class ChatData extends DataClass implements Insertable<ChatData> {
   final int id;
   final int authorId;
   final int editorId;
   final int reviewerId;
-  const Chat({
+  const ChatData({
     required this.id,
     required this.authorId,
     required this.editorId,
@@ -2637,8 +3154,8 @@ class Chat extends DataClass implements Insertable<Chat> {
     return map;
   }
 
-  ChatsCompanion toCompanion(bool nullToAbsent) {
-    return ChatsCompanion(
+  ChatCompanion toCompanion(bool nullToAbsent) {
+    return ChatCompanion(
       id: Value(id),
       authorId: Value(authorId),
       editorId: Value(editorId),
@@ -2646,12 +3163,12 @@ class Chat extends DataClass implements Insertable<Chat> {
     );
   }
 
-  factory Chat.fromJson(
+  factory ChatData.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Chat(
+    return ChatData(
       id: serializer.fromJson<int>(json['id']),
       authorId: serializer.fromJson<int>(json['authorId']),
       editorId: serializer.fromJson<int>(json['editorId']),
@@ -2669,15 +3186,15 @@ class Chat extends DataClass implements Insertable<Chat> {
     };
   }
 
-  Chat copyWith({int? id, int? authorId, int? editorId, int? reviewerId}) =>
-      Chat(
+  ChatData copyWith({int? id, int? authorId, int? editorId, int? reviewerId}) =>
+      ChatData(
         id: id ?? this.id,
         authorId: authorId ?? this.authorId,
         editorId: editorId ?? this.editorId,
         reviewerId: reviewerId ?? this.reviewerId,
       );
-  Chat copyWithCompanion(ChatsCompanion data) {
-    return Chat(
+  ChatData copyWithCompanion(ChatCompanion data) {
+    return ChatData(
       id: data.id.present ? data.id.value : this.id,
       authorId: data.authorId.present ? data.authorId.value : this.authorId,
       editorId: data.editorId.present ? data.editorId.value : this.editorId,
@@ -2689,7 +3206,7 @@ class Chat extends DataClass implements Insertable<Chat> {
 
   @override
   String toString() {
-    return (StringBuffer('Chat(')
+    return (StringBuffer('ChatData(')
           ..write('id: $id, ')
           ..write('authorId: $authorId, ')
           ..write('editorId: $editorId, ')
@@ -2703,25 +3220,25 @@ class Chat extends DataClass implements Insertable<Chat> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Chat &&
+      (other is ChatData &&
           other.id == this.id &&
           other.authorId == this.authorId &&
           other.editorId == this.editorId &&
           other.reviewerId == this.reviewerId);
 }
 
-class ChatsCompanion extends UpdateCompanion<Chat> {
+class ChatCompanion extends UpdateCompanion<ChatData> {
   final Value<int> id;
   final Value<int> authorId;
   final Value<int> editorId;
   final Value<int> reviewerId;
-  const ChatsCompanion({
+  const ChatCompanion({
     this.id = const Value.absent(),
     this.authorId = const Value.absent(),
     this.editorId = const Value.absent(),
     this.reviewerId = const Value.absent(),
   });
-  ChatsCompanion.insert({
+  ChatCompanion.insert({
     this.id = const Value.absent(),
     required int authorId,
     required int editorId,
@@ -2729,7 +3246,7 @@ class ChatsCompanion extends UpdateCompanion<Chat> {
   }) : authorId = Value(authorId),
        editorId = Value(editorId),
        reviewerId = Value(reviewerId);
-  static Insertable<Chat> custom({
+  static Insertable<ChatData> custom({
     Expression<int>? id,
     Expression<int>? authorId,
     Expression<int>? editorId,
@@ -2743,13 +3260,13 @@ class ChatsCompanion extends UpdateCompanion<Chat> {
     });
   }
 
-  ChatsCompanion copyWith({
+  ChatCompanion copyWith({
     Value<int>? id,
     Value<int>? authorId,
     Value<int>? editorId,
     Value<int>? reviewerId,
   }) {
-    return ChatsCompanion(
+    return ChatCompanion(
       id: id ?? this.id,
       authorId: authorId ?? this.authorId,
       editorId: editorId ?? this.editorId,
@@ -2777,7 +3294,7 @@ class ChatsCompanion extends UpdateCompanion<Chat> {
 
   @override
   String toString() {
-    return (StringBuffer('ChatsCompanion(')
+    return (StringBuffer('ChatCompanion(')
           ..write('id: $id, ')
           ..write('authorId: $authorId, ')
           ..write('editorId: $editorId, ')
@@ -2787,11 +3304,11 @@ class ChatsCompanion extends UpdateCompanion<Chat> {
   }
 }
 
-class $RequestsTable extends Requests with TableInfo<$RequestsTable, Request> {
+class $RequestTable extends Request with TableInfo<$RequestTable, RequestData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $RequestsTable(this.attachedDatabase, [this._alias]);
+  $RequestTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -2816,7 +3333,7 @@ class $RequestsTable extends Requests with TableInfo<$RequestsTable, Request> {
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES authors (id)',
+      'REFERENCES author (id)',
     ),
   );
   static const VerificationMeta _conferenceIdMeta = const VerificationMeta(
@@ -2830,7 +3347,7 @@ class $RequestsTable extends Requests with TableInfo<$RequestsTable, Request> {
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES conferences (id)',
+      'REFERENCES conference (id)',
     ),
   );
   static const VerificationMeta _sectionIdMeta = const VerificationMeta(
@@ -2844,7 +3361,7 @@ class $RequestsTable extends Requests with TableInfo<$RequestsTable, Request> {
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES sections (id)',
+      'REFERENCES section (id)',
     ),
   );
   static const VerificationMeta _coAuthorsMeta = const VerificationMeta(
@@ -2896,7 +3413,7 @@ class $RequestsTable extends Requests with TableInfo<$RequestsTable, Request> {
     type: DriftSqlType.int,
     requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES chats (id)',
+      'REFERENCES chat (id)',
     ),
   );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
@@ -2927,10 +3444,10 @@ class $RequestsTable extends Requests with TableInfo<$RequestsTable, Request> {
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'requests';
+  static const String $name = 'request';
   @override
   VerificationContext validateIntegrity(
-    Insertable<Request> instance, {
+    Insertable<RequestData> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -3013,9 +3530,9 @@ class $RequestsTable extends Requests with TableInfo<$RequestsTable, Request> {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Request map(Map<String, dynamic> data, {String? tablePrefix}) {
+  RequestData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Request(
+    return RequestData(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -3060,12 +3577,12 @@ class $RequestsTable extends Requests with TableInfo<$RequestsTable, Request> {
   }
 
   @override
-  $RequestsTable createAlias(String alias) {
-    return $RequestsTable(attachedDatabase, alias);
+  $RequestTable createAlias(String alias) {
+    return $RequestTable(attachedDatabase, alias);
   }
 }
 
-class Request extends DataClass implements Insertable<Request> {
+class RequestData extends DataClass implements Insertable<RequestData> {
   final int id;
   final int authorId;
   final int conferenceId;
@@ -3076,7 +3593,7 @@ class Request extends DataClass implements Insertable<Request> {
   final String? comment;
   final int? chatId;
   final DateTime createdAt;
-  const Request({
+  const RequestData({
     required this.id,
     required this.authorId,
     required this.conferenceId,
@@ -3110,8 +3627,8 @@ class Request extends DataClass implements Insertable<Request> {
     return map;
   }
 
-  RequestsCompanion toCompanion(bool nullToAbsent) {
-    return RequestsCompanion(
+  RequestCompanion toCompanion(bool nullToAbsent) {
+    return RequestCompanion(
       id: Value(id),
       authorId: Value(authorId),
       conferenceId: Value(conferenceId),
@@ -3131,12 +3648,12 @@ class Request extends DataClass implements Insertable<Request> {
     );
   }
 
-  factory Request.fromJson(
+  factory RequestData.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Request(
+    return RequestData(
       id: serializer.fromJson<int>(json['id']),
       authorId: serializer.fromJson<int>(json['authorId']),
       conferenceId: serializer.fromJson<int>(json['conferenceId']),
@@ -3166,7 +3683,7 @@ class Request extends DataClass implements Insertable<Request> {
     };
   }
 
-  Request copyWith({
+  RequestData copyWith({
     int? id,
     int? authorId,
     int? conferenceId,
@@ -3177,7 +3694,7 @@ class Request extends DataClass implements Insertable<Request> {
     Value<String?> comment = const Value.absent(),
     Value<int?> chatId = const Value.absent(),
     DateTime? createdAt,
-  }) => Request(
+  }) => RequestData(
     id: id ?? this.id,
     authorId: authorId ?? this.authorId,
     conferenceId: conferenceId ?? this.conferenceId,
@@ -3189,8 +3706,8 @@ class Request extends DataClass implements Insertable<Request> {
     chatId: chatId.present ? chatId.value : this.chatId,
     createdAt: createdAt ?? this.createdAt,
   );
-  Request copyWithCompanion(RequestsCompanion data) {
-    return Request(
+  RequestData copyWithCompanion(RequestCompanion data) {
+    return RequestData(
       id: data.id.present ? data.id.value : this.id,
       authorId: data.authorId.present ? data.authorId.value : this.authorId,
       conferenceId: data.conferenceId.present
@@ -3208,7 +3725,7 @@ class Request extends DataClass implements Insertable<Request> {
 
   @override
   String toString() {
-    return (StringBuffer('Request(')
+    return (StringBuffer('RequestData(')
           ..write('id: $id, ')
           ..write('authorId: $authorId, ')
           ..write('conferenceId: $conferenceId, ')
@@ -3239,7 +3756,7 @@ class Request extends DataClass implements Insertable<Request> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Request &&
+      (other is RequestData &&
           other.id == this.id &&
           other.authorId == this.authorId &&
           other.conferenceId == this.conferenceId &&
@@ -3252,7 +3769,7 @@ class Request extends DataClass implements Insertable<Request> {
           other.createdAt == this.createdAt);
 }
 
-class RequestsCompanion extends UpdateCompanion<Request> {
+class RequestCompanion extends UpdateCompanion<RequestData> {
   final Value<int> id;
   final Value<int> authorId;
   final Value<int> conferenceId;
@@ -3263,7 +3780,7 @@ class RequestsCompanion extends UpdateCompanion<Request> {
   final Value<String?> comment;
   final Value<int?> chatId;
   final Value<DateTime> createdAt;
-  const RequestsCompanion({
+  const RequestCompanion({
     this.id = const Value.absent(),
     this.authorId = const Value.absent(),
     this.conferenceId = const Value.absent(),
@@ -3275,7 +3792,7 @@ class RequestsCompanion extends UpdateCompanion<Request> {
     this.chatId = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
-  RequestsCompanion.insert({
+  RequestCompanion.insert({
     this.id = const Value.absent(),
     required int authorId,
     required int conferenceId,
@@ -3292,7 +3809,7 @@ class RequestsCompanion extends UpdateCompanion<Request> {
        title = Value(title),
        status = Value(status),
        createdAt = Value(createdAt);
-  static Insertable<Request> custom({
+  static Insertable<RequestData> custom({
     Expression<int>? id,
     Expression<int>? authorId,
     Expression<int>? conferenceId,
@@ -3318,7 +3835,7 @@ class RequestsCompanion extends UpdateCompanion<Request> {
     });
   }
 
-  RequestsCompanion copyWith({
+  RequestCompanion copyWith({
     Value<int>? id,
     Value<int>? authorId,
     Value<int>? conferenceId,
@@ -3330,7 +3847,7 @@ class RequestsCompanion extends UpdateCompanion<Request> {
     Value<int?>? chatId,
     Value<DateTime>? createdAt,
   }) {
-    return RequestsCompanion(
+    return RequestCompanion(
       id: id ?? this.id,
       authorId: authorId ?? this.authorId,
       conferenceId: conferenceId ?? this.conferenceId,
@@ -3382,7 +3899,7 @@ class RequestsCompanion extends UpdateCompanion<Request> {
 
   @override
   String toString() {
-    return (StringBuffer('RequestsCompanion(')
+    return (StringBuffer('RequestCompanion(')
           ..write('id: $id, ')
           ..write('authorId: $authorId, ')
           ..write('conferenceId: $conferenceId, ')
@@ -3398,11 +3915,11 @@ class RequestsCompanion extends UpdateCompanion<Request> {
   }
 }
 
-class $MessagesTable extends Messages with TableInfo<$MessagesTable, Message> {
+class $MessageTable extends Message with TableInfo<$MessageTable, MessageData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $MessagesTable(this.attachedDatabase, [this._alias]);
+  $MessageTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -3425,7 +3942,7 @@ class $MessagesTable extends Messages with TableInfo<$MessagesTable, Message> {
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES chats (id)',
+      'REFERENCES chat (id)',
     ),
   );
   static const VerificationMeta _messageTextMeta = const VerificationMeta(
@@ -3448,7 +3965,7 @@ class $MessagesTable extends Messages with TableInfo<$MessagesTable, Message> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES users (uid)',
+      'REFERENCES user (uid)',
     ),
   );
   @override
@@ -3457,10 +3974,10 @@ class $MessagesTable extends Messages with TableInfo<$MessagesTable, Message> {
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'messages';
+  static const String $name = 'message';
   @override
   VerificationContext validateIntegrity(
-    Insertable<Message> instance, {
+    Insertable<MessageData> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -3501,9 +4018,9 @@ class $MessagesTable extends Messages with TableInfo<$MessagesTable, Message> {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Message map(Map<String, dynamic> data, {String? tablePrefix}) {
+  MessageData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Message(
+    return MessageData(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -3524,17 +4041,17 @@ class $MessagesTable extends Messages with TableInfo<$MessagesTable, Message> {
   }
 
   @override
-  $MessagesTable createAlias(String alias) {
-    return $MessagesTable(attachedDatabase, alias);
+  $MessageTable createAlias(String alias) {
+    return $MessageTable(attachedDatabase, alias);
   }
 }
 
-class Message extends DataClass implements Insertable<Message> {
+class MessageData extends DataClass implements Insertable<MessageData> {
   final int id;
   final int chatId;
   final String messageText;
   final String uid;
-  const Message({
+  const MessageData({
     required this.id,
     required this.chatId,
     required this.messageText,
@@ -3550,8 +4067,8 @@ class Message extends DataClass implements Insertable<Message> {
     return map;
   }
 
-  MessagesCompanion toCompanion(bool nullToAbsent) {
-    return MessagesCompanion(
+  MessageCompanion toCompanion(bool nullToAbsent) {
+    return MessageCompanion(
       id: Value(id),
       chatId: Value(chatId),
       messageText: Value(messageText),
@@ -3559,12 +4076,12 @@ class Message extends DataClass implements Insertable<Message> {
     );
   }
 
-  factory Message.fromJson(
+  factory MessageData.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Message(
+    return MessageData(
       id: serializer.fromJson<int>(json['id']),
       chatId: serializer.fromJson<int>(json['chatId']),
       messageText: serializer.fromJson<String>(json['messageText']),
@@ -3582,15 +4099,19 @@ class Message extends DataClass implements Insertable<Message> {
     };
   }
 
-  Message copyWith({int? id, int? chatId, String? messageText, String? uid}) =>
-      Message(
-        id: id ?? this.id,
-        chatId: chatId ?? this.chatId,
-        messageText: messageText ?? this.messageText,
-        uid: uid ?? this.uid,
-      );
-  Message copyWithCompanion(MessagesCompanion data) {
-    return Message(
+  MessageData copyWith({
+    int? id,
+    int? chatId,
+    String? messageText,
+    String? uid,
+  }) => MessageData(
+    id: id ?? this.id,
+    chatId: chatId ?? this.chatId,
+    messageText: messageText ?? this.messageText,
+    uid: uid ?? this.uid,
+  );
+  MessageData copyWithCompanion(MessageCompanion data) {
+    return MessageData(
       id: data.id.present ? data.id.value : this.id,
       chatId: data.chatId.present ? data.chatId.value : this.chatId,
       messageText: data.messageText.present
@@ -3602,7 +4123,7 @@ class Message extends DataClass implements Insertable<Message> {
 
   @override
   String toString() {
-    return (StringBuffer('Message(')
+    return (StringBuffer('MessageData(')
           ..write('id: $id, ')
           ..write('chatId: $chatId, ')
           ..write('messageText: $messageText, ')
@@ -3616,25 +4137,25 @@ class Message extends DataClass implements Insertable<Message> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Message &&
+      (other is MessageData &&
           other.id == this.id &&
           other.chatId == this.chatId &&
           other.messageText == this.messageText &&
           other.uid == this.uid);
 }
 
-class MessagesCompanion extends UpdateCompanion<Message> {
+class MessageCompanion extends UpdateCompanion<MessageData> {
   final Value<int> id;
   final Value<int> chatId;
   final Value<String> messageText;
   final Value<String> uid;
-  const MessagesCompanion({
+  const MessageCompanion({
     this.id = const Value.absent(),
     this.chatId = const Value.absent(),
     this.messageText = const Value.absent(),
     this.uid = const Value.absent(),
   });
-  MessagesCompanion.insert({
+  MessageCompanion.insert({
     this.id = const Value.absent(),
     required int chatId,
     required String messageText,
@@ -3642,7 +4163,7 @@ class MessagesCompanion extends UpdateCompanion<Message> {
   }) : chatId = Value(chatId),
        messageText = Value(messageText),
        uid = Value(uid);
-  static Insertable<Message> custom({
+  static Insertable<MessageData> custom({
     Expression<int>? id,
     Expression<int>? chatId,
     Expression<String>? messageText,
@@ -3656,13 +4177,13 @@ class MessagesCompanion extends UpdateCompanion<Message> {
     });
   }
 
-  MessagesCompanion copyWith({
+  MessageCompanion copyWith({
     Value<int>? id,
     Value<int>? chatId,
     Value<String>? messageText,
     Value<String>? uid,
   }) {
-    return MessagesCompanion(
+    return MessageCompanion(
       id: id ?? this.id,
       chatId: chatId ?? this.chatId,
       messageText: messageText ?? this.messageText,
@@ -3690,7 +4211,7 @@ class MessagesCompanion extends UpdateCompanion<Message> {
 
   @override
   String toString() {
-    return (StringBuffer('MessagesCompanion(')
+    return (StringBuffer('MessageCompanion(')
           ..write('id: $id, ')
           ..write('chatId: $chatId, ')
           ..write('messageText: $messageText, ')
@@ -3700,12 +4221,17 @@ class MessagesCompanion extends UpdateCompanion<Message> {
   }
 }
 
-class $AssigmentsTable extends Assigments
-    with TableInfo<$AssigmentsTable, Assigment> {
+class $RequestReviewersEditorsAssigmentTable
+    extends RequestReviewersEditorsAssigment
+    with
+        TableInfo<
+          $RequestReviewersEditorsAssigmentTable,
+          RequestReviewersEditorsAssigmentData
+        > {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $AssigmentsTable(this.attachedDatabase, [this._alias]);
+  $RequestReviewersEditorsAssigmentTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -3730,7 +4256,7 @@ class $AssigmentsTable extends Assigments
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES requests (id)',
+      'REFERENCES request (id)',
     ),
   );
   static const VerificationMeta _editorIdMeta = const VerificationMeta(
@@ -3744,7 +4270,7 @@ class $AssigmentsTable extends Assigments
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES editors (id)',
+      'REFERENCES editor (id)',
     ),
   );
   static const VerificationMeta _reviewerIdMeta = const VerificationMeta(
@@ -3758,7 +4284,7 @@ class $AssigmentsTable extends Assigments
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES reviewers (id)',
+      'REFERENCES reviewer (id)',
     ),
   );
   @override
@@ -3767,10 +4293,10 @@ class $AssigmentsTable extends Assigments
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'assigments';
+  static const String $name = 'request_reviewers_editors_assigment';
   @override
   VerificationContext validateIntegrity(
-    Insertable<Assigment> instance, {
+    Insertable<RequestReviewersEditorsAssigmentData> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -3808,9 +4334,12 @@ class $AssigmentsTable extends Assigments
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Assigment map(Map<String, dynamic> data, {String? tablePrefix}) {
+  RequestReviewersEditorsAssigmentData map(
+    Map<String, dynamic> data, {
+    String? tablePrefix,
+  }) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Assigment(
+    return RequestReviewersEditorsAssigmentData(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -3831,17 +4360,18 @@ class $AssigmentsTable extends Assigments
   }
 
   @override
-  $AssigmentsTable createAlias(String alias) {
-    return $AssigmentsTable(attachedDatabase, alias);
+  $RequestReviewersEditorsAssigmentTable createAlias(String alias) {
+    return $RequestReviewersEditorsAssigmentTable(attachedDatabase, alias);
   }
 }
 
-class Assigment extends DataClass implements Insertable<Assigment> {
+class RequestReviewersEditorsAssigmentData extends DataClass
+    implements Insertable<RequestReviewersEditorsAssigmentData> {
   final int id;
   final int requestId;
   final int editorId;
   final int reviewerId;
-  const Assigment({
+  const RequestReviewersEditorsAssigmentData({
     required this.id,
     required this.requestId,
     required this.editorId,
@@ -3857,8 +4387,8 @@ class Assigment extends DataClass implements Insertable<Assigment> {
     return map;
   }
 
-  AssigmentsCompanion toCompanion(bool nullToAbsent) {
-    return AssigmentsCompanion(
+  RequestReviewersEditorsAssigmentCompanion toCompanion(bool nullToAbsent) {
+    return RequestReviewersEditorsAssigmentCompanion(
       id: Value(id),
       requestId: Value(requestId),
       editorId: Value(editorId),
@@ -3866,12 +4396,12 @@ class Assigment extends DataClass implements Insertable<Assigment> {
     );
   }
 
-  factory Assigment.fromJson(
+  factory RequestReviewersEditorsAssigmentData.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Assigment(
+    return RequestReviewersEditorsAssigmentData(
       id: serializer.fromJson<int>(json['id']),
       requestId: serializer.fromJson<int>(json['requestId']),
       editorId: serializer.fromJson<int>(json['editorId']),
@@ -3889,19 +4419,21 @@ class Assigment extends DataClass implements Insertable<Assigment> {
     };
   }
 
-  Assigment copyWith({
+  RequestReviewersEditorsAssigmentData copyWith({
     int? id,
     int? requestId,
     int? editorId,
     int? reviewerId,
-  }) => Assigment(
+  }) => RequestReviewersEditorsAssigmentData(
     id: id ?? this.id,
     requestId: requestId ?? this.requestId,
     editorId: editorId ?? this.editorId,
     reviewerId: reviewerId ?? this.reviewerId,
   );
-  Assigment copyWithCompanion(AssigmentsCompanion data) {
-    return Assigment(
+  RequestReviewersEditorsAssigmentData copyWithCompanion(
+    RequestReviewersEditorsAssigmentCompanion data,
+  ) {
+    return RequestReviewersEditorsAssigmentData(
       id: data.id.present ? data.id.value : this.id,
       requestId: data.requestId.present ? data.requestId.value : this.requestId,
       editorId: data.editorId.present ? data.editorId.value : this.editorId,
@@ -3913,7 +4445,7 @@ class Assigment extends DataClass implements Insertable<Assigment> {
 
   @override
   String toString() {
-    return (StringBuffer('Assigment(')
+    return (StringBuffer('RequestReviewersEditorsAssigmentData(')
           ..write('id: $id, ')
           ..write('requestId: $requestId, ')
           ..write('editorId: $editorId, ')
@@ -3927,25 +4459,26 @@ class Assigment extends DataClass implements Insertable<Assigment> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Assigment &&
+      (other is RequestReviewersEditorsAssigmentData &&
           other.id == this.id &&
           other.requestId == this.requestId &&
           other.editorId == this.editorId &&
           other.reviewerId == this.reviewerId);
 }
 
-class AssigmentsCompanion extends UpdateCompanion<Assigment> {
+class RequestReviewersEditorsAssigmentCompanion
+    extends UpdateCompanion<RequestReviewersEditorsAssigmentData> {
   final Value<int> id;
   final Value<int> requestId;
   final Value<int> editorId;
   final Value<int> reviewerId;
-  const AssigmentsCompanion({
+  const RequestReviewersEditorsAssigmentCompanion({
     this.id = const Value.absent(),
     this.requestId = const Value.absent(),
     this.editorId = const Value.absent(),
     this.reviewerId = const Value.absent(),
   });
-  AssigmentsCompanion.insert({
+  RequestReviewersEditorsAssigmentCompanion.insert({
     this.id = const Value.absent(),
     required int requestId,
     required int editorId,
@@ -3953,7 +4486,7 @@ class AssigmentsCompanion extends UpdateCompanion<Assigment> {
   }) : requestId = Value(requestId),
        editorId = Value(editorId),
        reviewerId = Value(reviewerId);
-  static Insertable<Assigment> custom({
+  static Insertable<RequestReviewersEditorsAssigmentData> custom({
     Expression<int>? id,
     Expression<int>? requestId,
     Expression<int>? editorId,
@@ -3967,13 +4500,13 @@ class AssigmentsCompanion extends UpdateCompanion<Assigment> {
     });
   }
 
-  AssigmentsCompanion copyWith({
+  RequestReviewersEditorsAssigmentCompanion copyWith({
     Value<int>? id,
     Value<int>? requestId,
     Value<int>? editorId,
     Value<int>? reviewerId,
   }) {
-    return AssigmentsCompanion(
+    return RequestReviewersEditorsAssigmentCompanion(
       id: id ?? this.id,
       requestId: requestId ?? this.requestId,
       editorId: editorId ?? this.editorId,
@@ -4001,7 +4534,7 @@ class AssigmentsCompanion extends UpdateCompanion<Assigment> {
 
   @override
   String toString() {
-    return (StringBuffer('AssigmentsCompanion(')
+    return (StringBuffer('RequestReviewersEditorsAssigmentCompanion(')
           ..write('id: $id, ')
           ..write('requestId: $requestId, ')
           ..write('editorId: $editorId, ')
@@ -4014,43 +4547,46 @@ class AssigmentsCompanion extends UpdateCompanion<Assigment> {
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
-  late final $UsersTable users = $UsersTable(this);
+  late final $UserTable user = $UserTable(this);
   late final $OrganizationTable organization = $OrganizationTable(this);
-  late final $AuthorsTable authors = $AuthorsTable(this);
-  late final $EditorsTable editors = $EditorsTable(this);
-  late final $ReviewersTable reviewers = $ReviewersTable(this);
+  late final $AuthorTable author = $AuthorTable(this);
+  late final $EditorTable editor = $EditorTable(this);
+  late final $ReviewerTable reviewer = $ReviewerTable(this);
   late final $AdminTable admin = $AdminTable(this);
-  late final $ConferencesTable conferences = $ConferencesTable(this);
-  late final $SectionsTable sections = $SectionsTable(this);
-  late final $ChatsTable chats = $ChatsTable(this);
-  late final $RequestsTable requests = $RequestsTable(this);
-  late final $MessagesTable messages = $MessagesTable(this);
-  late final $AssigmentsTable assigments = $AssigmentsTable(this);
+  late final $ConferenceTable conference = $ConferenceTable(this);
+  late final $SectionTable section = $SectionTable(this);
+  late final $ChatTable chat = $ChatTable(this);
+  late final $RequestTable request = $RequestTable(this);
+  late final $MessageTable message = $MessageTable(this);
+  late final $RequestReviewersEditorsAssigmentTable
+  requestReviewersEditorsAssigment = $RequestReviewersEditorsAssigmentTable(
+    this,
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
-    users,
+    user,
     organization,
-    authors,
-    editors,
-    reviewers,
+    author,
+    editor,
+    reviewer,
     admin,
-    conferences,
-    sections,
-    chats,
-    requests,
-    messages,
-    assigments,
+    conference,
+    section,
+    chat,
+    request,
+    message,
+    requestReviewersEditorsAssigment,
   ];
   @override
   DriftDatabaseOptions get options =>
       const DriftDatabaseOptions(storeDateTimeAsText: true);
 }
 
-typedef $$UsersTableCreateCompanionBuilder =
-    UsersCompanion Function({
+typedef $$UserTableCreateCompanionBuilder =
+    UserCompanion Function({
       required String uid,
       required String emailAddress,
       required String role,
@@ -4058,8 +4594,8 @@ typedef $$UsersTableCreateCompanionBuilder =
       Value<String?> photoUrl,
       Value<int> rowid,
     });
-typedef $$UsersTableUpdateCompanionBuilder =
-    UsersCompanion Function({
+typedef $$UserTableUpdateCompanionBuilder =
+    UserCompanion Function({
       Value<String> uid,
       Value<String> emailAddress,
       Value<String> role,
@@ -4068,61 +4604,61 @@ typedef $$UsersTableUpdateCompanionBuilder =
       Value<int> rowid,
     });
 
-final class $$UsersTableReferences
-    extends BaseReferences<_$AppDatabase, $UsersTable, User> {
-  $$UsersTableReferences(super.$_db, super.$_table, super.$_typedResult);
+final class $$UserTableReferences
+    extends BaseReferences<_$AppDatabase, $UserTable, UserData> {
+  $$UserTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static MultiTypedResultKey<$AuthorsTable, List<Author>> _authorsRefsTable(
+  static MultiTypedResultKey<$AuthorTable, List<AuthorData>> _authorRefsTable(
     _$AppDatabase db,
   ) => MultiTypedResultKey.fromTable(
-    db.authors,
-    aliasName: $_aliasNameGenerator(db.users.uid, db.authors.uid),
+    db.author,
+    aliasName: $_aliasNameGenerator(db.user.uid, db.author.uid),
   );
 
-  $$AuthorsTableProcessedTableManager get authorsRefs {
-    final manager = $$AuthorsTableTableManager(
+  $$AuthorTableProcessedTableManager get authorRefs {
+    final manager = $$AuthorTableTableManager(
       $_db,
-      $_db.authors,
+      $_db.author,
     ).filter((f) => f.uid.uid.sqlEquals($_itemColumn<String>('uid')!));
 
-    final cache = $_typedResult.readTableOrNull(_authorsRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(_authorRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 
-  static MultiTypedResultKey<$EditorsTable, List<Editor>> _editorsRefsTable(
+  static MultiTypedResultKey<$EditorTable, List<EditorData>> _editorRefsTable(
     _$AppDatabase db,
   ) => MultiTypedResultKey.fromTable(
-    db.editors,
-    aliasName: $_aliasNameGenerator(db.users.uid, db.editors.uid),
+    db.editor,
+    aliasName: $_aliasNameGenerator(db.user.uid, db.editor.uid),
   );
 
-  $$EditorsTableProcessedTableManager get editorsRefs {
-    final manager = $$EditorsTableTableManager(
+  $$EditorTableProcessedTableManager get editorRefs {
+    final manager = $$EditorTableTableManager(
       $_db,
-      $_db.editors,
+      $_db.editor,
     ).filter((f) => f.uid.uid.sqlEquals($_itemColumn<String>('uid')!));
 
-    final cache = $_typedResult.readTableOrNull(_editorsRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(_editorRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 
-  static MultiTypedResultKey<$ReviewersTable, List<Reviewer>>
-  _reviewersRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
-    db.reviewers,
-    aliasName: $_aliasNameGenerator(db.users.uid, db.reviewers.uid),
+  static MultiTypedResultKey<$ReviewerTable, List<ReviewerData>>
+  _reviewerRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.reviewer,
+    aliasName: $_aliasNameGenerator(db.user.uid, db.reviewer.uid),
   );
 
-  $$ReviewersTableProcessedTableManager get reviewersRefs {
-    final manager = $$ReviewersTableTableManager(
+  $$ReviewerTableProcessedTableManager get reviewerRefs {
+    final manager = $$ReviewerTableTableManager(
       $_db,
-      $_db.reviewers,
+      $_db.reviewer,
     ).filter((f) => f.uid.uid.sqlEquals($_itemColumn<String>('uid')!));
 
-    final cache = $_typedResult.readTableOrNull(_reviewersRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(_reviewerRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -4132,7 +4668,7 @@ final class $$UsersTableReferences
     _$AppDatabase db,
   ) => MultiTypedResultKey.fromTable(
     db.admin,
-    aliasName: $_aliasNameGenerator(db.users.uid, db.admin.uid),
+    aliasName: $_aliasNameGenerator(db.user.uid, db.admin.uid),
   );
 
   $$AdminTableProcessedTableManager get adminRefs {
@@ -4147,28 +4683,27 @@ final class $$UsersTableReferences
     );
   }
 
-  static MultiTypedResultKey<$MessagesTable, List<Message>> _messagesRefsTable(
-    _$AppDatabase db,
-  ) => MultiTypedResultKey.fromTable(
-    db.messages,
-    aliasName: $_aliasNameGenerator(db.users.uid, db.messages.uid),
+  static MultiTypedResultKey<$MessageTable, List<MessageData>>
+  _messageRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.message,
+    aliasName: $_aliasNameGenerator(db.user.uid, db.message.uid),
   );
 
-  $$MessagesTableProcessedTableManager get messagesRefs {
-    final manager = $$MessagesTableTableManager(
+  $$MessageTableProcessedTableManager get messageRefs {
+    final manager = $$MessageTableTableManager(
       $_db,
-      $_db.messages,
+      $_db.message,
     ).filter((f) => f.uid.uid.sqlEquals($_itemColumn<String>('uid')!));
 
-    final cache = $_typedResult.readTableOrNull(_messagesRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(_messageRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 }
 
-class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
-  $$UsersTableFilterComposer({
+class $$UserTableFilterComposer extends Composer<_$AppDatabase, $UserTable> {
+  $$UserTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -4200,22 +4735,22 @@ class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
     builder: (column) => ColumnFilters(column),
   );
 
-  Expression<bool> authorsRefs(
-    Expression<bool> Function($$AuthorsTableFilterComposer f) f,
+  Expression<bool> authorRefs(
+    Expression<bool> Function($$AuthorTableFilterComposer f) f,
   ) {
-    final $$AuthorsTableFilterComposer composer = $composerBuilder(
+    final $$AuthorTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.uid,
-      referencedTable: $db.authors,
+      referencedTable: $db.author,
       getReferencedColumn: (t) => t.uid,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$AuthorsTableFilterComposer(
+          }) => $$AuthorTableFilterComposer(
             $db: $db,
-            $table: $db.authors,
+            $table: $db.author,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -4225,22 +4760,22 @@ class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
     return f(composer);
   }
 
-  Expression<bool> editorsRefs(
-    Expression<bool> Function($$EditorsTableFilterComposer f) f,
+  Expression<bool> editorRefs(
+    Expression<bool> Function($$EditorTableFilterComposer f) f,
   ) {
-    final $$EditorsTableFilterComposer composer = $composerBuilder(
+    final $$EditorTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.uid,
-      referencedTable: $db.editors,
+      referencedTable: $db.editor,
       getReferencedColumn: (t) => t.uid,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$EditorsTableFilterComposer(
+          }) => $$EditorTableFilterComposer(
             $db: $db,
-            $table: $db.editors,
+            $table: $db.editor,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -4250,22 +4785,22 @@ class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
     return f(composer);
   }
 
-  Expression<bool> reviewersRefs(
-    Expression<bool> Function($$ReviewersTableFilterComposer f) f,
+  Expression<bool> reviewerRefs(
+    Expression<bool> Function($$ReviewerTableFilterComposer f) f,
   ) {
-    final $$ReviewersTableFilterComposer composer = $composerBuilder(
+    final $$ReviewerTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.uid,
-      referencedTable: $db.reviewers,
+      referencedTable: $db.reviewer,
       getReferencedColumn: (t) => t.uid,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ReviewersTableFilterComposer(
+          }) => $$ReviewerTableFilterComposer(
             $db: $db,
-            $table: $db.reviewers,
+            $table: $db.reviewer,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -4300,22 +4835,22 @@ class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
     return f(composer);
   }
 
-  Expression<bool> messagesRefs(
-    Expression<bool> Function($$MessagesTableFilterComposer f) f,
+  Expression<bool> messageRefs(
+    Expression<bool> Function($$MessageTableFilterComposer f) f,
   ) {
-    final $$MessagesTableFilterComposer composer = $composerBuilder(
+    final $$MessageTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.uid,
-      referencedTable: $db.messages,
+      referencedTable: $db.message,
       getReferencedColumn: (t) => t.uid,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$MessagesTableFilterComposer(
+          }) => $$MessageTableFilterComposer(
             $db: $db,
-            $table: $db.messages,
+            $table: $db.message,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -4326,9 +4861,8 @@ class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
   }
 }
 
-class $$UsersTableOrderingComposer
-    extends Composer<_$AppDatabase, $UsersTable> {
-  $$UsersTableOrderingComposer({
+class $$UserTableOrderingComposer extends Composer<_$AppDatabase, $UserTable> {
+  $$UserTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -4361,9 +4895,9 @@ class $$UsersTableOrderingComposer
   );
 }
 
-class $$UsersTableAnnotationComposer
-    extends Composer<_$AppDatabase, $UsersTable> {
-  $$UsersTableAnnotationComposer({
+class $$UserTableAnnotationComposer
+    extends Composer<_$AppDatabase, $UserTable> {
+  $$UserTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -4389,22 +4923,22 @@ class $$UsersTableAnnotationComposer
   GeneratedColumn<String> get photoUrl =>
       $composableBuilder(column: $table.photoUrl, builder: (column) => column);
 
-  Expression<T> authorsRefs<T extends Object>(
-    Expression<T> Function($$AuthorsTableAnnotationComposer a) f,
+  Expression<T> authorRefs<T extends Object>(
+    Expression<T> Function($$AuthorTableAnnotationComposer a) f,
   ) {
-    final $$AuthorsTableAnnotationComposer composer = $composerBuilder(
+    final $$AuthorTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.uid,
-      referencedTable: $db.authors,
+      referencedTable: $db.author,
       getReferencedColumn: (t) => t.uid,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$AuthorsTableAnnotationComposer(
+          }) => $$AuthorTableAnnotationComposer(
             $db: $db,
-            $table: $db.authors,
+            $table: $db.author,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -4414,22 +4948,22 @@ class $$UsersTableAnnotationComposer
     return f(composer);
   }
 
-  Expression<T> editorsRefs<T extends Object>(
-    Expression<T> Function($$EditorsTableAnnotationComposer a) f,
+  Expression<T> editorRefs<T extends Object>(
+    Expression<T> Function($$EditorTableAnnotationComposer a) f,
   ) {
-    final $$EditorsTableAnnotationComposer composer = $composerBuilder(
+    final $$EditorTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.uid,
-      referencedTable: $db.editors,
+      referencedTable: $db.editor,
       getReferencedColumn: (t) => t.uid,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$EditorsTableAnnotationComposer(
+          }) => $$EditorTableAnnotationComposer(
             $db: $db,
-            $table: $db.editors,
+            $table: $db.editor,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -4439,22 +4973,22 @@ class $$UsersTableAnnotationComposer
     return f(composer);
   }
 
-  Expression<T> reviewersRefs<T extends Object>(
-    Expression<T> Function($$ReviewersTableAnnotationComposer a) f,
+  Expression<T> reviewerRefs<T extends Object>(
+    Expression<T> Function($$ReviewerTableAnnotationComposer a) f,
   ) {
-    final $$ReviewersTableAnnotationComposer composer = $composerBuilder(
+    final $$ReviewerTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.uid,
-      referencedTable: $db.reviewers,
+      referencedTable: $db.reviewer,
       getReferencedColumn: (t) => t.uid,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ReviewersTableAnnotationComposer(
+          }) => $$ReviewerTableAnnotationComposer(
             $db: $db,
-            $table: $db.reviewers,
+            $table: $db.reviewer,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -4489,22 +5023,22 @@ class $$UsersTableAnnotationComposer
     return f(composer);
   }
 
-  Expression<T> messagesRefs<T extends Object>(
-    Expression<T> Function($$MessagesTableAnnotationComposer a) f,
+  Expression<T> messageRefs<T extends Object>(
+    Expression<T> Function($$MessageTableAnnotationComposer a) f,
   ) {
-    final $$MessagesTableAnnotationComposer composer = $composerBuilder(
+    final $$MessageTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.uid,
-      referencedTable: $db.messages,
+      referencedTable: $db.message,
       getReferencedColumn: (t) => t.uid,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$MessagesTableAnnotationComposer(
+          }) => $$MessageTableAnnotationComposer(
             $db: $db,
-            $table: $db.messages,
+            $table: $db.message,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -4515,38 +5049,38 @@ class $$UsersTableAnnotationComposer
   }
 }
 
-class $$UsersTableTableManager
+class $$UserTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $UsersTable,
-          User,
-          $$UsersTableFilterComposer,
-          $$UsersTableOrderingComposer,
-          $$UsersTableAnnotationComposer,
-          $$UsersTableCreateCompanionBuilder,
-          $$UsersTableUpdateCompanionBuilder,
-          (User, $$UsersTableReferences),
-          User,
+          $UserTable,
+          UserData,
+          $$UserTableFilterComposer,
+          $$UserTableOrderingComposer,
+          $$UserTableAnnotationComposer,
+          $$UserTableCreateCompanionBuilder,
+          $$UserTableUpdateCompanionBuilder,
+          (UserData, $$UserTableReferences),
+          UserData,
           PrefetchHooks Function({
-            bool authorsRefs,
-            bool editorsRefs,
-            bool reviewersRefs,
+            bool authorRefs,
+            bool editorRefs,
+            bool reviewerRefs,
             bool adminRefs,
-            bool messagesRefs,
+            bool messageRefs,
           })
         > {
-  $$UsersTableTableManager(_$AppDatabase db, $UsersTable table)
+  $$UserTableTableManager(_$AppDatabase db, $UserTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$UsersTableFilterComposer($db: db, $table: table),
+              $$UserTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$UsersTableOrderingComposer($db: db, $table: table),
+              $$UserTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$UsersTableAnnotationComposer($db: db, $table: table),
+              $$UserTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<String> uid = const Value.absent(),
@@ -4555,7 +5089,7 @@ class $$UsersTableTableManager
                 Value<String> displayName = const Value.absent(),
                 Value<String?> photoUrl = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => UsersCompanion(
+              }) => UserCompanion(
                 uid: uid,
                 emailAddress: emailAddress,
                 role: role,
@@ -4571,7 +5105,7 @@ class $$UsersTableTableManager
                 required String displayName,
                 Value<String?> photoUrl = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => UsersCompanion.insert(
+              }) => UserCompanion.insert(
                 uid: uid,
                 emailAddress: emailAddress,
                 role: role,
@@ -4582,66 +5116,74 @@ class $$UsersTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) =>
-                    (e.readTable(table), $$UsersTableReferences(db, table, e)),
+                    (e.readTable(table), $$UserTableReferences(db, table, e)),
               )
               .toList(),
           prefetchHooksCallback:
               ({
-                authorsRefs = false,
-                editorsRefs = false,
-                reviewersRefs = false,
+                authorRefs = false,
+                editorRefs = false,
+                reviewerRefs = false,
                 adminRefs = false,
-                messagesRefs = false,
+                messageRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
-                    if (authorsRefs) db.authors,
-                    if (editorsRefs) db.editors,
-                    if (reviewersRefs) db.reviewers,
+                    if (authorRefs) db.author,
+                    if (editorRefs) db.editor,
+                    if (reviewerRefs) db.reviewer,
                     if (adminRefs) db.admin,
-                    if (messagesRefs) db.messages,
+                    if (messageRefs) db.message,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
                     return [
-                      if (authorsRefs)
-                        await $_getPrefetchedData<User, $UsersTable, Author>(
+                      if (authorRefs)
+                        await $_getPrefetchedData<
+                          UserData,
+                          $UserTable,
+                          AuthorData
+                        >(
                           currentTable: table,
-                          referencedTable: $$UsersTableReferences
-                              ._authorsRefsTable(db),
+                          referencedTable: $$UserTableReferences
+                              ._authorRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$UsersTableReferences(db, table, p0).authorsRefs,
+                              $$UserTableReferences(db, table, p0).authorRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.uid == item.uid,
                               ),
                           typedResults: items,
                         ),
-                      if (editorsRefs)
-                        await $_getPrefetchedData<User, $UsersTable, Editor>(
+                      if (editorRefs)
+                        await $_getPrefetchedData<
+                          UserData,
+                          $UserTable,
+                          EditorData
+                        >(
                           currentTable: table,
-                          referencedTable: $$UsersTableReferences
-                              ._editorsRefsTable(db),
+                          referencedTable: $$UserTableReferences
+                              ._editorRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$UsersTableReferences(db, table, p0).editorsRefs,
+                              $$UserTableReferences(db, table, p0).editorRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.uid == item.uid,
                               ),
                           typedResults: items,
                         ),
-                      if (reviewersRefs)
-                        await $_getPrefetchedData<User, $UsersTable, Reviewer>(
+                      if (reviewerRefs)
+                        await $_getPrefetchedData<
+                          UserData,
+                          $UserTable,
+                          ReviewerData
+                        >(
                           currentTable: table,
-                          referencedTable: $$UsersTableReferences
-                              ._reviewersRefsTable(db),
+                          referencedTable: $$UserTableReferences
+                              ._reviewerRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$UsersTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).reviewersRefs,
+                              $$UserTableReferences(db, table, p0).reviewerRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.uid == item.uid,
@@ -4649,29 +5191,33 @@ class $$UsersTableTableManager
                           typedResults: items,
                         ),
                       if (adminRefs)
-                        await $_getPrefetchedData<User, $UsersTable, AdminData>(
+                        await $_getPrefetchedData<
+                          UserData,
+                          $UserTable,
+                          AdminData
+                        >(
                           currentTable: table,
-                          referencedTable: $$UsersTableReferences
+                          referencedTable: $$UserTableReferences
                               ._adminRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$UsersTableReferences(db, table, p0).adminRefs,
+                              $$UserTableReferences(db, table, p0).adminRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.uid == item.uid,
                               ),
                           typedResults: items,
                         ),
-                      if (messagesRefs)
-                        await $_getPrefetchedData<User, $UsersTable, Message>(
+                      if (messageRefs)
+                        await $_getPrefetchedData<
+                          UserData,
+                          $UserTable,
+                          MessageData
+                        >(
                           currentTable: table,
-                          referencedTable: $$UsersTableReferences
-                              ._messagesRefsTable(db),
+                          referencedTable: $$UserTableReferences
+                              ._messageRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$UsersTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).messagesRefs,
+                              $$UserTableReferences(db, table, p0).messageRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.uid == item.uid,
@@ -4686,24 +5232,24 @@ class $$UsersTableTableManager
       );
 }
 
-typedef $$UsersTableProcessedTableManager =
+typedef $$UserTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $UsersTable,
-      User,
-      $$UsersTableFilterComposer,
-      $$UsersTableOrderingComposer,
-      $$UsersTableAnnotationComposer,
-      $$UsersTableCreateCompanionBuilder,
-      $$UsersTableUpdateCompanionBuilder,
-      (User, $$UsersTableReferences),
-      User,
+      $UserTable,
+      UserData,
+      $$UserTableFilterComposer,
+      $$UserTableOrderingComposer,
+      $$UserTableAnnotationComposer,
+      $$UserTableCreateCompanionBuilder,
+      $$UserTableUpdateCompanionBuilder,
+      (UserData, $$UserTableReferences),
+      UserData,
       PrefetchHooks Function({
-        bool authorsRefs,
-        bool editorsRefs,
-        bool reviewersRefs,
+        bool authorRefs,
+        bool editorRefs,
+        bool reviewerRefs,
         bool adminRefs,
-        bool messagesRefs,
+        bool messageRefs,
       })
     >;
 typedef $$OrganizationTableCreateCompanionBuilder =
@@ -4724,23 +5270,23 @@ final class $$OrganizationTableReferences
         BaseReferences<_$AppDatabase, $OrganizationTable, OrganizationData> {
   $$OrganizationTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static MultiTypedResultKey<$AuthorsTable, List<Author>> _authorsRefsTable(
+  static MultiTypedResultKey<$AuthorTable, List<AuthorData>> _authorRefsTable(
     _$AppDatabase db,
   ) => MultiTypedResultKey.fromTable(
-    db.authors,
+    db.author,
     aliasName: $_aliasNameGenerator(
       db.organization.id,
-      db.authors.organizationId,
+      db.author.organizationId,
     ),
   );
 
-  $$AuthorsTableProcessedTableManager get authorsRefs {
-    final manager = $$AuthorsTableTableManager(
+  $$AuthorTableProcessedTableManager get authorRefs {
+    final manager = $$AuthorTableTableManager(
       $_db,
-      $_db.authors,
+      $_db.author,
     ).filter((f) => f.organizationId.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(_authorsRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(_authorRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -4771,22 +5317,22 @@ class $$OrganizationTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  Expression<bool> authorsRefs(
-    Expression<bool> Function($$AuthorsTableFilterComposer f) f,
+  Expression<bool> authorRefs(
+    Expression<bool> Function($$AuthorTableFilterComposer f) f,
   ) {
-    final $$AuthorsTableFilterComposer composer = $composerBuilder(
+    final $$AuthorTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.authors,
+      referencedTable: $db.author,
       getReferencedColumn: (t) => t.organizationId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$AuthorsTableFilterComposer(
+          }) => $$AuthorTableFilterComposer(
             $db: $db,
-            $table: $db.authors,
+            $table: $db.author,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -4840,22 +5386,22 @@ class $$OrganizationTableAnnotationComposer
   GeneratedColumn<String> get titleEn =>
       $composableBuilder(column: $table.titleEn, builder: (column) => column);
 
-  Expression<T> authorsRefs<T extends Object>(
-    Expression<T> Function($$AuthorsTableAnnotationComposer a) f,
+  Expression<T> authorRefs<T extends Object>(
+    Expression<T> Function($$AuthorTableAnnotationComposer a) f,
   ) {
-    final $$AuthorsTableAnnotationComposer composer = $composerBuilder(
+    final $$AuthorTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.authors,
+      referencedTable: $db.author,
       getReferencedColumn: (t) => t.organizationId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$AuthorsTableAnnotationComposer(
+          }) => $$AuthorTableAnnotationComposer(
             $db: $db,
-            $table: $db.authors,
+            $table: $db.author,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -4879,7 +5425,7 @@ class $$OrganizationTableTableManager
           $$OrganizationTableUpdateCompanionBuilder,
           (OrganizationData, $$OrganizationTableReferences),
           OrganizationData,
-          PrefetchHooks Function({bool authorsRefs})
+          PrefetchHooks Function({bool authorRefs})
         > {
   $$OrganizationTableTableManager(_$AppDatabase db, $OrganizationTable table)
     : super(
@@ -4920,28 +5466,28 @@ class $$OrganizationTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({authorsRefs = false}) {
+          prefetchHooksCallback: ({authorRefs = false}) {
             return PrefetchHooks(
               db: db,
-              explicitlyWatchedTables: [if (authorsRefs) db.authors],
+              explicitlyWatchedTables: [if (authorRefs) db.author],
               addJoins: null,
               getPrefetchedDataCallback: (items) async {
                 return [
-                  if (authorsRefs)
+                  if (authorRefs)
                     await $_getPrefetchedData<
                       OrganizationData,
                       $OrganizationTable,
-                      Author
+                      AuthorData
                     >(
                       currentTable: table,
                       referencedTable: $$OrganizationTableReferences
-                          ._authorsRefsTable(db),
+                          ._authorRefsTable(db),
                       managerFromTypedResult: (p0) =>
                           $$OrganizationTableReferences(
                             db,
                             table,
                             p0,
-                          ).authorsRefs,
+                          ).authorRefs,
                       referencedItemsForCurrentItem: (item, referencedItems) =>
                           referencedItems.where(
                             (e) => e.organizationId == item.id,
@@ -4968,10 +5514,10 @@ typedef $$OrganizationTableProcessedTableManager =
       $$OrganizationTableUpdateCompanionBuilder,
       (OrganizationData, $$OrganizationTableReferences),
       OrganizationData,
-      PrefetchHooks Function({bool authorsRefs})
+      PrefetchHooks Function({bool authorRefs})
     >;
-typedef $$AuthorsTableCreateCompanionBuilder =
-    AuthorsCompanion Function({
+typedef $$AuthorTableCreateCompanionBuilder =
+    AuthorCompanion Function({
       required String uid,
       Value<int> id,
       required String status,
@@ -4987,8 +5533,8 @@ typedef $$AuthorsTableCreateCompanionBuilder =
       Value<String?> academicDegree,
       Value<String?> academicTitle,
     });
-typedef $$AuthorsTableUpdateCompanionBuilder =
-    AuthorsCompanion Function({
+typedef $$AuthorTableUpdateCompanionBuilder =
+    AuthorCompanion Function({
       Value<String> uid,
       Value<int> id,
       Value<String> status,
@@ -5005,19 +5551,19 @@ typedef $$AuthorsTableUpdateCompanionBuilder =
       Value<String?> academicTitle,
     });
 
-final class $$AuthorsTableReferences
-    extends BaseReferences<_$AppDatabase, $AuthorsTable, Author> {
-  $$AuthorsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+final class $$AuthorTableReferences
+    extends BaseReferences<_$AppDatabase, $AuthorTable, AuthorData> {
+  $$AuthorTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $UsersTable _uidTable(_$AppDatabase db) =>
-      db.users.createAlias($_aliasNameGenerator(db.authors.uid, db.users.uid));
+  static $UserTable _uidTable(_$AppDatabase db) =>
+      db.user.createAlias($_aliasNameGenerator(db.author.uid, db.user.uid));
 
-  $$UsersTableProcessedTableManager get uid {
+  $$UserTableProcessedTableManager get uid {
     final $_column = $_itemColumn<String>('uid')!;
 
-    final manager = $$UsersTableTableManager(
+    final manager = $$UserTableTableManager(
       $_db,
-      $_db.users,
+      $_db.user,
     ).filter((f) => f.uid.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_uidTable($_db));
     if (item == null) return manager;
@@ -5028,7 +5574,7 @@ final class $$AuthorsTableReferences
 
   static $OrganizationTable _organizationIdTable(_$AppDatabase db) =>
       db.organization.createAlias(
-        $_aliasNameGenerator(db.authors.organizationId, db.organization.id),
+        $_aliasNameGenerator(db.author.organizationId, db.organization.id),
       );
 
   $$OrganizationTableProcessedTableManager get organizationId {
@@ -5045,48 +5591,47 @@ final class $$AuthorsTableReferences
     );
   }
 
-  static MultiTypedResultKey<$ChatsTable, List<Chat>> _chatsRefsTable(
+  static MultiTypedResultKey<$ChatTable, List<ChatData>> _chatRefsTable(
     _$AppDatabase db,
   ) => MultiTypedResultKey.fromTable(
-    db.chats,
-    aliasName: $_aliasNameGenerator(db.authors.id, db.chats.authorId),
+    db.chat,
+    aliasName: $_aliasNameGenerator(db.author.id, db.chat.authorId),
   );
 
-  $$ChatsTableProcessedTableManager get chatsRefs {
-    final manager = $$ChatsTableTableManager(
+  $$ChatTableProcessedTableManager get chatRefs {
+    final manager = $$ChatTableTableManager(
       $_db,
-      $_db.chats,
+      $_db.chat,
     ).filter((f) => f.authorId.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(_chatsRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(_chatRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 
-  static MultiTypedResultKey<$RequestsTable, List<Request>> _requestsRefsTable(
-    _$AppDatabase db,
-  ) => MultiTypedResultKey.fromTable(
-    db.requests,
-    aliasName: $_aliasNameGenerator(db.authors.id, db.requests.authorId),
+  static MultiTypedResultKey<$RequestTable, List<RequestData>>
+  _requestRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.request,
+    aliasName: $_aliasNameGenerator(db.author.id, db.request.authorId),
   );
 
-  $$RequestsTableProcessedTableManager get requestsRefs {
-    final manager = $$RequestsTableTableManager(
+  $$RequestTableProcessedTableManager get requestRefs {
+    final manager = $$RequestTableTableManager(
       $_db,
-      $_db.requests,
+      $_db.request,
     ).filter((f) => f.authorId.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(_requestsRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(_requestRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 }
 
-class $$AuthorsTableFilterComposer
-    extends Composer<_$AppDatabase, $AuthorsTable> {
-  $$AuthorsTableFilterComposer({
+class $$AuthorTableFilterComposer
+    extends Composer<_$AppDatabase, $AuthorTable> {
+  $$AuthorTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -5154,20 +5699,20 @@ class $$AuthorsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$UsersTableFilterComposer get uid {
-    final $$UsersTableFilterComposer composer = $composerBuilder(
+  $$UserTableFilterComposer get uid {
+    final $$UserTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.uid,
-      referencedTable: $db.users,
+      referencedTable: $db.user,
       getReferencedColumn: (t) => t.uid,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableFilterComposer(
+          }) => $$UserTableFilterComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.user,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -5200,22 +5745,22 @@ class $$AuthorsTableFilterComposer
     return composer;
   }
 
-  Expression<bool> chatsRefs(
-    Expression<bool> Function($$ChatsTableFilterComposer f) f,
+  Expression<bool> chatRefs(
+    Expression<bool> Function($$ChatTableFilterComposer f) f,
   ) {
-    final $$ChatsTableFilterComposer composer = $composerBuilder(
+    final $$ChatTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.chats,
+      referencedTable: $db.chat,
       getReferencedColumn: (t) => t.authorId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ChatsTableFilterComposer(
+          }) => $$ChatTableFilterComposer(
             $db: $db,
-            $table: $db.chats,
+            $table: $db.chat,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -5225,22 +5770,22 @@ class $$AuthorsTableFilterComposer
     return f(composer);
   }
 
-  Expression<bool> requestsRefs(
-    Expression<bool> Function($$RequestsTableFilterComposer f) f,
+  Expression<bool> requestRefs(
+    Expression<bool> Function($$RequestTableFilterComposer f) f,
   ) {
-    final $$RequestsTableFilterComposer composer = $composerBuilder(
+    final $$RequestTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.requests,
+      referencedTable: $db.request,
       getReferencedColumn: (t) => t.authorId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$RequestsTableFilterComposer(
+          }) => $$RequestTableFilterComposer(
             $db: $db,
-            $table: $db.requests,
+            $table: $db.request,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -5251,9 +5796,9 @@ class $$AuthorsTableFilterComposer
   }
 }
 
-class $$AuthorsTableOrderingComposer
-    extends Composer<_$AppDatabase, $AuthorsTable> {
-  $$AuthorsTableOrderingComposer({
+class $$AuthorTableOrderingComposer
+    extends Composer<_$AppDatabase, $AuthorTable> {
+  $$AuthorTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -5320,20 +5865,20 @@ class $$AuthorsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$UsersTableOrderingComposer get uid {
-    final $$UsersTableOrderingComposer composer = $composerBuilder(
+  $$UserTableOrderingComposer get uid {
+    final $$UserTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.uid,
-      referencedTable: $db.users,
+      referencedTable: $db.user,
       getReferencedColumn: (t) => t.uid,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableOrderingComposer(
+          }) => $$UserTableOrderingComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.user,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -5367,9 +5912,9 @@ class $$AuthorsTableOrderingComposer
   }
 }
 
-class $$AuthorsTableAnnotationComposer
-    extends Composer<_$AppDatabase, $AuthorsTable> {
-  $$AuthorsTableAnnotationComposer({
+class $$AuthorTableAnnotationComposer
+    extends Composer<_$AppDatabase, $AuthorTable> {
+  $$AuthorTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -5430,20 +5975,20 @@ class $$AuthorsTableAnnotationComposer
     builder: (column) => column,
   );
 
-  $$UsersTableAnnotationComposer get uid {
-    final $$UsersTableAnnotationComposer composer = $composerBuilder(
+  $$UserTableAnnotationComposer get uid {
+    final $$UserTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.uid,
-      referencedTable: $db.users,
+      referencedTable: $db.user,
       getReferencedColumn: (t) => t.uid,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableAnnotationComposer(
+          }) => $$UserTableAnnotationComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.user,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -5476,22 +6021,22 @@ class $$AuthorsTableAnnotationComposer
     return composer;
   }
 
-  Expression<T> chatsRefs<T extends Object>(
-    Expression<T> Function($$ChatsTableAnnotationComposer a) f,
+  Expression<T> chatRefs<T extends Object>(
+    Expression<T> Function($$ChatTableAnnotationComposer a) f,
   ) {
-    final $$ChatsTableAnnotationComposer composer = $composerBuilder(
+    final $$ChatTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.chats,
+      referencedTable: $db.chat,
       getReferencedColumn: (t) => t.authorId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ChatsTableAnnotationComposer(
+          }) => $$ChatTableAnnotationComposer(
             $db: $db,
-            $table: $db.chats,
+            $table: $db.chat,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -5501,22 +6046,22 @@ class $$AuthorsTableAnnotationComposer
     return f(composer);
   }
 
-  Expression<T> requestsRefs<T extends Object>(
-    Expression<T> Function($$RequestsTableAnnotationComposer a) f,
+  Expression<T> requestRefs<T extends Object>(
+    Expression<T> Function($$RequestTableAnnotationComposer a) f,
   ) {
-    final $$RequestsTableAnnotationComposer composer = $composerBuilder(
+    final $$RequestTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.requests,
+      referencedTable: $db.request,
       getReferencedColumn: (t) => t.authorId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$RequestsTableAnnotationComposer(
+          }) => $$RequestTableAnnotationComposer(
             $db: $db,
-            $table: $db.requests,
+            $table: $db.request,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -5527,37 +6072,37 @@ class $$AuthorsTableAnnotationComposer
   }
 }
 
-class $$AuthorsTableTableManager
+class $$AuthorTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $AuthorsTable,
-          Author,
-          $$AuthorsTableFilterComposer,
-          $$AuthorsTableOrderingComposer,
-          $$AuthorsTableAnnotationComposer,
-          $$AuthorsTableCreateCompanionBuilder,
-          $$AuthorsTableUpdateCompanionBuilder,
-          (Author, $$AuthorsTableReferences),
-          Author,
+          $AuthorTable,
+          AuthorData,
+          $$AuthorTableFilterComposer,
+          $$AuthorTableOrderingComposer,
+          $$AuthorTableAnnotationComposer,
+          $$AuthorTableCreateCompanionBuilder,
+          $$AuthorTableUpdateCompanionBuilder,
+          (AuthorData, $$AuthorTableReferences),
+          AuthorData,
           PrefetchHooks Function({
             bool uid,
             bool organizationId,
-            bool chatsRefs,
-            bool requestsRefs,
+            bool chatRefs,
+            bool requestRefs,
           })
         > {
-  $$AuthorsTableTableManager(_$AppDatabase db, $AuthorsTable table)
+  $$AuthorTableTableManager(_$AppDatabase db, $AuthorTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$AuthorsTableFilterComposer($db: db, $table: table),
+              $$AuthorTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$AuthorsTableOrderingComposer($db: db, $table: table),
+              $$AuthorTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$AuthorsTableAnnotationComposer($db: db, $table: table),
+              $$AuthorTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<String> uid = const Value.absent(),
@@ -5574,7 +6119,7 @@ class $$AuthorsTableTableManager
                 Value<List<Post>?> posts = const Value.absent(),
                 Value<String?> academicDegree = const Value.absent(),
                 Value<String?> academicTitle = const Value.absent(),
-              }) => AuthorsCompanion(
+              }) => AuthorCompanion(
                 uid: uid,
                 id: id,
                 status: status,
@@ -5606,7 +6151,7 @@ class $$AuthorsTableTableManager
                 Value<List<Post>?> posts = const Value.absent(),
                 Value<String?> academicDegree = const Value.absent(),
                 Value<String?> academicTitle = const Value.absent(),
-              }) => AuthorsCompanion.insert(
+              }) => AuthorCompanion.insert(
                 uid: uid,
                 id: id,
                 status: status,
@@ -5624,24 +6169,22 @@ class $$AuthorsTableTableManager
               ),
           withReferenceMapper: (p0) => p0
               .map(
-                (e) => (
-                  e.readTable(table),
-                  $$AuthorsTableReferences(db, table, e),
-                ),
+                (e) =>
+                    (e.readTable(table), $$AuthorTableReferences(db, table, e)),
               )
               .toList(),
           prefetchHooksCallback:
               ({
                 uid = false,
                 organizationId = false,
-                chatsRefs = false,
-                requestsRefs = false,
+                chatRefs = false,
+                requestRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
-                    if (chatsRefs) db.chats,
-                    if (requestsRefs) db.requests,
+                    if (chatRefs) db.chat,
+                    if (requestRefs) db.request,
                   ],
                   addJoins:
                       <
@@ -5664,9 +6207,9 @@ class $$AuthorsTableTableManager
                               state.withJoin(
                                     currentTable: table,
                                     currentColumn: table.uid,
-                                    referencedTable: $$AuthorsTableReferences
+                                    referencedTable: $$AuthorTableReferences
                                         ._uidTable(db),
-                                    referencedColumn: $$AuthorsTableReferences
+                                    referencedColumn: $$AuthorTableReferences
                                         ._uidTable(db)
                                         .uid,
                                   )
@@ -5677,9 +6220,9 @@ class $$AuthorsTableTableManager
                               state.withJoin(
                                     currentTable: table,
                                     currentColumn: table.organizationId,
-                                    referencedTable: $$AuthorsTableReferences
+                                    referencedTable: $$AuthorTableReferences
                                         ._organizationIdTable(db),
-                                    referencedColumn: $$AuthorsTableReferences
+                                    referencedColumn: $$AuthorTableReferences
                                         ._organizationIdTable(db)
                                         .id,
                                   )
@@ -5690,34 +6233,38 @@ class $$AuthorsTableTableManager
                       },
                   getPrefetchedDataCallback: (items) async {
                     return [
-                      if (chatsRefs)
-                        await $_getPrefetchedData<Author, $AuthorsTable, Chat>(
+                      if (chatRefs)
+                        await $_getPrefetchedData<
+                          AuthorData,
+                          $AuthorTable,
+                          ChatData
+                        >(
                           currentTable: table,
-                          referencedTable: $$AuthorsTableReferences
-                              ._chatsRefsTable(db),
+                          referencedTable: $$AuthorTableReferences
+                              ._chatRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$AuthorsTableReferences(db, table, p0).chatsRefs,
+                              $$AuthorTableReferences(db, table, p0).chatRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.authorId == item.id,
                               ),
                           typedResults: items,
                         ),
-                      if (requestsRefs)
+                      if (requestRefs)
                         await $_getPrefetchedData<
-                          Author,
-                          $AuthorsTable,
-                          Request
+                          AuthorData,
+                          $AuthorTable,
+                          RequestData
                         >(
                           currentTable: table,
-                          referencedTable: $$AuthorsTableReferences
-                              ._requestsRefsTable(db),
+                          referencedTable: $$AuthorTableReferences
+                              ._requestRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$AuthorsTableReferences(
+                              $$AuthorTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).requestsRefs,
+                              ).requestRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.authorId == item.id,
@@ -5732,43 +6279,43 @@ class $$AuthorsTableTableManager
       );
 }
 
-typedef $$AuthorsTableProcessedTableManager =
+typedef $$AuthorTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $AuthorsTable,
-      Author,
-      $$AuthorsTableFilterComposer,
-      $$AuthorsTableOrderingComposer,
-      $$AuthorsTableAnnotationComposer,
-      $$AuthorsTableCreateCompanionBuilder,
-      $$AuthorsTableUpdateCompanionBuilder,
-      (Author, $$AuthorsTableReferences),
-      Author,
+      $AuthorTable,
+      AuthorData,
+      $$AuthorTableFilterComposer,
+      $$AuthorTableOrderingComposer,
+      $$AuthorTableAnnotationComposer,
+      $$AuthorTableCreateCompanionBuilder,
+      $$AuthorTableUpdateCompanionBuilder,
+      (AuthorData, $$AuthorTableReferences),
+      AuthorData,
       PrefetchHooks Function({
         bool uid,
         bool organizationId,
-        bool chatsRefs,
-        bool requestsRefs,
+        bool chatRefs,
+        bool requestRefs,
       })
     >;
-typedef $$EditorsTableCreateCompanionBuilder =
-    EditorsCompanion Function({required String uid, Value<int> id});
-typedef $$EditorsTableUpdateCompanionBuilder =
-    EditorsCompanion Function({Value<String> uid, Value<int> id});
+typedef $$EditorTableCreateCompanionBuilder =
+    EditorCompanion Function({required String uid, Value<int> id});
+typedef $$EditorTableUpdateCompanionBuilder =
+    EditorCompanion Function({Value<String> uid, Value<int> id});
 
-final class $$EditorsTableReferences
-    extends BaseReferences<_$AppDatabase, $EditorsTable, Editor> {
-  $$EditorsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+final class $$EditorTableReferences
+    extends BaseReferences<_$AppDatabase, $EditorTable, EditorData> {
+  $$EditorTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $UsersTable _uidTable(_$AppDatabase db) =>
-      db.users.createAlias($_aliasNameGenerator(db.editors.uid, db.users.uid));
+  static $UserTable _uidTable(_$AppDatabase db) =>
+      db.user.createAlias($_aliasNameGenerator(db.editor.uid, db.user.uid));
 
-  $$UsersTableProcessedTableManager get uid {
+  $$UserTableProcessedTableManager get uid {
     final $_column = $_itemColumn<String>('uid')!;
 
-    final manager = $$UsersTableTableManager(
+    final manager = $$UserTableTableManager(
       $_db,
-      $_db.users,
+      $_db.user,
     ).filter((f) => f.uid.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_uidTable($_db));
     if (item == null) return manager;
@@ -5777,47 +6324,57 @@ final class $$EditorsTableReferences
     );
   }
 
-  static MultiTypedResultKey<$ChatsTable, List<Chat>> _chatsRefsTable(
+  static MultiTypedResultKey<$ChatTable, List<ChatData>> _chatRefsTable(
     _$AppDatabase db,
   ) => MultiTypedResultKey.fromTable(
-    db.chats,
-    aliasName: $_aliasNameGenerator(db.editors.id, db.chats.editorId),
+    db.chat,
+    aliasName: $_aliasNameGenerator(db.editor.id, db.chat.editorId),
   );
 
-  $$ChatsTableProcessedTableManager get chatsRefs {
-    final manager = $$ChatsTableTableManager(
+  $$ChatTableProcessedTableManager get chatRefs {
+    final manager = $$ChatTableTableManager(
       $_db,
-      $_db.chats,
+      $_db.chat,
     ).filter((f) => f.editorId.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(_chatsRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(_chatRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 
-  static MultiTypedResultKey<$AssigmentsTable, List<Assigment>>
-  _assigmentsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
-    db.assigments,
-    aliasName: $_aliasNameGenerator(db.editors.id, db.assigments.editorId),
-  );
+  static MultiTypedResultKey<
+    $RequestReviewersEditorsAssigmentTable,
+    List<RequestReviewersEditorsAssigmentData>
+  >
+  _requestReviewersEditorsAssigmentRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.requestReviewersEditorsAssigment,
+        aliasName: $_aliasNameGenerator(
+          db.editor.id,
+          db.requestReviewersEditorsAssigment.editorId,
+        ),
+      );
 
-  $$AssigmentsTableProcessedTableManager get assigmentsRefs {
-    final manager = $$AssigmentsTableTableManager(
+  $$RequestReviewersEditorsAssigmentTableProcessedTableManager
+  get requestReviewersEditorsAssigmentRefs {
+    final manager = $$RequestReviewersEditorsAssigmentTableTableManager(
       $_db,
-      $_db.assigments,
+      $_db.requestReviewersEditorsAssigment,
     ).filter((f) => f.editorId.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(_assigmentsRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(
+      _requestReviewersEditorsAssigmentRefsTable($_db),
+    );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 }
 
-class $$EditorsTableFilterComposer
-    extends Composer<_$AppDatabase, $EditorsTable> {
-  $$EditorsTableFilterComposer({
+class $$EditorTableFilterComposer
+    extends Composer<_$AppDatabase, $EditorTable> {
+  $$EditorTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -5829,20 +6386,20 @@ class $$EditorsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$UsersTableFilterComposer get uid {
-    final $$UsersTableFilterComposer composer = $composerBuilder(
+  $$UserTableFilterComposer get uid {
+    final $$UserTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.uid,
-      referencedTable: $db.users,
+      referencedTable: $db.user,
       getReferencedColumn: (t) => t.uid,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableFilterComposer(
+          }) => $$UserTableFilterComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.user,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -5852,22 +6409,22 @@ class $$EditorsTableFilterComposer
     return composer;
   }
 
-  Expression<bool> chatsRefs(
-    Expression<bool> Function($$ChatsTableFilterComposer f) f,
+  Expression<bool> chatRefs(
+    Expression<bool> Function($$ChatTableFilterComposer f) f,
   ) {
-    final $$ChatsTableFilterComposer composer = $composerBuilder(
+    final $$ChatTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.chats,
+      referencedTable: $db.chat,
       getReferencedColumn: (t) => t.editorId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ChatsTableFilterComposer(
+          }) => $$ChatTableFilterComposer(
             $db: $db,
-            $table: $db.chats,
+            $table: $db.chat,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -5877,35 +6434,39 @@ class $$EditorsTableFilterComposer
     return f(composer);
   }
 
-  Expression<bool> assigmentsRefs(
-    Expression<bool> Function($$AssigmentsTableFilterComposer f) f,
+  Expression<bool> requestReviewersEditorsAssigmentRefs(
+    Expression<bool> Function(
+      $$RequestReviewersEditorsAssigmentTableFilterComposer f,
+    )
+    f,
   ) {
-    final $$AssigmentsTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.assigments,
-      getReferencedColumn: (t) => t.editorId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$AssigmentsTableFilterComposer(
-            $db: $db,
-            $table: $db.assigments,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
+    final $$RequestReviewersEditorsAssigmentTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.requestReviewersEditorsAssigment,
+          getReferencedColumn: (t) => t.editorId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer,
-          ),
-    );
+              }) => $$RequestReviewersEditorsAssigmentTableFilterComposer(
+                $db: $db,
+                $table: $db.requestReviewersEditorsAssigment,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
     return f(composer);
   }
 }
 
-class $$EditorsTableOrderingComposer
-    extends Composer<_$AppDatabase, $EditorsTable> {
-  $$EditorsTableOrderingComposer({
+class $$EditorTableOrderingComposer
+    extends Composer<_$AppDatabase, $EditorTable> {
+  $$EditorTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -5917,20 +6478,20 @@ class $$EditorsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$UsersTableOrderingComposer get uid {
-    final $$UsersTableOrderingComposer composer = $composerBuilder(
+  $$UserTableOrderingComposer get uid {
+    final $$UserTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.uid,
-      referencedTable: $db.users,
+      referencedTable: $db.user,
       getReferencedColumn: (t) => t.uid,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableOrderingComposer(
+          }) => $$UserTableOrderingComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.user,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -5941,9 +6502,9 @@ class $$EditorsTableOrderingComposer
   }
 }
 
-class $$EditorsTableAnnotationComposer
-    extends Composer<_$AppDatabase, $EditorsTable> {
-  $$EditorsTableAnnotationComposer({
+class $$EditorTableAnnotationComposer
+    extends Composer<_$AppDatabase, $EditorTable> {
+  $$EditorTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -5953,20 +6514,20 @@ class $$EditorsTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  $$UsersTableAnnotationComposer get uid {
-    final $$UsersTableAnnotationComposer composer = $composerBuilder(
+  $$UserTableAnnotationComposer get uid {
+    final $$UserTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.uid,
-      referencedTable: $db.users,
+      referencedTable: $db.user,
       getReferencedColumn: (t) => t.uid,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableAnnotationComposer(
+          }) => $$UserTableAnnotationComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.user,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -5976,22 +6537,22 @@ class $$EditorsTableAnnotationComposer
     return composer;
   }
 
-  Expression<T> chatsRefs<T extends Object>(
-    Expression<T> Function($$ChatsTableAnnotationComposer a) f,
+  Expression<T> chatRefs<T extends Object>(
+    Expression<T> Function($$ChatTableAnnotationComposer a) f,
   ) {
-    final $$ChatsTableAnnotationComposer composer = $composerBuilder(
+    final $$ChatTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.chats,
+      referencedTable: $db.chat,
       getReferencedColumn: (t) => t.editorId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ChatsTableAnnotationComposer(
+          }) => $$ChatTableAnnotationComposer(
             $db: $db,
-            $table: $db.chats,
+            $table: $db.chat,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6001,85 +6562,92 @@ class $$EditorsTableAnnotationComposer
     return f(composer);
   }
 
-  Expression<T> assigmentsRefs<T extends Object>(
-    Expression<T> Function($$AssigmentsTableAnnotationComposer a) f,
+  Expression<T> requestReviewersEditorsAssigmentRefs<T extends Object>(
+    Expression<T> Function(
+      $$RequestReviewersEditorsAssigmentTableAnnotationComposer a,
+    )
+    f,
   ) {
-    final $$AssigmentsTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.assigments,
-      getReferencedColumn: (t) => t.editorId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$AssigmentsTableAnnotationComposer(
-            $db: $db,
-            $table: $db.assigments,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
+    final $$RequestReviewersEditorsAssigmentTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.requestReviewersEditorsAssigment,
+          getReferencedColumn: (t) => t.editorId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer,
-          ),
-    );
+              }) => $$RequestReviewersEditorsAssigmentTableAnnotationComposer(
+                $db: $db,
+                $table: $db.requestReviewersEditorsAssigment,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
     return f(composer);
   }
 }
 
-class $$EditorsTableTableManager
+class $$EditorTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $EditorsTable,
-          Editor,
-          $$EditorsTableFilterComposer,
-          $$EditorsTableOrderingComposer,
-          $$EditorsTableAnnotationComposer,
-          $$EditorsTableCreateCompanionBuilder,
-          $$EditorsTableUpdateCompanionBuilder,
-          (Editor, $$EditorsTableReferences),
-          Editor,
+          $EditorTable,
+          EditorData,
+          $$EditorTableFilterComposer,
+          $$EditorTableOrderingComposer,
+          $$EditorTableAnnotationComposer,
+          $$EditorTableCreateCompanionBuilder,
+          $$EditorTableUpdateCompanionBuilder,
+          (EditorData, $$EditorTableReferences),
+          EditorData,
           PrefetchHooks Function({
             bool uid,
-            bool chatsRefs,
-            bool assigmentsRefs,
+            bool chatRefs,
+            bool requestReviewersEditorsAssigmentRefs,
           })
         > {
-  $$EditorsTableTableManager(_$AppDatabase db, $EditorsTable table)
+  $$EditorTableTableManager(_$AppDatabase db, $EditorTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$EditorsTableFilterComposer($db: db, $table: table),
+              $$EditorTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$EditorsTableOrderingComposer($db: db, $table: table),
+              $$EditorTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$EditorsTableAnnotationComposer($db: db, $table: table),
+              $$EditorTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<String> uid = const Value.absent(),
                 Value<int> id = const Value.absent(),
-              }) => EditorsCompanion(uid: uid, id: id),
+              }) => EditorCompanion(uid: uid, id: id),
           createCompanionCallback:
               ({required String uid, Value<int> id = const Value.absent()}) =>
-                  EditorsCompanion.insert(uid: uid, id: id),
+                  EditorCompanion.insert(uid: uid, id: id),
           withReferenceMapper: (p0) => p0
               .map(
-                (e) => (
-                  e.readTable(table),
-                  $$EditorsTableReferences(db, table, e),
-                ),
+                (e) =>
+                    (e.readTable(table), $$EditorTableReferences(db, table, e)),
               )
               .toList(),
           prefetchHooksCallback:
-              ({uid = false, chatsRefs = false, assigmentsRefs = false}) {
+              ({
+                uid = false,
+                chatRefs = false,
+                requestReviewersEditorsAssigmentRefs = false,
+              }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
-                    if (chatsRefs) db.chats,
-                    if (assigmentsRefs) db.assigments,
+                    if (chatRefs) db.chat,
+                    if (requestReviewersEditorsAssigmentRefs)
+                      db.requestReviewersEditorsAssigment,
                   ],
                   addJoins:
                       <
@@ -6102,9 +6670,9 @@ class $$EditorsTableTableManager
                               state.withJoin(
                                     currentTable: table,
                                     currentColumn: table.uid,
-                                    referencedTable: $$EditorsTableReferences
+                                    referencedTable: $$EditorTableReferences
                                         ._uidTable(db),
-                                    referencedColumn: $$EditorsTableReferences
+                                    referencedColumn: $$EditorTableReferences
                                         ._uidTable(db)
                                         .uid,
                                   )
@@ -6115,34 +6683,38 @@ class $$EditorsTableTableManager
                       },
                   getPrefetchedDataCallback: (items) async {
                     return [
-                      if (chatsRefs)
-                        await $_getPrefetchedData<Editor, $EditorsTable, Chat>(
+                      if (chatRefs)
+                        await $_getPrefetchedData<
+                          EditorData,
+                          $EditorTable,
+                          ChatData
+                        >(
                           currentTable: table,
-                          referencedTable: $$EditorsTableReferences
-                              ._chatsRefsTable(db),
+                          referencedTable: $$EditorTableReferences
+                              ._chatRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$EditorsTableReferences(db, table, p0).chatsRefs,
+                              $$EditorTableReferences(db, table, p0).chatRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.editorId == item.id,
                               ),
                           typedResults: items,
                         ),
-                      if (assigmentsRefs)
+                      if (requestReviewersEditorsAssigmentRefs)
                         await $_getPrefetchedData<
-                          Editor,
-                          $EditorsTable,
-                          Assigment
+                          EditorData,
+                          $EditorTable,
+                          RequestReviewersEditorsAssigmentData
                         >(
                           currentTable: table,
-                          referencedTable: $$EditorsTableReferences
-                              ._assigmentsRefsTable(db),
+                          referencedTable: $$EditorTableReferences
+                              ._requestReviewersEditorsAssigmentRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$EditorsTableReferences(
+                              $$EditorTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).assigmentsRefs,
+                              ).requestReviewersEditorsAssigmentRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.editorId == item.id,
@@ -6157,39 +6729,42 @@ class $$EditorsTableTableManager
       );
 }
 
-typedef $$EditorsTableProcessedTableManager =
+typedef $$EditorTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $EditorsTable,
-      Editor,
-      $$EditorsTableFilterComposer,
-      $$EditorsTableOrderingComposer,
-      $$EditorsTableAnnotationComposer,
-      $$EditorsTableCreateCompanionBuilder,
-      $$EditorsTableUpdateCompanionBuilder,
-      (Editor, $$EditorsTableReferences),
-      Editor,
-      PrefetchHooks Function({bool uid, bool chatsRefs, bool assigmentsRefs})
+      $EditorTable,
+      EditorData,
+      $$EditorTableFilterComposer,
+      $$EditorTableOrderingComposer,
+      $$EditorTableAnnotationComposer,
+      $$EditorTableCreateCompanionBuilder,
+      $$EditorTableUpdateCompanionBuilder,
+      (EditorData, $$EditorTableReferences),
+      EditorData,
+      PrefetchHooks Function({
+        bool uid,
+        bool chatRefs,
+        bool requestReviewersEditorsAssigmentRefs,
+      })
     >;
-typedef $$ReviewersTableCreateCompanionBuilder =
-    ReviewersCompanion Function({required String uid, Value<int> id});
-typedef $$ReviewersTableUpdateCompanionBuilder =
-    ReviewersCompanion Function({Value<String> uid, Value<int> id});
+typedef $$ReviewerTableCreateCompanionBuilder =
+    ReviewerCompanion Function({required String uid, Value<int> id});
+typedef $$ReviewerTableUpdateCompanionBuilder =
+    ReviewerCompanion Function({Value<String> uid, Value<int> id});
 
-final class $$ReviewersTableReferences
-    extends BaseReferences<_$AppDatabase, $ReviewersTable, Reviewer> {
-  $$ReviewersTableReferences(super.$_db, super.$_table, super.$_typedResult);
+final class $$ReviewerTableReferences
+    extends BaseReferences<_$AppDatabase, $ReviewerTable, ReviewerData> {
+  $$ReviewerTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $UsersTable _uidTable(_$AppDatabase db) => db.users.createAlias(
-    $_aliasNameGenerator(db.reviewers.uid, db.users.uid),
-  );
+  static $UserTable _uidTable(_$AppDatabase db) =>
+      db.user.createAlias($_aliasNameGenerator(db.reviewer.uid, db.user.uid));
 
-  $$UsersTableProcessedTableManager get uid {
+  $$UserTableProcessedTableManager get uid {
     final $_column = $_itemColumn<String>('uid')!;
 
-    final manager = $$UsersTableTableManager(
+    final manager = $$UserTableTableManager(
       $_db,
-      $_db.users,
+      $_db.user,
     ).filter((f) => f.uid.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_uidTable($_db));
     if (item == null) return manager;
@@ -6198,47 +6773,57 @@ final class $$ReviewersTableReferences
     );
   }
 
-  static MultiTypedResultKey<$ChatsTable, List<Chat>> _chatsRefsTable(
+  static MultiTypedResultKey<$ChatTable, List<ChatData>> _chatRefsTable(
     _$AppDatabase db,
   ) => MultiTypedResultKey.fromTable(
-    db.chats,
-    aliasName: $_aliasNameGenerator(db.reviewers.id, db.chats.reviewerId),
+    db.chat,
+    aliasName: $_aliasNameGenerator(db.reviewer.id, db.chat.reviewerId),
   );
 
-  $$ChatsTableProcessedTableManager get chatsRefs {
-    final manager = $$ChatsTableTableManager(
+  $$ChatTableProcessedTableManager get chatRefs {
+    final manager = $$ChatTableTableManager(
       $_db,
-      $_db.chats,
+      $_db.chat,
     ).filter((f) => f.reviewerId.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(_chatsRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(_chatRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 
-  static MultiTypedResultKey<$AssigmentsTable, List<Assigment>>
-  _assigmentsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
-    db.assigments,
-    aliasName: $_aliasNameGenerator(db.reviewers.id, db.assigments.reviewerId),
-  );
+  static MultiTypedResultKey<
+    $RequestReviewersEditorsAssigmentTable,
+    List<RequestReviewersEditorsAssigmentData>
+  >
+  _requestReviewersEditorsAssigmentRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.requestReviewersEditorsAssigment,
+        aliasName: $_aliasNameGenerator(
+          db.reviewer.id,
+          db.requestReviewersEditorsAssigment.reviewerId,
+        ),
+      );
 
-  $$AssigmentsTableProcessedTableManager get assigmentsRefs {
-    final manager = $$AssigmentsTableTableManager(
+  $$RequestReviewersEditorsAssigmentTableProcessedTableManager
+  get requestReviewersEditorsAssigmentRefs {
+    final manager = $$RequestReviewersEditorsAssigmentTableTableManager(
       $_db,
-      $_db.assigments,
+      $_db.requestReviewersEditorsAssigment,
     ).filter((f) => f.reviewerId.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(_assigmentsRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(
+      _requestReviewersEditorsAssigmentRefsTable($_db),
+    );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 }
 
-class $$ReviewersTableFilterComposer
-    extends Composer<_$AppDatabase, $ReviewersTable> {
-  $$ReviewersTableFilterComposer({
+class $$ReviewerTableFilterComposer
+    extends Composer<_$AppDatabase, $ReviewerTable> {
+  $$ReviewerTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -6250,20 +6835,20 @@ class $$ReviewersTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$UsersTableFilterComposer get uid {
-    final $$UsersTableFilterComposer composer = $composerBuilder(
+  $$UserTableFilterComposer get uid {
+    final $$UserTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.uid,
-      referencedTable: $db.users,
+      referencedTable: $db.user,
       getReferencedColumn: (t) => t.uid,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableFilterComposer(
+          }) => $$UserTableFilterComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.user,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6273,22 +6858,22 @@ class $$ReviewersTableFilterComposer
     return composer;
   }
 
-  Expression<bool> chatsRefs(
-    Expression<bool> Function($$ChatsTableFilterComposer f) f,
+  Expression<bool> chatRefs(
+    Expression<bool> Function($$ChatTableFilterComposer f) f,
   ) {
-    final $$ChatsTableFilterComposer composer = $composerBuilder(
+    final $$ChatTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.chats,
+      referencedTable: $db.chat,
       getReferencedColumn: (t) => t.reviewerId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ChatsTableFilterComposer(
+          }) => $$ChatTableFilterComposer(
             $db: $db,
-            $table: $db.chats,
+            $table: $db.chat,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6298,35 +6883,39 @@ class $$ReviewersTableFilterComposer
     return f(composer);
   }
 
-  Expression<bool> assigmentsRefs(
-    Expression<bool> Function($$AssigmentsTableFilterComposer f) f,
+  Expression<bool> requestReviewersEditorsAssigmentRefs(
+    Expression<bool> Function(
+      $$RequestReviewersEditorsAssigmentTableFilterComposer f,
+    )
+    f,
   ) {
-    final $$AssigmentsTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.assigments,
-      getReferencedColumn: (t) => t.reviewerId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$AssigmentsTableFilterComposer(
-            $db: $db,
-            $table: $db.assigments,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
+    final $$RequestReviewersEditorsAssigmentTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.requestReviewersEditorsAssigment,
+          getReferencedColumn: (t) => t.reviewerId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer,
-          ),
-    );
+              }) => $$RequestReviewersEditorsAssigmentTableFilterComposer(
+                $db: $db,
+                $table: $db.requestReviewersEditorsAssigment,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
     return f(composer);
   }
 }
 
-class $$ReviewersTableOrderingComposer
-    extends Composer<_$AppDatabase, $ReviewersTable> {
-  $$ReviewersTableOrderingComposer({
+class $$ReviewerTableOrderingComposer
+    extends Composer<_$AppDatabase, $ReviewerTable> {
+  $$ReviewerTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -6338,20 +6927,20 @@ class $$ReviewersTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$UsersTableOrderingComposer get uid {
-    final $$UsersTableOrderingComposer composer = $composerBuilder(
+  $$UserTableOrderingComposer get uid {
+    final $$UserTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.uid,
-      referencedTable: $db.users,
+      referencedTable: $db.user,
       getReferencedColumn: (t) => t.uid,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableOrderingComposer(
+          }) => $$UserTableOrderingComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.user,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6362,9 +6951,9 @@ class $$ReviewersTableOrderingComposer
   }
 }
 
-class $$ReviewersTableAnnotationComposer
-    extends Composer<_$AppDatabase, $ReviewersTable> {
-  $$ReviewersTableAnnotationComposer({
+class $$ReviewerTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ReviewerTable> {
+  $$ReviewerTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -6374,20 +6963,20 @@ class $$ReviewersTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  $$UsersTableAnnotationComposer get uid {
-    final $$UsersTableAnnotationComposer composer = $composerBuilder(
+  $$UserTableAnnotationComposer get uid {
+    final $$UserTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.uid,
-      referencedTable: $db.users,
+      referencedTable: $db.user,
       getReferencedColumn: (t) => t.uid,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableAnnotationComposer(
+          }) => $$UserTableAnnotationComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.user,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6397,22 +6986,22 @@ class $$ReviewersTableAnnotationComposer
     return composer;
   }
 
-  Expression<T> chatsRefs<T extends Object>(
-    Expression<T> Function($$ChatsTableAnnotationComposer a) f,
+  Expression<T> chatRefs<T extends Object>(
+    Expression<T> Function($$ChatTableAnnotationComposer a) f,
   ) {
-    final $$ChatsTableAnnotationComposer composer = $composerBuilder(
+    final $$ChatTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.chats,
+      referencedTable: $db.chat,
       getReferencedColumn: (t) => t.reviewerId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ChatsTableAnnotationComposer(
+          }) => $$ChatTableAnnotationComposer(
             $db: $db,
-            $table: $db.chats,
+            $table: $db.chat,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6422,85 +7011,94 @@ class $$ReviewersTableAnnotationComposer
     return f(composer);
   }
 
-  Expression<T> assigmentsRefs<T extends Object>(
-    Expression<T> Function($$AssigmentsTableAnnotationComposer a) f,
+  Expression<T> requestReviewersEditorsAssigmentRefs<T extends Object>(
+    Expression<T> Function(
+      $$RequestReviewersEditorsAssigmentTableAnnotationComposer a,
+    )
+    f,
   ) {
-    final $$AssigmentsTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.assigments,
-      getReferencedColumn: (t) => t.reviewerId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$AssigmentsTableAnnotationComposer(
-            $db: $db,
-            $table: $db.assigments,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
+    final $$RequestReviewersEditorsAssigmentTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.requestReviewersEditorsAssigment,
+          getReferencedColumn: (t) => t.reviewerId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer,
-          ),
-    );
+              }) => $$RequestReviewersEditorsAssigmentTableAnnotationComposer(
+                $db: $db,
+                $table: $db.requestReviewersEditorsAssigment,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
     return f(composer);
   }
 }
 
-class $$ReviewersTableTableManager
+class $$ReviewerTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $ReviewersTable,
-          Reviewer,
-          $$ReviewersTableFilterComposer,
-          $$ReviewersTableOrderingComposer,
-          $$ReviewersTableAnnotationComposer,
-          $$ReviewersTableCreateCompanionBuilder,
-          $$ReviewersTableUpdateCompanionBuilder,
-          (Reviewer, $$ReviewersTableReferences),
-          Reviewer,
+          $ReviewerTable,
+          ReviewerData,
+          $$ReviewerTableFilterComposer,
+          $$ReviewerTableOrderingComposer,
+          $$ReviewerTableAnnotationComposer,
+          $$ReviewerTableCreateCompanionBuilder,
+          $$ReviewerTableUpdateCompanionBuilder,
+          (ReviewerData, $$ReviewerTableReferences),
+          ReviewerData,
           PrefetchHooks Function({
             bool uid,
-            bool chatsRefs,
-            bool assigmentsRefs,
+            bool chatRefs,
+            bool requestReviewersEditorsAssigmentRefs,
           })
         > {
-  $$ReviewersTableTableManager(_$AppDatabase db, $ReviewersTable table)
+  $$ReviewerTableTableManager(_$AppDatabase db, $ReviewerTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$ReviewersTableFilterComposer($db: db, $table: table),
+              $$ReviewerTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$ReviewersTableOrderingComposer($db: db, $table: table),
+              $$ReviewerTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$ReviewersTableAnnotationComposer($db: db, $table: table),
+              $$ReviewerTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<String> uid = const Value.absent(),
                 Value<int> id = const Value.absent(),
-              }) => ReviewersCompanion(uid: uid, id: id),
+              }) => ReviewerCompanion(uid: uid, id: id),
           createCompanionCallback:
               ({required String uid, Value<int> id = const Value.absent()}) =>
-                  ReviewersCompanion.insert(uid: uid, id: id),
+                  ReviewerCompanion.insert(uid: uid, id: id),
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$ReviewersTableReferences(db, table, e),
+                  $$ReviewerTableReferences(db, table, e),
                 ),
               )
               .toList(),
           prefetchHooksCallback:
-              ({uid = false, chatsRefs = false, assigmentsRefs = false}) {
+              ({
+                uid = false,
+                chatRefs = false,
+                requestReviewersEditorsAssigmentRefs = false,
+              }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
-                    if (chatsRefs) db.chats,
-                    if (assigmentsRefs) db.assigments,
+                    if (chatRefs) db.chat,
+                    if (requestReviewersEditorsAssigmentRefs)
+                      db.requestReviewersEditorsAssigment,
                   ],
                   addJoins:
                       <
@@ -6523,9 +7121,9 @@ class $$ReviewersTableTableManager
                               state.withJoin(
                                     currentTable: table,
                                     currentColumn: table.uid,
-                                    referencedTable: $$ReviewersTableReferences
+                                    referencedTable: $$ReviewerTableReferences
                                         ._uidTable(db),
-                                    referencedColumn: $$ReviewersTableReferences
+                                    referencedColumn: $$ReviewerTableReferences
                                         ._uidTable(db)
                                         .uid,
                                   )
@@ -6536,42 +7134,38 @@ class $$ReviewersTableTableManager
                       },
                   getPrefetchedDataCallback: (items) async {
                     return [
-                      if (chatsRefs)
+                      if (chatRefs)
                         await $_getPrefetchedData<
-                          Reviewer,
-                          $ReviewersTable,
-                          Chat
+                          ReviewerData,
+                          $ReviewerTable,
+                          ChatData
                         >(
                           currentTable: table,
-                          referencedTable: $$ReviewersTableReferences
-                              ._chatsRefsTable(db),
+                          referencedTable: $$ReviewerTableReferences
+                              ._chatRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$ReviewersTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).chatsRefs,
+                              $$ReviewerTableReferences(db, table, p0).chatRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.reviewerId == item.id,
                               ),
                           typedResults: items,
                         ),
-                      if (assigmentsRefs)
+                      if (requestReviewersEditorsAssigmentRefs)
                         await $_getPrefetchedData<
-                          Reviewer,
-                          $ReviewersTable,
-                          Assigment
+                          ReviewerData,
+                          $ReviewerTable,
+                          RequestReviewersEditorsAssigmentData
                         >(
                           currentTable: table,
-                          referencedTable: $$ReviewersTableReferences
-                              ._assigmentsRefsTable(db),
+                          referencedTable: $$ReviewerTableReferences
+                              ._requestReviewersEditorsAssigmentRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$ReviewersTableReferences(
+                              $$ReviewerTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).assigmentsRefs,
+                              ).requestReviewersEditorsAssigmentRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.reviewerId == item.id,
@@ -6586,19 +7180,23 @@ class $$ReviewersTableTableManager
       );
 }
 
-typedef $$ReviewersTableProcessedTableManager =
+typedef $$ReviewerTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $ReviewersTable,
-      Reviewer,
-      $$ReviewersTableFilterComposer,
-      $$ReviewersTableOrderingComposer,
-      $$ReviewersTableAnnotationComposer,
-      $$ReviewersTableCreateCompanionBuilder,
-      $$ReviewersTableUpdateCompanionBuilder,
-      (Reviewer, $$ReviewersTableReferences),
-      Reviewer,
-      PrefetchHooks Function({bool uid, bool chatsRefs, bool assigmentsRefs})
+      $ReviewerTable,
+      ReviewerData,
+      $$ReviewerTableFilterComposer,
+      $$ReviewerTableOrderingComposer,
+      $$ReviewerTableAnnotationComposer,
+      $$ReviewerTableCreateCompanionBuilder,
+      $$ReviewerTableUpdateCompanionBuilder,
+      (ReviewerData, $$ReviewerTableReferences),
+      ReviewerData,
+      PrefetchHooks Function({
+        bool uid,
+        bool chatRefs,
+        bool requestReviewersEditorsAssigmentRefs,
+      })
     >;
 typedef $$AdminTableCreateCompanionBuilder =
     AdminCompanion Function({required String uid, Value<int> id});
@@ -6609,15 +7207,15 @@ final class $$AdminTableReferences
     extends BaseReferences<_$AppDatabase, $AdminTable, AdminData> {
   $$AdminTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $UsersTable _uidTable(_$AppDatabase db) =>
-      db.users.createAlias($_aliasNameGenerator(db.admin.uid, db.users.uid));
+  static $UserTable _uidTable(_$AppDatabase db) =>
+      db.user.createAlias($_aliasNameGenerator(db.admin.uid, db.user.uid));
 
-  $$UsersTableProcessedTableManager get uid {
+  $$UserTableProcessedTableManager get uid {
     final $_column = $_itemColumn<String>('uid')!;
 
-    final manager = $$UsersTableTableManager(
+    final manager = $$UserTableTableManager(
       $_db,
-      $_db.users,
+      $_db.user,
     ).filter((f) => f.uid.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_uidTable($_db));
     if (item == null) return manager;
@@ -6640,20 +7238,20 @@ class $$AdminTableFilterComposer extends Composer<_$AppDatabase, $AdminTable> {
     builder: (column) => ColumnFilters(column),
   );
 
-  $$UsersTableFilterComposer get uid {
-    final $$UsersTableFilterComposer composer = $composerBuilder(
+  $$UserTableFilterComposer get uid {
+    final $$UserTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.uid,
-      referencedTable: $db.users,
+      referencedTable: $db.user,
       getReferencedColumn: (t) => t.uid,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableFilterComposer(
+          }) => $$UserTableFilterComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.user,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6678,20 +7276,20 @@ class $$AdminTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$UsersTableOrderingComposer get uid {
-    final $$UsersTableOrderingComposer composer = $composerBuilder(
+  $$UserTableOrderingComposer get uid {
+    final $$UserTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.uid,
-      referencedTable: $db.users,
+      referencedTable: $db.user,
       getReferencedColumn: (t) => t.uid,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableOrderingComposer(
+          }) => $$UserTableOrderingComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.user,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6714,20 +7312,20 @@ class $$AdminTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  $$UsersTableAnnotationComposer get uid {
-    final $$UsersTableAnnotationComposer composer = $composerBuilder(
+  $$UserTableAnnotationComposer get uid {
+    final $$UserTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.uid,
-      referencedTable: $db.users,
+      referencedTable: $db.user,
       getReferencedColumn: (t) => t.uid,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableAnnotationComposer(
+          }) => $$UserTableAnnotationComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.user,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6837,49 +7435,63 @@ typedef $$AdminTableProcessedTableManager =
       AdminData,
       PrefetchHooks Function({bool uid})
     >;
-typedef $$ConferencesTableCreateCompanionBuilder =
-    ConferencesCompanion Function({
+typedef $$ConferenceTableCreateCompanionBuilder =
+    ConferenceCompanion Function({
       Value<int> id,
       required String title,
-      required DateTime endDate,
+      required String shortDescription,
+      required DateTime startConferenceDate,
+      Value<DateTime?> endConferenceDate,
+      required String address,
+      Value<List<ConferenceFormat>?> conferenceFormat,
+      required DateTime submissionStartDate,
+      required DateTime submissionEndDate,
+      required int quantityOfPages,
+      Value<List<FileFormat>?> fileFormat,
+      required String requirements,
     });
-typedef $$ConferencesTableUpdateCompanionBuilder =
-    ConferencesCompanion Function({
+typedef $$ConferenceTableUpdateCompanionBuilder =
+    ConferenceCompanion Function({
       Value<int> id,
       Value<String> title,
-      Value<DateTime> endDate,
+      Value<String> shortDescription,
+      Value<DateTime> startConferenceDate,
+      Value<DateTime?> endConferenceDate,
+      Value<String> address,
+      Value<List<ConferenceFormat>?> conferenceFormat,
+      Value<DateTime> submissionStartDate,
+      Value<DateTime> submissionEndDate,
+      Value<int> quantityOfPages,
+      Value<List<FileFormat>?> fileFormat,
+      Value<String> requirements,
     });
 
-final class $$ConferencesTableReferences
-    extends BaseReferences<_$AppDatabase, $ConferencesTable, Conference> {
-  $$ConferencesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+final class $$ConferenceTableReferences
+    extends BaseReferences<_$AppDatabase, $ConferenceTable, ConferenceData> {
+  $$ConferenceTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static MultiTypedResultKey<$RequestsTable, List<Request>> _requestsRefsTable(
-    _$AppDatabase db,
-  ) => MultiTypedResultKey.fromTable(
-    db.requests,
-    aliasName: $_aliasNameGenerator(
-      db.conferences.id,
-      db.requests.conferenceId,
-    ),
+  static MultiTypedResultKey<$RequestTable, List<RequestData>>
+  _requestRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.request,
+    aliasName: $_aliasNameGenerator(db.conference.id, db.request.conferenceId),
   );
 
-  $$RequestsTableProcessedTableManager get requestsRefs {
-    final manager = $$RequestsTableTableManager(
+  $$RequestTableProcessedTableManager get requestRefs {
+    final manager = $$RequestTableTableManager(
       $_db,
-      $_db.requests,
+      $_db.request,
     ).filter((f) => f.conferenceId.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(_requestsRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(_requestRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 }
 
-class $$ConferencesTableFilterComposer
-    extends Composer<_$AppDatabase, $ConferencesTable> {
-  $$ConferencesTableFilterComposer({
+class $$ConferenceTableFilterComposer
+    extends Composer<_$AppDatabase, $ConferenceTable> {
+  $$ConferenceTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -6896,27 +7508,78 @@ class $$ConferencesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<DateTime> get endDate => $composableBuilder(
-    column: $table.endDate,
+  ColumnFilters<String> get shortDescription => $composableBuilder(
+    column: $table.shortDescription,
     builder: (column) => ColumnFilters(column),
   );
 
-  Expression<bool> requestsRefs(
-    Expression<bool> Function($$RequestsTableFilterComposer f) f,
+  ColumnFilters<DateTime> get startConferenceDate => $composableBuilder(
+    column: $table.startConferenceDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get endConferenceDate => $composableBuilder(
+    column: $table.endConferenceDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get address => $composableBuilder(
+    column: $table.address,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<
+    List<ConferenceFormat>?,
+    List<ConferenceFormat>,
+    String
+  >
+  get conferenceFormat => $composableBuilder(
+    column: $table.conferenceFormat,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<DateTime> get submissionStartDate => $composableBuilder(
+    column: $table.submissionStartDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get submissionEndDate => $composableBuilder(
+    column: $table.submissionEndDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get quantityOfPages => $composableBuilder(
+    column: $table.quantityOfPages,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<List<FileFormat>?, List<FileFormat>, String>
+  get fileFormat => $composableBuilder(
+    column: $table.fileFormat,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<String> get requirements => $composableBuilder(
+    column: $table.requirements,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  Expression<bool> requestRefs(
+    Expression<bool> Function($$RequestTableFilterComposer f) f,
   ) {
-    final $$RequestsTableFilterComposer composer = $composerBuilder(
+    final $$RequestTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.requests,
+      referencedTable: $db.request,
       getReferencedColumn: (t) => t.conferenceId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$RequestsTableFilterComposer(
+          }) => $$RequestTableFilterComposer(
             $db: $db,
-            $table: $db.requests,
+            $table: $db.request,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6927,9 +7590,9 @@ class $$ConferencesTableFilterComposer
   }
 }
 
-class $$ConferencesTableOrderingComposer
-    extends Composer<_$AppDatabase, $ConferencesTable> {
-  $$ConferencesTableOrderingComposer({
+class $$ConferenceTableOrderingComposer
+    extends Composer<_$AppDatabase, $ConferenceTable> {
+  $$ConferenceTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -6946,15 +7609,60 @@ class $$ConferencesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<DateTime> get endDate => $composableBuilder(
-    column: $table.endDate,
+  ColumnOrderings<String> get shortDescription => $composableBuilder(
+    column: $table.shortDescription,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get startConferenceDate => $composableBuilder(
+    column: $table.startConferenceDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get endConferenceDate => $composableBuilder(
+    column: $table.endConferenceDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get address => $composableBuilder(
+    column: $table.address,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get conferenceFormat => $composableBuilder(
+    column: $table.conferenceFormat,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get submissionStartDate => $composableBuilder(
+    column: $table.submissionStartDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get submissionEndDate => $composableBuilder(
+    column: $table.submissionEndDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get quantityOfPages => $composableBuilder(
+    column: $table.quantityOfPages,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fileFormat => $composableBuilder(
+    column: $table.fileFormat,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get requirements => $composableBuilder(
+    column: $table.requirements,
     builder: (column) => ColumnOrderings(column),
   );
 }
 
-class $$ConferencesTableAnnotationComposer
-    extends Composer<_$AppDatabase, $ConferencesTable> {
-  $$ConferencesTableAnnotationComposer({
+class $$ConferenceTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ConferenceTable> {
+  $$ConferenceTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -6967,25 +7675,72 @@ class $$ConferencesTableAnnotationComposer
   GeneratedColumn<String> get title =>
       $composableBuilder(column: $table.title, builder: (column) => column);
 
-  GeneratedColumn<DateTime> get endDate =>
-      $composableBuilder(column: $table.endDate, builder: (column) => column);
+  GeneratedColumn<String> get shortDescription => $composableBuilder(
+    column: $table.shortDescription,
+    builder: (column) => column,
+  );
 
-  Expression<T> requestsRefs<T extends Object>(
-    Expression<T> Function($$RequestsTableAnnotationComposer a) f,
+  GeneratedColumn<DateTime> get startConferenceDate => $composableBuilder(
+    column: $table.startConferenceDate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get endConferenceDate => $composableBuilder(
+    column: $table.endConferenceDate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get address =>
+      $composableBuilder(column: $table.address, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<List<ConferenceFormat>?, String>
+  get conferenceFormat => $composableBuilder(
+    column: $table.conferenceFormat,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get submissionStartDate => $composableBuilder(
+    column: $table.submissionStartDate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get submissionEndDate => $composableBuilder(
+    column: $table.submissionEndDate,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get quantityOfPages => $composableBuilder(
+    column: $table.quantityOfPages,
+    builder: (column) => column,
+  );
+
+  GeneratedColumnWithTypeConverter<List<FileFormat>?, String> get fileFormat =>
+      $composableBuilder(
+        column: $table.fileFormat,
+        builder: (column) => column,
+      );
+
+  GeneratedColumn<String> get requirements => $composableBuilder(
+    column: $table.requirements,
+    builder: (column) => column,
+  );
+
+  Expression<T> requestRefs<T extends Object>(
+    Expression<T> Function($$RequestTableAnnotationComposer a) f,
   ) {
-    final $$RequestsTableAnnotationComposer composer = $composerBuilder(
+    final $$RequestTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.requests,
+      referencedTable: $db.request,
       getReferencedColumn: (t) => t.conferenceId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$RequestsTableAnnotationComposer(
+          }) => $$RequestTableAnnotationComposer(
             $db: $db,
-            $table: $db.requests,
+            $table: $db.request,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -6996,79 +7751,120 @@ class $$ConferencesTableAnnotationComposer
   }
 }
 
-class $$ConferencesTableTableManager
+class $$ConferenceTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $ConferencesTable,
-          Conference,
-          $$ConferencesTableFilterComposer,
-          $$ConferencesTableOrderingComposer,
-          $$ConferencesTableAnnotationComposer,
-          $$ConferencesTableCreateCompanionBuilder,
-          $$ConferencesTableUpdateCompanionBuilder,
-          (Conference, $$ConferencesTableReferences),
-          Conference,
-          PrefetchHooks Function({bool requestsRefs})
+          $ConferenceTable,
+          ConferenceData,
+          $$ConferenceTableFilterComposer,
+          $$ConferenceTableOrderingComposer,
+          $$ConferenceTableAnnotationComposer,
+          $$ConferenceTableCreateCompanionBuilder,
+          $$ConferenceTableUpdateCompanionBuilder,
+          (ConferenceData, $$ConferenceTableReferences),
+          ConferenceData,
+          PrefetchHooks Function({bool requestRefs})
         > {
-  $$ConferencesTableTableManager(_$AppDatabase db, $ConferencesTable table)
+  $$ConferenceTableTableManager(_$AppDatabase db, $ConferenceTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$ConferencesTableFilterComposer($db: db, $table: table),
+              $$ConferenceTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$ConferencesTableOrderingComposer($db: db, $table: table),
+              $$ConferenceTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$ConferencesTableAnnotationComposer($db: db, $table: table),
+              $$ConferenceTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
                 Value<String> title = const Value.absent(),
-                Value<DateTime> endDate = const Value.absent(),
-              }) =>
-                  ConferencesCompanion(id: id, title: title, endDate: endDate),
+                Value<String> shortDescription = const Value.absent(),
+                Value<DateTime> startConferenceDate = const Value.absent(),
+                Value<DateTime?> endConferenceDate = const Value.absent(),
+                Value<String> address = const Value.absent(),
+                Value<List<ConferenceFormat>?> conferenceFormat =
+                    const Value.absent(),
+                Value<DateTime> submissionStartDate = const Value.absent(),
+                Value<DateTime> submissionEndDate = const Value.absent(),
+                Value<int> quantityOfPages = const Value.absent(),
+                Value<List<FileFormat>?> fileFormat = const Value.absent(),
+                Value<String> requirements = const Value.absent(),
+              }) => ConferenceCompanion(
+                id: id,
+                title: title,
+                shortDescription: shortDescription,
+                startConferenceDate: startConferenceDate,
+                endConferenceDate: endConferenceDate,
+                address: address,
+                conferenceFormat: conferenceFormat,
+                submissionStartDate: submissionStartDate,
+                submissionEndDate: submissionEndDate,
+                quantityOfPages: quantityOfPages,
+                fileFormat: fileFormat,
+                requirements: requirements,
+              ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
                 required String title,
-                required DateTime endDate,
-              }) => ConferencesCompanion.insert(
+                required String shortDescription,
+                required DateTime startConferenceDate,
+                Value<DateTime?> endConferenceDate = const Value.absent(),
+                required String address,
+                Value<List<ConferenceFormat>?> conferenceFormat =
+                    const Value.absent(),
+                required DateTime submissionStartDate,
+                required DateTime submissionEndDate,
+                required int quantityOfPages,
+                Value<List<FileFormat>?> fileFormat = const Value.absent(),
+                required String requirements,
+              }) => ConferenceCompanion.insert(
                 id: id,
                 title: title,
-                endDate: endDate,
+                shortDescription: shortDescription,
+                startConferenceDate: startConferenceDate,
+                endConferenceDate: endConferenceDate,
+                address: address,
+                conferenceFormat: conferenceFormat,
+                submissionStartDate: submissionStartDate,
+                submissionEndDate: submissionEndDate,
+                quantityOfPages: quantityOfPages,
+                fileFormat: fileFormat,
+                requirements: requirements,
               ),
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$ConferencesTableReferences(db, table, e),
+                  $$ConferenceTableReferences(db, table, e),
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({requestsRefs = false}) {
+          prefetchHooksCallback: ({requestRefs = false}) {
             return PrefetchHooks(
               db: db,
-              explicitlyWatchedTables: [if (requestsRefs) db.requests],
+              explicitlyWatchedTables: [if (requestRefs) db.request],
               addJoins: null,
               getPrefetchedDataCallback: (items) async {
                 return [
-                  if (requestsRefs)
+                  if (requestRefs)
                     await $_getPrefetchedData<
-                      Conference,
-                      $ConferencesTable,
-                      Request
+                      ConferenceData,
+                      $ConferenceTable,
+                      RequestData
                     >(
                       currentTable: table,
-                      referencedTable: $$ConferencesTableReferences
-                          ._requestsRefsTable(db),
+                      referencedTable: $$ConferenceTableReferences
+                          ._requestRefsTable(db),
                       managerFromTypedResult: (p0) =>
-                          $$ConferencesTableReferences(
+                          $$ConferenceTableReferences(
                             db,
                             table,
                             p0,
-                          ).requestsRefs,
+                          ).requestRefs,
                       referencedItemsForCurrentItem: (item, referencedItems) =>
                           referencedItems.where(
                             (e) => e.conferenceId == item.id,
@@ -7083,52 +7879,51 @@ class $$ConferencesTableTableManager
       );
 }
 
-typedef $$ConferencesTableProcessedTableManager =
+typedef $$ConferenceTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $ConferencesTable,
-      Conference,
-      $$ConferencesTableFilterComposer,
-      $$ConferencesTableOrderingComposer,
-      $$ConferencesTableAnnotationComposer,
-      $$ConferencesTableCreateCompanionBuilder,
-      $$ConferencesTableUpdateCompanionBuilder,
-      (Conference, $$ConferencesTableReferences),
-      Conference,
-      PrefetchHooks Function({bool requestsRefs})
+      $ConferenceTable,
+      ConferenceData,
+      $$ConferenceTableFilterComposer,
+      $$ConferenceTableOrderingComposer,
+      $$ConferenceTableAnnotationComposer,
+      $$ConferenceTableCreateCompanionBuilder,
+      $$ConferenceTableUpdateCompanionBuilder,
+      (ConferenceData, $$ConferenceTableReferences),
+      ConferenceData,
+      PrefetchHooks Function({bool requestRefs})
     >;
-typedef $$SectionsTableCreateCompanionBuilder =
-    SectionsCompanion Function({Value<int> id, required String title});
-typedef $$SectionsTableUpdateCompanionBuilder =
-    SectionsCompanion Function({Value<int> id, Value<String> title});
+typedef $$SectionTableCreateCompanionBuilder =
+    SectionCompanion Function({Value<int> id, required String title});
+typedef $$SectionTableUpdateCompanionBuilder =
+    SectionCompanion Function({Value<int> id, Value<String> title});
 
-final class $$SectionsTableReferences
-    extends BaseReferences<_$AppDatabase, $SectionsTable, Section> {
-  $$SectionsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+final class $$SectionTableReferences
+    extends BaseReferences<_$AppDatabase, $SectionTable, SectionData> {
+  $$SectionTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static MultiTypedResultKey<$RequestsTable, List<Request>> _requestsRefsTable(
-    _$AppDatabase db,
-  ) => MultiTypedResultKey.fromTable(
-    db.requests,
-    aliasName: $_aliasNameGenerator(db.sections.id, db.requests.sectionId),
+  static MultiTypedResultKey<$RequestTable, List<RequestData>>
+  _requestRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.request,
+    aliasName: $_aliasNameGenerator(db.section.id, db.request.sectionId),
   );
 
-  $$RequestsTableProcessedTableManager get requestsRefs {
-    final manager = $$RequestsTableTableManager(
+  $$RequestTableProcessedTableManager get requestRefs {
+    final manager = $$RequestTableTableManager(
       $_db,
-      $_db.requests,
+      $_db.request,
     ).filter((f) => f.sectionId.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(_requestsRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(_requestRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 }
 
-class $$SectionsTableFilterComposer
-    extends Composer<_$AppDatabase, $SectionsTable> {
-  $$SectionsTableFilterComposer({
+class $$SectionTableFilterComposer
+    extends Composer<_$AppDatabase, $SectionTable> {
+  $$SectionTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -7145,22 +7940,22 @@ class $$SectionsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  Expression<bool> requestsRefs(
-    Expression<bool> Function($$RequestsTableFilterComposer f) f,
+  Expression<bool> requestRefs(
+    Expression<bool> Function($$RequestTableFilterComposer f) f,
   ) {
-    final $$RequestsTableFilterComposer composer = $composerBuilder(
+    final $$RequestTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.requests,
+      referencedTable: $db.request,
       getReferencedColumn: (t) => t.sectionId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$RequestsTableFilterComposer(
+          }) => $$RequestTableFilterComposer(
             $db: $db,
-            $table: $db.requests,
+            $table: $db.request,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -7171,9 +7966,9 @@ class $$SectionsTableFilterComposer
   }
 }
 
-class $$SectionsTableOrderingComposer
-    extends Composer<_$AppDatabase, $SectionsTable> {
-  $$SectionsTableOrderingComposer({
+class $$SectionTableOrderingComposer
+    extends Composer<_$AppDatabase, $SectionTable> {
+  $$SectionTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -7191,9 +7986,9 @@ class $$SectionsTableOrderingComposer
   );
 }
 
-class $$SectionsTableAnnotationComposer
-    extends Composer<_$AppDatabase, $SectionsTable> {
-  $$SectionsTableAnnotationComposer({
+class $$SectionTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SectionTable> {
+  $$SectionTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -7206,22 +8001,22 @@ class $$SectionsTableAnnotationComposer
   GeneratedColumn<String> get title =>
       $composableBuilder(column: $table.title, builder: (column) => column);
 
-  Expression<T> requestsRefs<T extends Object>(
-    Expression<T> Function($$RequestsTableAnnotationComposer a) f,
+  Expression<T> requestRefs<T extends Object>(
+    Expression<T> Function($$RequestTableAnnotationComposer a) f,
   ) {
-    final $$RequestsTableAnnotationComposer composer = $composerBuilder(
+    final $$RequestTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.requests,
+      referencedTable: $db.request,
       getReferencedColumn: (t) => t.sectionId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$RequestsTableAnnotationComposer(
+          }) => $$RequestTableAnnotationComposer(
             $db: $db,
-            $table: $db.requests,
+            $table: $db.request,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -7232,62 +8027,66 @@ class $$SectionsTableAnnotationComposer
   }
 }
 
-class $$SectionsTableTableManager
+class $$SectionTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $SectionsTable,
-          Section,
-          $$SectionsTableFilterComposer,
-          $$SectionsTableOrderingComposer,
-          $$SectionsTableAnnotationComposer,
-          $$SectionsTableCreateCompanionBuilder,
-          $$SectionsTableUpdateCompanionBuilder,
-          (Section, $$SectionsTableReferences),
-          Section,
-          PrefetchHooks Function({bool requestsRefs})
+          $SectionTable,
+          SectionData,
+          $$SectionTableFilterComposer,
+          $$SectionTableOrderingComposer,
+          $$SectionTableAnnotationComposer,
+          $$SectionTableCreateCompanionBuilder,
+          $$SectionTableUpdateCompanionBuilder,
+          (SectionData, $$SectionTableReferences),
+          SectionData,
+          PrefetchHooks Function({bool requestRefs})
         > {
-  $$SectionsTableTableManager(_$AppDatabase db, $SectionsTable table)
+  $$SectionTableTableManager(_$AppDatabase db, $SectionTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$SectionsTableFilterComposer($db: db, $table: table),
+              $$SectionTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$SectionsTableOrderingComposer($db: db, $table: table),
+              $$SectionTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$SectionsTableAnnotationComposer($db: db, $table: table),
+              $$SectionTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
                 Value<String> title = const Value.absent(),
-              }) => SectionsCompanion(id: id, title: title),
+              }) => SectionCompanion(id: id, title: title),
           createCompanionCallback:
               ({Value<int> id = const Value.absent(), required String title}) =>
-                  SectionsCompanion.insert(id: id, title: title),
+                  SectionCompanion.insert(id: id, title: title),
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$SectionsTableReferences(db, table, e),
+                  $$SectionTableReferences(db, table, e),
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({requestsRefs = false}) {
+          prefetchHooksCallback: ({requestRefs = false}) {
             return PrefetchHooks(
               db: db,
-              explicitlyWatchedTables: [if (requestsRefs) db.requests],
+              explicitlyWatchedTables: [if (requestRefs) db.request],
               addJoins: null,
               getPrefetchedDataCallback: (items) async {
                 return [
-                  if (requestsRefs)
-                    await $_getPrefetchedData<Section, $SectionsTable, Request>(
+                  if (requestRefs)
+                    await $_getPrefetchedData<
+                      SectionData,
+                      $SectionTable,
+                      RequestData
+                    >(
                       currentTable: table,
-                      referencedTable: $$SectionsTableReferences
-                          ._requestsRefsTable(db),
+                      referencedTable: $$SectionTableReferences
+                          ._requestRefsTable(db),
                       managerFromTypedResult: (p0) =>
-                          $$SectionsTableReferences(db, table, p0).requestsRefs,
+                          $$SectionTableReferences(db, table, p0).requestRefs,
                       referencedItemsForCurrentItem: (item, referencedItems) =>
                           referencedItems.where((e) => e.sectionId == item.id),
                       typedResults: items,
@@ -7300,48 +8099,49 @@ class $$SectionsTableTableManager
       );
 }
 
-typedef $$SectionsTableProcessedTableManager =
+typedef $$SectionTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $SectionsTable,
-      Section,
-      $$SectionsTableFilterComposer,
-      $$SectionsTableOrderingComposer,
-      $$SectionsTableAnnotationComposer,
-      $$SectionsTableCreateCompanionBuilder,
-      $$SectionsTableUpdateCompanionBuilder,
-      (Section, $$SectionsTableReferences),
-      Section,
-      PrefetchHooks Function({bool requestsRefs})
+      $SectionTable,
+      SectionData,
+      $$SectionTableFilterComposer,
+      $$SectionTableOrderingComposer,
+      $$SectionTableAnnotationComposer,
+      $$SectionTableCreateCompanionBuilder,
+      $$SectionTableUpdateCompanionBuilder,
+      (SectionData, $$SectionTableReferences),
+      SectionData,
+      PrefetchHooks Function({bool requestRefs})
     >;
-typedef $$ChatsTableCreateCompanionBuilder =
-    ChatsCompanion Function({
+typedef $$ChatTableCreateCompanionBuilder =
+    ChatCompanion Function({
       Value<int> id,
       required int authorId,
       required int editorId,
       required int reviewerId,
     });
-typedef $$ChatsTableUpdateCompanionBuilder =
-    ChatsCompanion Function({
+typedef $$ChatTableUpdateCompanionBuilder =
+    ChatCompanion Function({
       Value<int> id,
       Value<int> authorId,
       Value<int> editorId,
       Value<int> reviewerId,
     });
 
-final class $$ChatsTableReferences
-    extends BaseReferences<_$AppDatabase, $ChatsTable, Chat> {
-  $$ChatsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+final class $$ChatTableReferences
+    extends BaseReferences<_$AppDatabase, $ChatTable, ChatData> {
+  $$ChatTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $AuthorsTable _authorIdTable(_$AppDatabase db) => db.authors
-      .createAlias($_aliasNameGenerator(db.chats.authorId, db.authors.id));
+  static $AuthorTable _authorIdTable(_$AppDatabase db) => db.author.createAlias(
+    $_aliasNameGenerator(db.chat.authorId, db.author.id),
+  );
 
-  $$AuthorsTableProcessedTableManager get authorId {
+  $$AuthorTableProcessedTableManager get authorId {
     final $_column = $_itemColumn<int>('author_id')!;
 
-    final manager = $$AuthorsTableTableManager(
+    final manager = $$AuthorTableTableManager(
       $_db,
-      $_db.authors,
+      $_db.author,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_authorIdTable($_db));
     if (item == null) return manager;
@@ -7350,15 +8150,16 @@ final class $$ChatsTableReferences
     );
   }
 
-  static $EditorsTable _editorIdTable(_$AppDatabase db) => db.editors
-      .createAlias($_aliasNameGenerator(db.chats.editorId, db.editors.id));
+  static $EditorTable _editorIdTable(_$AppDatabase db) => db.editor.createAlias(
+    $_aliasNameGenerator(db.chat.editorId, db.editor.id),
+  );
 
-  $$EditorsTableProcessedTableManager get editorId {
+  $$EditorTableProcessedTableManager get editorId {
     final $_column = $_itemColumn<int>('editor_id')!;
 
-    final manager = $$EditorsTableTableManager(
+    final manager = $$EditorTableTableManager(
       $_db,
-      $_db.editors,
+      $_db.editor,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_editorIdTable($_db));
     if (item == null) return manager;
@@ -7367,15 +8168,15 @@ final class $$ChatsTableReferences
     );
   }
 
-  static $ReviewersTable _reviewerIdTable(_$AppDatabase db) => db.reviewers
-      .createAlias($_aliasNameGenerator(db.chats.reviewerId, db.reviewers.id));
+  static $ReviewerTable _reviewerIdTable(_$AppDatabase db) => db.reviewer
+      .createAlias($_aliasNameGenerator(db.chat.reviewerId, db.reviewer.id));
 
-  $$ReviewersTableProcessedTableManager get reviewerId {
+  $$ReviewerTableProcessedTableManager get reviewerId {
     final $_column = $_itemColumn<int>('reviewer_id')!;
 
-    final manager = $$ReviewersTableTableManager(
+    final manager = $$ReviewerTableTableManager(
       $_db,
-      $_db.reviewers,
+      $_db.reviewer,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_reviewerIdTable($_db));
     if (item == null) return manager;
@@ -7384,47 +8185,45 @@ final class $$ChatsTableReferences
     );
   }
 
-  static MultiTypedResultKey<$RequestsTable, List<Request>> _requestsRefsTable(
-    _$AppDatabase db,
-  ) => MultiTypedResultKey.fromTable(
-    db.requests,
-    aliasName: $_aliasNameGenerator(db.chats.id, db.requests.chatId),
+  static MultiTypedResultKey<$RequestTable, List<RequestData>>
+  _requestRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.request,
+    aliasName: $_aliasNameGenerator(db.chat.id, db.request.chatId),
   );
 
-  $$RequestsTableProcessedTableManager get requestsRefs {
-    final manager = $$RequestsTableTableManager(
+  $$RequestTableProcessedTableManager get requestRefs {
+    final manager = $$RequestTableTableManager(
       $_db,
-      $_db.requests,
+      $_db.request,
     ).filter((f) => f.chatId.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(_requestsRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(_requestRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 
-  static MultiTypedResultKey<$MessagesTable, List<Message>> _messagesRefsTable(
-    _$AppDatabase db,
-  ) => MultiTypedResultKey.fromTable(
-    db.messages,
-    aliasName: $_aliasNameGenerator(db.chats.id, db.messages.chatId),
+  static MultiTypedResultKey<$MessageTable, List<MessageData>>
+  _messageRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.message,
+    aliasName: $_aliasNameGenerator(db.chat.id, db.message.chatId),
   );
 
-  $$MessagesTableProcessedTableManager get messagesRefs {
-    final manager = $$MessagesTableTableManager(
+  $$MessageTableProcessedTableManager get messageRefs {
+    final manager = $$MessageTableTableManager(
       $_db,
-      $_db.messages,
+      $_db.message,
     ).filter((f) => f.chatId.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(_messagesRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(_messageRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 }
 
-class $$ChatsTableFilterComposer extends Composer<_$AppDatabase, $ChatsTable> {
-  $$ChatsTableFilterComposer({
+class $$ChatTableFilterComposer extends Composer<_$AppDatabase, $ChatTable> {
+  $$ChatTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -7436,20 +8235,20 @@ class $$ChatsTableFilterComposer extends Composer<_$AppDatabase, $ChatsTable> {
     builder: (column) => ColumnFilters(column),
   );
 
-  $$AuthorsTableFilterComposer get authorId {
-    final $$AuthorsTableFilterComposer composer = $composerBuilder(
+  $$AuthorTableFilterComposer get authorId {
+    final $$AuthorTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.authorId,
-      referencedTable: $db.authors,
+      referencedTable: $db.author,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$AuthorsTableFilterComposer(
+          }) => $$AuthorTableFilterComposer(
             $db: $db,
-            $table: $db.authors,
+            $table: $db.author,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -7459,20 +8258,20 @@ class $$ChatsTableFilterComposer extends Composer<_$AppDatabase, $ChatsTable> {
     return composer;
   }
 
-  $$EditorsTableFilterComposer get editorId {
-    final $$EditorsTableFilterComposer composer = $composerBuilder(
+  $$EditorTableFilterComposer get editorId {
+    final $$EditorTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.editorId,
-      referencedTable: $db.editors,
+      referencedTable: $db.editor,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$EditorsTableFilterComposer(
+          }) => $$EditorTableFilterComposer(
             $db: $db,
-            $table: $db.editors,
+            $table: $db.editor,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -7482,20 +8281,20 @@ class $$ChatsTableFilterComposer extends Composer<_$AppDatabase, $ChatsTable> {
     return composer;
   }
 
-  $$ReviewersTableFilterComposer get reviewerId {
-    final $$ReviewersTableFilterComposer composer = $composerBuilder(
+  $$ReviewerTableFilterComposer get reviewerId {
+    final $$ReviewerTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.reviewerId,
-      referencedTable: $db.reviewers,
+      referencedTable: $db.reviewer,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ReviewersTableFilterComposer(
+          }) => $$ReviewerTableFilterComposer(
             $db: $db,
-            $table: $db.reviewers,
+            $table: $db.reviewer,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -7505,22 +8304,22 @@ class $$ChatsTableFilterComposer extends Composer<_$AppDatabase, $ChatsTable> {
     return composer;
   }
 
-  Expression<bool> requestsRefs(
-    Expression<bool> Function($$RequestsTableFilterComposer f) f,
+  Expression<bool> requestRefs(
+    Expression<bool> Function($$RequestTableFilterComposer f) f,
   ) {
-    final $$RequestsTableFilterComposer composer = $composerBuilder(
+    final $$RequestTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.requests,
+      referencedTable: $db.request,
       getReferencedColumn: (t) => t.chatId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$RequestsTableFilterComposer(
+          }) => $$RequestTableFilterComposer(
             $db: $db,
-            $table: $db.requests,
+            $table: $db.request,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -7530,22 +8329,22 @@ class $$ChatsTableFilterComposer extends Composer<_$AppDatabase, $ChatsTable> {
     return f(composer);
   }
 
-  Expression<bool> messagesRefs(
-    Expression<bool> Function($$MessagesTableFilterComposer f) f,
+  Expression<bool> messageRefs(
+    Expression<bool> Function($$MessageTableFilterComposer f) f,
   ) {
-    final $$MessagesTableFilterComposer composer = $composerBuilder(
+    final $$MessageTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.messages,
+      referencedTable: $db.message,
       getReferencedColumn: (t) => t.chatId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$MessagesTableFilterComposer(
+          }) => $$MessageTableFilterComposer(
             $db: $db,
-            $table: $db.messages,
+            $table: $db.message,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -7556,9 +8355,8 @@ class $$ChatsTableFilterComposer extends Composer<_$AppDatabase, $ChatsTable> {
   }
 }
 
-class $$ChatsTableOrderingComposer
-    extends Composer<_$AppDatabase, $ChatsTable> {
-  $$ChatsTableOrderingComposer({
+class $$ChatTableOrderingComposer extends Composer<_$AppDatabase, $ChatTable> {
+  $$ChatTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -7570,20 +8368,20 @@ class $$ChatsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$AuthorsTableOrderingComposer get authorId {
-    final $$AuthorsTableOrderingComposer composer = $composerBuilder(
+  $$AuthorTableOrderingComposer get authorId {
+    final $$AuthorTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.authorId,
-      referencedTable: $db.authors,
+      referencedTable: $db.author,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$AuthorsTableOrderingComposer(
+          }) => $$AuthorTableOrderingComposer(
             $db: $db,
-            $table: $db.authors,
+            $table: $db.author,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -7593,20 +8391,20 @@ class $$ChatsTableOrderingComposer
     return composer;
   }
 
-  $$EditorsTableOrderingComposer get editorId {
-    final $$EditorsTableOrderingComposer composer = $composerBuilder(
+  $$EditorTableOrderingComposer get editorId {
+    final $$EditorTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.editorId,
-      referencedTable: $db.editors,
+      referencedTable: $db.editor,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$EditorsTableOrderingComposer(
+          }) => $$EditorTableOrderingComposer(
             $db: $db,
-            $table: $db.editors,
+            $table: $db.editor,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -7616,20 +8414,20 @@ class $$ChatsTableOrderingComposer
     return composer;
   }
 
-  $$ReviewersTableOrderingComposer get reviewerId {
-    final $$ReviewersTableOrderingComposer composer = $composerBuilder(
+  $$ReviewerTableOrderingComposer get reviewerId {
+    final $$ReviewerTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.reviewerId,
-      referencedTable: $db.reviewers,
+      referencedTable: $db.reviewer,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ReviewersTableOrderingComposer(
+          }) => $$ReviewerTableOrderingComposer(
             $db: $db,
-            $table: $db.reviewers,
+            $table: $db.reviewer,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -7640,9 +8438,9 @@ class $$ChatsTableOrderingComposer
   }
 }
 
-class $$ChatsTableAnnotationComposer
-    extends Composer<_$AppDatabase, $ChatsTable> {
-  $$ChatsTableAnnotationComposer({
+class $$ChatTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ChatTable> {
+  $$ChatTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -7652,20 +8450,20 @@ class $$ChatsTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  $$AuthorsTableAnnotationComposer get authorId {
-    final $$AuthorsTableAnnotationComposer composer = $composerBuilder(
+  $$AuthorTableAnnotationComposer get authorId {
+    final $$AuthorTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.authorId,
-      referencedTable: $db.authors,
+      referencedTable: $db.author,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$AuthorsTableAnnotationComposer(
+          }) => $$AuthorTableAnnotationComposer(
             $db: $db,
-            $table: $db.authors,
+            $table: $db.author,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -7675,20 +8473,20 @@ class $$ChatsTableAnnotationComposer
     return composer;
   }
 
-  $$EditorsTableAnnotationComposer get editorId {
-    final $$EditorsTableAnnotationComposer composer = $composerBuilder(
+  $$EditorTableAnnotationComposer get editorId {
+    final $$EditorTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.editorId,
-      referencedTable: $db.editors,
+      referencedTable: $db.editor,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$EditorsTableAnnotationComposer(
+          }) => $$EditorTableAnnotationComposer(
             $db: $db,
-            $table: $db.editors,
+            $table: $db.editor,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -7698,20 +8496,20 @@ class $$ChatsTableAnnotationComposer
     return composer;
   }
 
-  $$ReviewersTableAnnotationComposer get reviewerId {
-    final $$ReviewersTableAnnotationComposer composer = $composerBuilder(
+  $$ReviewerTableAnnotationComposer get reviewerId {
+    final $$ReviewerTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.reviewerId,
-      referencedTable: $db.reviewers,
+      referencedTable: $db.reviewer,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ReviewersTableAnnotationComposer(
+          }) => $$ReviewerTableAnnotationComposer(
             $db: $db,
-            $table: $db.reviewers,
+            $table: $db.reviewer,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -7721,22 +8519,22 @@ class $$ChatsTableAnnotationComposer
     return composer;
   }
 
-  Expression<T> requestsRefs<T extends Object>(
-    Expression<T> Function($$RequestsTableAnnotationComposer a) f,
+  Expression<T> requestRefs<T extends Object>(
+    Expression<T> Function($$RequestTableAnnotationComposer a) f,
   ) {
-    final $$RequestsTableAnnotationComposer composer = $composerBuilder(
+    final $$RequestTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.requests,
+      referencedTable: $db.request,
       getReferencedColumn: (t) => t.chatId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$RequestsTableAnnotationComposer(
+          }) => $$RequestTableAnnotationComposer(
             $db: $db,
-            $table: $db.requests,
+            $table: $db.request,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -7746,22 +8544,22 @@ class $$ChatsTableAnnotationComposer
     return f(composer);
   }
 
-  Expression<T> messagesRefs<T extends Object>(
-    Expression<T> Function($$MessagesTableAnnotationComposer a) f,
+  Expression<T> messageRefs<T extends Object>(
+    Expression<T> Function($$MessageTableAnnotationComposer a) f,
   ) {
-    final $$MessagesTableAnnotationComposer composer = $composerBuilder(
+    final $$MessageTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.messages,
+      referencedTable: $db.message,
       getReferencedColumn: (t) => t.chatId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$MessagesTableAnnotationComposer(
+          }) => $$MessageTableAnnotationComposer(
             $db: $db,
-            $table: $db.messages,
+            $table: $db.message,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -7772,45 +8570,45 @@ class $$ChatsTableAnnotationComposer
   }
 }
 
-class $$ChatsTableTableManager
+class $$ChatTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $ChatsTable,
-          Chat,
-          $$ChatsTableFilterComposer,
-          $$ChatsTableOrderingComposer,
-          $$ChatsTableAnnotationComposer,
-          $$ChatsTableCreateCompanionBuilder,
-          $$ChatsTableUpdateCompanionBuilder,
-          (Chat, $$ChatsTableReferences),
-          Chat,
+          $ChatTable,
+          ChatData,
+          $$ChatTableFilterComposer,
+          $$ChatTableOrderingComposer,
+          $$ChatTableAnnotationComposer,
+          $$ChatTableCreateCompanionBuilder,
+          $$ChatTableUpdateCompanionBuilder,
+          (ChatData, $$ChatTableReferences),
+          ChatData,
           PrefetchHooks Function({
             bool authorId,
             bool editorId,
             bool reviewerId,
-            bool requestsRefs,
-            bool messagesRefs,
+            bool requestRefs,
+            bool messageRefs,
           })
         > {
-  $$ChatsTableTableManager(_$AppDatabase db, $ChatsTable table)
+  $$ChatTableTableManager(_$AppDatabase db, $ChatTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$ChatsTableFilterComposer($db: db, $table: table),
+              $$ChatTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$ChatsTableOrderingComposer($db: db, $table: table),
+              $$ChatTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$ChatsTableAnnotationComposer($db: db, $table: table),
+              $$ChatTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
                 Value<int> authorId = const Value.absent(),
                 Value<int> editorId = const Value.absent(),
                 Value<int> reviewerId = const Value.absent(),
-              }) => ChatsCompanion(
+              }) => ChatCompanion(
                 id: id,
                 authorId: authorId,
                 editorId: editorId,
@@ -7822,7 +8620,7 @@ class $$ChatsTableTableManager
                 required int authorId,
                 required int editorId,
                 required int reviewerId,
-              }) => ChatsCompanion.insert(
+              }) => ChatCompanion.insert(
                 id: id,
                 authorId: authorId,
                 editorId: editorId,
@@ -7831,7 +8629,7 @@ class $$ChatsTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) =>
-                    (e.readTable(table), $$ChatsTableReferences(db, table, e)),
+                    (e.readTable(table), $$ChatTableReferences(db, table, e)),
               )
               .toList(),
           prefetchHooksCallback:
@@ -7839,14 +8637,14 @@ class $$ChatsTableTableManager
                 authorId = false,
                 editorId = false,
                 reviewerId = false,
-                requestsRefs = false,
-                messagesRefs = false,
+                requestRefs = false,
+                messageRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
-                    if (requestsRefs) db.requests,
-                    if (messagesRefs) db.messages,
+                    if (requestRefs) db.request,
+                    if (messageRefs) db.message,
                   ],
                   addJoins:
                       <
@@ -7869,9 +8667,9 @@ class $$ChatsTableTableManager
                               state.withJoin(
                                     currentTable: table,
                                     currentColumn: table.authorId,
-                                    referencedTable: $$ChatsTableReferences
+                                    referencedTable: $$ChatTableReferences
                                         ._authorIdTable(db),
-                                    referencedColumn: $$ChatsTableReferences
+                                    referencedColumn: $$ChatTableReferences
                                         ._authorIdTable(db)
                                         .id,
                                   )
@@ -7882,9 +8680,9 @@ class $$ChatsTableTableManager
                               state.withJoin(
                                     currentTable: table,
                                     currentColumn: table.editorId,
-                                    referencedTable: $$ChatsTableReferences
+                                    referencedTable: $$ChatTableReferences
                                         ._editorIdTable(db),
-                                    referencedColumn: $$ChatsTableReferences
+                                    referencedColumn: $$ChatTableReferences
                                         ._editorIdTable(db)
                                         .id,
                                   )
@@ -7895,9 +8693,9 @@ class $$ChatsTableTableManager
                               state.withJoin(
                                     currentTable: table,
                                     currentColumn: table.reviewerId,
-                                    referencedTable: $$ChatsTableReferences
+                                    referencedTable: $$ChatTableReferences
                                         ._reviewerIdTable(db),
-                                    referencedColumn: $$ChatsTableReferences
+                                    referencedColumn: $$ChatTableReferences
                                         ._reviewerIdTable(db)
                                         .id,
                                   )
@@ -7908,34 +8706,34 @@ class $$ChatsTableTableManager
                       },
                   getPrefetchedDataCallback: (items) async {
                     return [
-                      if (requestsRefs)
-                        await $_getPrefetchedData<Chat, $ChatsTable, Request>(
+                      if (requestRefs)
+                        await $_getPrefetchedData<
+                          ChatData,
+                          $ChatTable,
+                          RequestData
+                        >(
                           currentTable: table,
-                          referencedTable: $$ChatsTableReferences
-                              ._requestsRefsTable(db),
+                          referencedTable: $$ChatTableReferences
+                              ._requestRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$ChatsTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).requestsRefs,
+                              $$ChatTableReferences(db, table, p0).requestRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.chatId == item.id,
                               ),
                           typedResults: items,
                         ),
-                      if (messagesRefs)
-                        await $_getPrefetchedData<Chat, $ChatsTable, Message>(
+                      if (messageRefs)
+                        await $_getPrefetchedData<
+                          ChatData,
+                          $ChatTable,
+                          MessageData
+                        >(
                           currentTable: table,
-                          referencedTable: $$ChatsTableReferences
-                              ._messagesRefsTable(db),
+                          referencedTable: $$ChatTableReferences
+                              ._messageRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$ChatsTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).messagesRefs,
+                              $$ChatTableReferences(db, table, p0).messageRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.chatId == item.id,
@@ -7950,28 +8748,28 @@ class $$ChatsTableTableManager
       );
 }
 
-typedef $$ChatsTableProcessedTableManager =
+typedef $$ChatTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $ChatsTable,
-      Chat,
-      $$ChatsTableFilterComposer,
-      $$ChatsTableOrderingComposer,
-      $$ChatsTableAnnotationComposer,
-      $$ChatsTableCreateCompanionBuilder,
-      $$ChatsTableUpdateCompanionBuilder,
-      (Chat, $$ChatsTableReferences),
-      Chat,
+      $ChatTable,
+      ChatData,
+      $$ChatTableFilterComposer,
+      $$ChatTableOrderingComposer,
+      $$ChatTableAnnotationComposer,
+      $$ChatTableCreateCompanionBuilder,
+      $$ChatTableUpdateCompanionBuilder,
+      (ChatData, $$ChatTableReferences),
+      ChatData,
       PrefetchHooks Function({
         bool authorId,
         bool editorId,
         bool reviewerId,
-        bool requestsRefs,
-        bool messagesRefs,
+        bool requestRefs,
+        bool messageRefs,
       })
     >;
-typedef $$RequestsTableCreateCompanionBuilder =
-    RequestsCompanion Function({
+typedef $$RequestTableCreateCompanionBuilder =
+    RequestCompanion Function({
       Value<int> id,
       required int authorId,
       required int conferenceId,
@@ -7983,8 +8781,8 @@ typedef $$RequestsTableCreateCompanionBuilder =
       Value<int?> chatId,
       required DateTime createdAt,
     });
-typedef $$RequestsTableUpdateCompanionBuilder =
-    RequestsCompanion Function({
+typedef $$RequestTableUpdateCompanionBuilder =
+    RequestCompanion Function({
       Value<int> id,
       Value<int> authorId,
       Value<int> conferenceId,
@@ -7997,19 +8795,20 @@ typedef $$RequestsTableUpdateCompanionBuilder =
       Value<DateTime> createdAt,
     });
 
-final class $$RequestsTableReferences
-    extends BaseReferences<_$AppDatabase, $RequestsTable, Request> {
-  $$RequestsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+final class $$RequestTableReferences
+    extends BaseReferences<_$AppDatabase, $RequestTable, RequestData> {
+  $$RequestTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $AuthorsTable _authorIdTable(_$AppDatabase db) => db.authors
-      .createAlias($_aliasNameGenerator(db.requests.authorId, db.authors.id));
+  static $AuthorTable _authorIdTable(_$AppDatabase db) => db.author.createAlias(
+    $_aliasNameGenerator(db.request.authorId, db.author.id),
+  );
 
-  $$AuthorsTableProcessedTableManager get authorId {
+  $$AuthorTableProcessedTableManager get authorId {
     final $_column = $_itemColumn<int>('author_id')!;
 
-    final manager = $$AuthorsTableTableManager(
+    final manager = $$AuthorTableTableManager(
       $_db,
-      $_db.authors,
+      $_db.author,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_authorIdTable($_db));
     if (item == null) return manager;
@@ -8018,17 +8817,17 @@ final class $$RequestsTableReferences
     );
   }
 
-  static $ConferencesTable _conferenceIdTable(_$AppDatabase db) =>
-      db.conferences.createAlias(
-        $_aliasNameGenerator(db.requests.conferenceId, db.conferences.id),
+  static $ConferenceTable _conferenceIdTable(_$AppDatabase db) =>
+      db.conference.createAlias(
+        $_aliasNameGenerator(db.request.conferenceId, db.conference.id),
       );
 
-  $$ConferencesTableProcessedTableManager get conferenceId {
+  $$ConferenceTableProcessedTableManager get conferenceId {
     final $_column = $_itemColumn<int>('conference_id')!;
 
-    final manager = $$ConferencesTableTableManager(
+    final manager = $$ConferenceTableTableManager(
       $_db,
-      $_db.conferences,
+      $_db.conference,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_conferenceIdTable($_db));
     if (item == null) return manager;
@@ -8037,15 +8836,15 @@ final class $$RequestsTableReferences
     );
   }
 
-  static $SectionsTable _sectionIdTable(_$AppDatabase db) => db.sections
-      .createAlias($_aliasNameGenerator(db.requests.sectionId, db.sections.id));
+  static $SectionTable _sectionIdTable(_$AppDatabase db) => db.section
+      .createAlias($_aliasNameGenerator(db.request.sectionId, db.section.id));
 
-  $$SectionsTableProcessedTableManager get sectionId {
+  $$SectionTableProcessedTableManager get sectionId {
     final $_column = $_itemColumn<int>('section_id')!;
 
-    final manager = $$SectionsTableTableManager(
+    final manager = $$SectionTableTableManager(
       $_db,
-      $_db.sections,
+      $_db.section,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_sectionIdTable($_db));
     if (item == null) return manager;
@@ -8054,16 +8853,15 @@ final class $$RequestsTableReferences
     );
   }
 
-  static $ChatsTable _chatIdTable(_$AppDatabase db) => db.chats.createAlias(
-    $_aliasNameGenerator(db.requests.chatId, db.chats.id),
-  );
+  static $ChatTable _chatIdTable(_$AppDatabase db) =>
+      db.chat.createAlias($_aliasNameGenerator(db.request.chatId, db.chat.id));
 
-  $$ChatsTableProcessedTableManager? get chatId {
+  $$ChatTableProcessedTableManager? get chatId {
     final $_column = $_itemColumn<int>('chat_id');
     if ($_column == null) return null;
-    final manager = $$ChatsTableTableManager(
+    final manager = $$ChatTableTableManager(
       $_db,
-      $_db.chats,
+      $_db.chat,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_chatIdTable($_db));
     if (item == null) return manager;
@@ -8072,28 +8870,38 @@ final class $$RequestsTableReferences
     );
   }
 
-  static MultiTypedResultKey<$AssigmentsTable, List<Assigment>>
-  _assigmentsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
-    db.assigments,
-    aliasName: $_aliasNameGenerator(db.requests.id, db.assigments.requestId),
-  );
+  static MultiTypedResultKey<
+    $RequestReviewersEditorsAssigmentTable,
+    List<RequestReviewersEditorsAssigmentData>
+  >
+  _requestReviewersEditorsAssigmentRefsTable(_$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.requestReviewersEditorsAssigment,
+        aliasName: $_aliasNameGenerator(
+          db.request.id,
+          db.requestReviewersEditorsAssigment.requestId,
+        ),
+      );
 
-  $$AssigmentsTableProcessedTableManager get assigmentsRefs {
-    final manager = $$AssigmentsTableTableManager(
+  $$RequestReviewersEditorsAssigmentTableProcessedTableManager
+  get requestReviewersEditorsAssigmentRefs {
+    final manager = $$RequestReviewersEditorsAssigmentTableTableManager(
       $_db,
-      $_db.assigments,
+      $_db.requestReviewersEditorsAssigment,
     ).filter((f) => f.requestId.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(_assigmentsRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(
+      _requestReviewersEditorsAssigmentRefsTable($_db),
+    );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
 }
 
-class $$RequestsTableFilterComposer
-    extends Composer<_$AppDatabase, $RequestsTable> {
-  $$RequestsTableFilterComposer({
+class $$RequestTableFilterComposer
+    extends Composer<_$AppDatabase, $RequestTable> {
+  $$RequestTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -8130,20 +8938,20 @@ class $$RequestsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$AuthorsTableFilterComposer get authorId {
-    final $$AuthorsTableFilterComposer composer = $composerBuilder(
+  $$AuthorTableFilterComposer get authorId {
+    final $$AuthorTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.authorId,
-      referencedTable: $db.authors,
+      referencedTable: $db.author,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$AuthorsTableFilterComposer(
+          }) => $$AuthorTableFilterComposer(
             $db: $db,
-            $table: $db.authors,
+            $table: $db.author,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8153,20 +8961,20 @@ class $$RequestsTableFilterComposer
     return composer;
   }
 
-  $$ConferencesTableFilterComposer get conferenceId {
-    final $$ConferencesTableFilterComposer composer = $composerBuilder(
+  $$ConferenceTableFilterComposer get conferenceId {
+    final $$ConferenceTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.conferenceId,
-      referencedTable: $db.conferences,
+      referencedTable: $db.conference,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ConferencesTableFilterComposer(
+          }) => $$ConferenceTableFilterComposer(
             $db: $db,
-            $table: $db.conferences,
+            $table: $db.conference,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8176,20 +8984,20 @@ class $$RequestsTableFilterComposer
     return composer;
   }
 
-  $$SectionsTableFilterComposer get sectionId {
-    final $$SectionsTableFilterComposer composer = $composerBuilder(
+  $$SectionTableFilterComposer get sectionId {
+    final $$SectionTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.sectionId,
-      referencedTable: $db.sections,
+      referencedTable: $db.section,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$SectionsTableFilterComposer(
+          }) => $$SectionTableFilterComposer(
             $db: $db,
-            $table: $db.sections,
+            $table: $db.section,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8199,20 +9007,20 @@ class $$RequestsTableFilterComposer
     return composer;
   }
 
-  $$ChatsTableFilterComposer get chatId {
-    final $$ChatsTableFilterComposer composer = $composerBuilder(
+  $$ChatTableFilterComposer get chatId {
+    final $$ChatTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.chatId,
-      referencedTable: $db.chats,
+      referencedTable: $db.chat,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ChatsTableFilterComposer(
+          }) => $$ChatTableFilterComposer(
             $db: $db,
-            $table: $db.chats,
+            $table: $db.chat,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8222,35 +9030,39 @@ class $$RequestsTableFilterComposer
     return composer;
   }
 
-  Expression<bool> assigmentsRefs(
-    Expression<bool> Function($$AssigmentsTableFilterComposer f) f,
+  Expression<bool> requestReviewersEditorsAssigmentRefs(
+    Expression<bool> Function(
+      $$RequestReviewersEditorsAssigmentTableFilterComposer f,
+    )
+    f,
   ) {
-    final $$AssigmentsTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.assigments,
-      getReferencedColumn: (t) => t.requestId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$AssigmentsTableFilterComposer(
-            $db: $db,
-            $table: $db.assigments,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
+    final $$RequestReviewersEditorsAssigmentTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.requestReviewersEditorsAssigment,
+          getReferencedColumn: (t) => t.requestId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer,
-          ),
-    );
+              }) => $$RequestReviewersEditorsAssigmentTableFilterComposer(
+                $db: $db,
+                $table: $db.requestReviewersEditorsAssigment,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
     return f(composer);
   }
 }
 
-class $$RequestsTableOrderingComposer
-    extends Composer<_$AppDatabase, $RequestsTable> {
-  $$RequestsTableOrderingComposer({
+class $$RequestTableOrderingComposer
+    extends Composer<_$AppDatabase, $RequestTable> {
+  $$RequestTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -8287,20 +9099,20 @@ class $$RequestsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$AuthorsTableOrderingComposer get authorId {
-    final $$AuthorsTableOrderingComposer composer = $composerBuilder(
+  $$AuthorTableOrderingComposer get authorId {
+    final $$AuthorTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.authorId,
-      referencedTable: $db.authors,
+      referencedTable: $db.author,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$AuthorsTableOrderingComposer(
+          }) => $$AuthorTableOrderingComposer(
             $db: $db,
-            $table: $db.authors,
+            $table: $db.author,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8310,20 +9122,20 @@ class $$RequestsTableOrderingComposer
     return composer;
   }
 
-  $$ConferencesTableOrderingComposer get conferenceId {
-    final $$ConferencesTableOrderingComposer composer = $composerBuilder(
+  $$ConferenceTableOrderingComposer get conferenceId {
+    final $$ConferenceTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.conferenceId,
-      referencedTable: $db.conferences,
+      referencedTable: $db.conference,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ConferencesTableOrderingComposer(
+          }) => $$ConferenceTableOrderingComposer(
             $db: $db,
-            $table: $db.conferences,
+            $table: $db.conference,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8333,20 +9145,20 @@ class $$RequestsTableOrderingComposer
     return composer;
   }
 
-  $$SectionsTableOrderingComposer get sectionId {
-    final $$SectionsTableOrderingComposer composer = $composerBuilder(
+  $$SectionTableOrderingComposer get sectionId {
+    final $$SectionTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.sectionId,
-      referencedTable: $db.sections,
+      referencedTable: $db.section,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$SectionsTableOrderingComposer(
+          }) => $$SectionTableOrderingComposer(
             $db: $db,
-            $table: $db.sections,
+            $table: $db.section,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8356,20 +9168,20 @@ class $$RequestsTableOrderingComposer
     return composer;
   }
 
-  $$ChatsTableOrderingComposer get chatId {
-    final $$ChatsTableOrderingComposer composer = $composerBuilder(
+  $$ChatTableOrderingComposer get chatId {
+    final $$ChatTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.chatId,
-      referencedTable: $db.chats,
+      referencedTable: $db.chat,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ChatsTableOrderingComposer(
+          }) => $$ChatTableOrderingComposer(
             $db: $db,
-            $table: $db.chats,
+            $table: $db.chat,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8380,9 +9192,9 @@ class $$RequestsTableOrderingComposer
   }
 }
 
-class $$RequestsTableAnnotationComposer
-    extends Composer<_$AppDatabase, $RequestsTable> {
-  $$RequestsTableAnnotationComposer({
+class $$RequestTableAnnotationComposer
+    extends Composer<_$AppDatabase, $RequestTable> {
+  $$RequestTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -8407,20 +9219,20 @@ class $$RequestsTableAnnotationComposer
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
-  $$AuthorsTableAnnotationComposer get authorId {
-    final $$AuthorsTableAnnotationComposer composer = $composerBuilder(
+  $$AuthorTableAnnotationComposer get authorId {
+    final $$AuthorTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.authorId,
-      referencedTable: $db.authors,
+      referencedTable: $db.author,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$AuthorsTableAnnotationComposer(
+          }) => $$AuthorTableAnnotationComposer(
             $db: $db,
-            $table: $db.authors,
+            $table: $db.author,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8430,20 +9242,20 @@ class $$RequestsTableAnnotationComposer
     return composer;
   }
 
-  $$ConferencesTableAnnotationComposer get conferenceId {
-    final $$ConferencesTableAnnotationComposer composer = $composerBuilder(
+  $$ConferenceTableAnnotationComposer get conferenceId {
+    final $$ConferenceTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.conferenceId,
-      referencedTable: $db.conferences,
+      referencedTable: $db.conference,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ConferencesTableAnnotationComposer(
+          }) => $$ConferenceTableAnnotationComposer(
             $db: $db,
-            $table: $db.conferences,
+            $table: $db.conference,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8453,20 +9265,20 @@ class $$RequestsTableAnnotationComposer
     return composer;
   }
 
-  $$SectionsTableAnnotationComposer get sectionId {
-    final $$SectionsTableAnnotationComposer composer = $composerBuilder(
+  $$SectionTableAnnotationComposer get sectionId {
+    final $$SectionTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.sectionId,
-      referencedTable: $db.sections,
+      referencedTable: $db.section,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$SectionsTableAnnotationComposer(
+          }) => $$SectionTableAnnotationComposer(
             $db: $db,
-            $table: $db.sections,
+            $table: $db.section,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8476,20 +9288,20 @@ class $$RequestsTableAnnotationComposer
     return composer;
   }
 
-  $$ChatsTableAnnotationComposer get chatId {
-    final $$ChatsTableAnnotationComposer composer = $composerBuilder(
+  $$ChatTableAnnotationComposer get chatId {
+    final $$ChatTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.chatId,
-      referencedTable: $db.chats,
+      referencedTable: $db.chat,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ChatsTableAnnotationComposer(
+          }) => $$ChatTableAnnotationComposer(
             $db: $db,
-            $table: $db.chats,
+            $table: $db.chat,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8499,64 +9311,68 @@ class $$RequestsTableAnnotationComposer
     return composer;
   }
 
-  Expression<T> assigmentsRefs<T extends Object>(
-    Expression<T> Function($$AssigmentsTableAnnotationComposer a) f,
+  Expression<T> requestReviewersEditorsAssigmentRefs<T extends Object>(
+    Expression<T> Function(
+      $$RequestReviewersEditorsAssigmentTableAnnotationComposer a,
+    )
+    f,
   ) {
-    final $$AssigmentsTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.assigments,
-      getReferencedColumn: (t) => t.requestId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$AssigmentsTableAnnotationComposer(
-            $db: $db,
-            $table: $db.assigments,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
+    final $$RequestReviewersEditorsAssigmentTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.requestReviewersEditorsAssigment,
+          getReferencedColumn: (t) => t.requestId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer,
-          ),
-    );
+              }) => $$RequestReviewersEditorsAssigmentTableAnnotationComposer(
+                $db: $db,
+                $table: $db.requestReviewersEditorsAssigment,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
     return f(composer);
   }
 }
 
-class $$RequestsTableTableManager
+class $$RequestTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $RequestsTable,
-          Request,
-          $$RequestsTableFilterComposer,
-          $$RequestsTableOrderingComposer,
-          $$RequestsTableAnnotationComposer,
-          $$RequestsTableCreateCompanionBuilder,
-          $$RequestsTableUpdateCompanionBuilder,
-          (Request, $$RequestsTableReferences),
-          Request,
+          $RequestTable,
+          RequestData,
+          $$RequestTableFilterComposer,
+          $$RequestTableOrderingComposer,
+          $$RequestTableAnnotationComposer,
+          $$RequestTableCreateCompanionBuilder,
+          $$RequestTableUpdateCompanionBuilder,
+          (RequestData, $$RequestTableReferences),
+          RequestData,
           PrefetchHooks Function({
             bool authorId,
             bool conferenceId,
             bool sectionId,
             bool chatId,
-            bool assigmentsRefs,
+            bool requestReviewersEditorsAssigmentRefs,
           })
         > {
-  $$RequestsTableTableManager(_$AppDatabase db, $RequestsTable table)
+  $$RequestTableTableManager(_$AppDatabase db, $RequestTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$RequestsTableFilterComposer($db: db, $table: table),
+              $$RequestTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$RequestsTableOrderingComposer($db: db, $table: table),
+              $$RequestTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$RequestsTableAnnotationComposer($db: db, $table: table),
+              $$RequestTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -8569,7 +9385,7 @@ class $$RequestsTableTableManager
                 Value<String?> comment = const Value.absent(),
                 Value<int?> chatId = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
-              }) => RequestsCompanion(
+              }) => RequestCompanion(
                 id: id,
                 authorId: authorId,
                 conferenceId: conferenceId,
@@ -8593,7 +9409,7 @@ class $$RequestsTableTableManager
                 Value<String?> comment = const Value.absent(),
                 Value<int?> chatId = const Value.absent(),
                 required DateTime createdAt,
-              }) => RequestsCompanion.insert(
+              }) => RequestCompanion.insert(
                 id: id,
                 authorId: authorId,
                 conferenceId: conferenceId,
@@ -8609,7 +9425,7 @@ class $$RequestsTableTableManager
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$RequestsTableReferences(db, table, e),
+                  $$RequestTableReferences(db, table, e),
                 ),
               )
               .toList(),
@@ -8619,11 +9435,14 @@ class $$RequestsTableTableManager
                 conferenceId = false,
                 sectionId = false,
                 chatId = false,
-                assigmentsRefs = false,
+                requestReviewersEditorsAssigmentRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
-                  explicitlyWatchedTables: [if (assigmentsRefs) db.assigments],
+                  explicitlyWatchedTables: [
+                    if (requestReviewersEditorsAssigmentRefs)
+                      db.requestReviewersEditorsAssigment,
+                  ],
                   addJoins:
                       <
                         T extends TableManagerState<
@@ -8645,9 +9464,9 @@ class $$RequestsTableTableManager
                               state.withJoin(
                                     currentTable: table,
                                     currentColumn: table.authorId,
-                                    referencedTable: $$RequestsTableReferences
+                                    referencedTable: $$RequestTableReferences
                                         ._authorIdTable(db),
-                                    referencedColumn: $$RequestsTableReferences
+                                    referencedColumn: $$RequestTableReferences
                                         ._authorIdTable(db)
                                         .id,
                                   )
@@ -8658,9 +9477,9 @@ class $$RequestsTableTableManager
                               state.withJoin(
                                     currentTable: table,
                                     currentColumn: table.conferenceId,
-                                    referencedTable: $$RequestsTableReferences
+                                    referencedTable: $$RequestTableReferences
                                         ._conferenceIdTable(db),
-                                    referencedColumn: $$RequestsTableReferences
+                                    referencedColumn: $$RequestTableReferences
                                         ._conferenceIdTable(db)
                                         .id,
                                   )
@@ -8671,9 +9490,9 @@ class $$RequestsTableTableManager
                               state.withJoin(
                                     currentTable: table,
                                     currentColumn: table.sectionId,
-                                    referencedTable: $$RequestsTableReferences
+                                    referencedTable: $$RequestTableReferences
                                         ._sectionIdTable(db),
-                                    referencedColumn: $$RequestsTableReferences
+                                    referencedColumn: $$RequestTableReferences
                                         ._sectionIdTable(db)
                                         .id,
                                   )
@@ -8684,9 +9503,9 @@ class $$RequestsTableTableManager
                               state.withJoin(
                                     currentTable: table,
                                     currentColumn: table.chatId,
-                                    referencedTable: $$RequestsTableReferences
+                                    referencedTable: $$RequestTableReferences
                                         ._chatIdTable(db),
-                                    referencedColumn: $$RequestsTableReferences
+                                    referencedColumn: $$RequestTableReferences
                                         ._chatIdTable(db)
                                         .id,
                                   )
@@ -8697,21 +9516,21 @@ class $$RequestsTableTableManager
                       },
                   getPrefetchedDataCallback: (items) async {
                     return [
-                      if (assigmentsRefs)
+                      if (requestReviewersEditorsAssigmentRefs)
                         await $_getPrefetchedData<
-                          Request,
-                          $RequestsTable,
-                          Assigment
+                          RequestData,
+                          $RequestTable,
+                          RequestReviewersEditorsAssigmentData
                         >(
                           currentTable: table,
-                          referencedTable: $$RequestsTableReferences
-                              ._assigmentsRefsTable(db),
+                          referencedTable: $$RequestTableReferences
+                              ._requestReviewersEditorsAssigmentRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$RequestsTableReferences(
+                              $$RequestTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).assigmentsRefs,
+                              ).requestReviewersEditorsAssigmentRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.requestId == item.id,
@@ -8726,55 +9545,54 @@ class $$RequestsTableTableManager
       );
 }
 
-typedef $$RequestsTableProcessedTableManager =
+typedef $$RequestTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $RequestsTable,
-      Request,
-      $$RequestsTableFilterComposer,
-      $$RequestsTableOrderingComposer,
-      $$RequestsTableAnnotationComposer,
-      $$RequestsTableCreateCompanionBuilder,
-      $$RequestsTableUpdateCompanionBuilder,
-      (Request, $$RequestsTableReferences),
-      Request,
+      $RequestTable,
+      RequestData,
+      $$RequestTableFilterComposer,
+      $$RequestTableOrderingComposer,
+      $$RequestTableAnnotationComposer,
+      $$RequestTableCreateCompanionBuilder,
+      $$RequestTableUpdateCompanionBuilder,
+      (RequestData, $$RequestTableReferences),
+      RequestData,
       PrefetchHooks Function({
         bool authorId,
         bool conferenceId,
         bool sectionId,
         bool chatId,
-        bool assigmentsRefs,
+        bool requestReviewersEditorsAssigmentRefs,
       })
     >;
-typedef $$MessagesTableCreateCompanionBuilder =
-    MessagesCompanion Function({
+typedef $$MessageTableCreateCompanionBuilder =
+    MessageCompanion Function({
       Value<int> id,
       required int chatId,
       required String messageText,
       required String uid,
     });
-typedef $$MessagesTableUpdateCompanionBuilder =
-    MessagesCompanion Function({
+typedef $$MessageTableUpdateCompanionBuilder =
+    MessageCompanion Function({
       Value<int> id,
       Value<int> chatId,
       Value<String> messageText,
       Value<String> uid,
     });
 
-final class $$MessagesTableReferences
-    extends BaseReferences<_$AppDatabase, $MessagesTable, Message> {
-  $$MessagesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+final class $$MessageTableReferences
+    extends BaseReferences<_$AppDatabase, $MessageTable, MessageData> {
+  $$MessageTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $ChatsTable _chatIdTable(_$AppDatabase db) => db.chats.createAlias(
-    $_aliasNameGenerator(db.messages.chatId, db.chats.id),
-  );
+  static $ChatTable _chatIdTable(_$AppDatabase db) =>
+      db.chat.createAlias($_aliasNameGenerator(db.message.chatId, db.chat.id));
 
-  $$ChatsTableProcessedTableManager get chatId {
+  $$ChatTableProcessedTableManager get chatId {
     final $_column = $_itemColumn<int>('chat_id')!;
 
-    final manager = $$ChatsTableTableManager(
+    final manager = $$ChatTableTableManager(
       $_db,
-      $_db.chats,
+      $_db.chat,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_chatIdTable($_db));
     if (item == null) return manager;
@@ -8783,15 +9601,15 @@ final class $$MessagesTableReferences
     );
   }
 
-  static $UsersTable _uidTable(_$AppDatabase db) =>
-      db.users.createAlias($_aliasNameGenerator(db.messages.uid, db.users.uid));
+  static $UserTable _uidTable(_$AppDatabase db) =>
+      db.user.createAlias($_aliasNameGenerator(db.message.uid, db.user.uid));
 
-  $$UsersTableProcessedTableManager get uid {
+  $$UserTableProcessedTableManager get uid {
     final $_column = $_itemColumn<String>('uid')!;
 
-    final manager = $$UsersTableTableManager(
+    final manager = $$UserTableTableManager(
       $_db,
-      $_db.users,
+      $_db.user,
     ).filter((f) => f.uid.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_uidTable($_db));
     if (item == null) return manager;
@@ -8801,9 +9619,9 @@ final class $$MessagesTableReferences
   }
 }
 
-class $$MessagesTableFilterComposer
-    extends Composer<_$AppDatabase, $MessagesTable> {
-  $$MessagesTableFilterComposer({
+class $$MessageTableFilterComposer
+    extends Composer<_$AppDatabase, $MessageTable> {
+  $$MessageTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -8820,20 +9638,20 @@ class $$MessagesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$ChatsTableFilterComposer get chatId {
-    final $$ChatsTableFilterComposer composer = $composerBuilder(
+  $$ChatTableFilterComposer get chatId {
+    final $$ChatTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.chatId,
-      referencedTable: $db.chats,
+      referencedTable: $db.chat,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ChatsTableFilterComposer(
+          }) => $$ChatTableFilterComposer(
             $db: $db,
-            $table: $db.chats,
+            $table: $db.chat,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8843,20 +9661,20 @@ class $$MessagesTableFilterComposer
     return composer;
   }
 
-  $$UsersTableFilterComposer get uid {
-    final $$UsersTableFilterComposer composer = $composerBuilder(
+  $$UserTableFilterComposer get uid {
+    final $$UserTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.uid,
-      referencedTable: $db.users,
+      referencedTable: $db.user,
       getReferencedColumn: (t) => t.uid,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableFilterComposer(
+          }) => $$UserTableFilterComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.user,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8867,9 +9685,9 @@ class $$MessagesTableFilterComposer
   }
 }
 
-class $$MessagesTableOrderingComposer
-    extends Composer<_$AppDatabase, $MessagesTable> {
-  $$MessagesTableOrderingComposer({
+class $$MessageTableOrderingComposer
+    extends Composer<_$AppDatabase, $MessageTable> {
+  $$MessageTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -8886,20 +9704,20 @@ class $$MessagesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$ChatsTableOrderingComposer get chatId {
-    final $$ChatsTableOrderingComposer composer = $composerBuilder(
+  $$ChatTableOrderingComposer get chatId {
+    final $$ChatTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.chatId,
-      referencedTable: $db.chats,
+      referencedTable: $db.chat,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ChatsTableOrderingComposer(
+          }) => $$ChatTableOrderingComposer(
             $db: $db,
-            $table: $db.chats,
+            $table: $db.chat,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8909,20 +9727,20 @@ class $$MessagesTableOrderingComposer
     return composer;
   }
 
-  $$UsersTableOrderingComposer get uid {
-    final $$UsersTableOrderingComposer composer = $composerBuilder(
+  $$UserTableOrderingComposer get uid {
+    final $$UserTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.uid,
-      referencedTable: $db.users,
+      referencedTable: $db.user,
       getReferencedColumn: (t) => t.uid,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableOrderingComposer(
+          }) => $$UserTableOrderingComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.user,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8933,9 +9751,9 @@ class $$MessagesTableOrderingComposer
   }
 }
 
-class $$MessagesTableAnnotationComposer
-    extends Composer<_$AppDatabase, $MessagesTable> {
-  $$MessagesTableAnnotationComposer({
+class $$MessageTableAnnotationComposer
+    extends Composer<_$AppDatabase, $MessageTable> {
+  $$MessageTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -8950,20 +9768,20 @@ class $$MessagesTableAnnotationComposer
     builder: (column) => column,
   );
 
-  $$ChatsTableAnnotationComposer get chatId {
-    final $$ChatsTableAnnotationComposer composer = $composerBuilder(
+  $$ChatTableAnnotationComposer get chatId {
+    final $$ChatTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.chatId,
-      referencedTable: $db.chats,
+      referencedTable: $db.chat,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ChatsTableAnnotationComposer(
+          }) => $$ChatTableAnnotationComposer(
             $db: $db,
-            $table: $db.chats,
+            $table: $db.chat,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8973,20 +9791,20 @@ class $$MessagesTableAnnotationComposer
     return composer;
   }
 
-  $$UsersTableAnnotationComposer get uid {
-    final $$UsersTableAnnotationComposer composer = $composerBuilder(
+  $$UserTableAnnotationComposer get uid {
+    final $$UserTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.uid,
-      referencedTable: $db.users,
+      referencedTable: $db.user,
       getReferencedColumn: (t) => t.uid,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$UsersTableAnnotationComposer(
+          }) => $$UserTableAnnotationComposer(
             $db: $db,
-            $table: $db.users,
+            $table: $db.user,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8997,39 +9815,39 @@ class $$MessagesTableAnnotationComposer
   }
 }
 
-class $$MessagesTableTableManager
+class $$MessageTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $MessagesTable,
-          Message,
-          $$MessagesTableFilterComposer,
-          $$MessagesTableOrderingComposer,
-          $$MessagesTableAnnotationComposer,
-          $$MessagesTableCreateCompanionBuilder,
-          $$MessagesTableUpdateCompanionBuilder,
-          (Message, $$MessagesTableReferences),
-          Message,
+          $MessageTable,
+          MessageData,
+          $$MessageTableFilterComposer,
+          $$MessageTableOrderingComposer,
+          $$MessageTableAnnotationComposer,
+          $$MessageTableCreateCompanionBuilder,
+          $$MessageTableUpdateCompanionBuilder,
+          (MessageData, $$MessageTableReferences),
+          MessageData,
           PrefetchHooks Function({bool chatId, bool uid})
         > {
-  $$MessagesTableTableManager(_$AppDatabase db, $MessagesTable table)
+  $$MessageTableTableManager(_$AppDatabase db, $MessageTable table)
     : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$MessagesTableFilterComposer($db: db, $table: table),
+              $$MessageTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$MessagesTableOrderingComposer($db: db, $table: table),
+              $$MessageTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$MessagesTableAnnotationComposer($db: db, $table: table),
+              $$MessageTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
                 Value<int> chatId = const Value.absent(),
                 Value<String> messageText = const Value.absent(),
                 Value<String> uid = const Value.absent(),
-              }) => MessagesCompanion(
+              }) => MessageCompanion(
                 id: id,
                 chatId: chatId,
                 messageText: messageText,
@@ -9041,7 +9859,7 @@ class $$MessagesTableTableManager
                 required int chatId,
                 required String messageText,
                 required String uid,
-              }) => MessagesCompanion.insert(
+              }) => MessageCompanion.insert(
                 id: id,
                 chatId: chatId,
                 messageText: messageText,
@@ -9051,7 +9869,7 @@ class $$MessagesTableTableManager
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$MessagesTableReferences(db, table, e),
+                  $$MessageTableReferences(db, table, e),
                 ),
               )
               .toList(),
@@ -9080,9 +9898,9 @@ class $$MessagesTableTableManager
                           state.withJoin(
                                 currentTable: table,
                                 currentColumn: table.chatId,
-                                referencedTable: $$MessagesTableReferences
+                                referencedTable: $$MessageTableReferences
                                     ._chatIdTable(db),
-                                referencedColumn: $$MessagesTableReferences
+                                referencedColumn: $$MessageTableReferences
                                     ._chatIdTable(db)
                                     .id,
                               )
@@ -9093,9 +9911,9 @@ class $$MessagesTableTableManager
                           state.withJoin(
                                 currentTable: table,
                                 currentColumn: table.uid,
-                                referencedTable: $$MessagesTableReferences
+                                referencedTable: $$MessageTableReferences
                                     ._uidTable(db),
-                                referencedColumn: $$MessagesTableReferences
+                                referencedColumn: $$MessageTableReferences
                                     ._uidTable(db)
                                     .uid,
                               )
@@ -9113,50 +9931,62 @@ class $$MessagesTableTableManager
       );
 }
 
-typedef $$MessagesTableProcessedTableManager =
+typedef $$MessageTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $MessagesTable,
-      Message,
-      $$MessagesTableFilterComposer,
-      $$MessagesTableOrderingComposer,
-      $$MessagesTableAnnotationComposer,
-      $$MessagesTableCreateCompanionBuilder,
-      $$MessagesTableUpdateCompanionBuilder,
-      (Message, $$MessagesTableReferences),
-      Message,
+      $MessageTable,
+      MessageData,
+      $$MessageTableFilterComposer,
+      $$MessageTableOrderingComposer,
+      $$MessageTableAnnotationComposer,
+      $$MessageTableCreateCompanionBuilder,
+      $$MessageTableUpdateCompanionBuilder,
+      (MessageData, $$MessageTableReferences),
+      MessageData,
       PrefetchHooks Function({bool chatId, bool uid})
     >;
-typedef $$AssigmentsTableCreateCompanionBuilder =
-    AssigmentsCompanion Function({
+typedef $$RequestReviewersEditorsAssigmentTableCreateCompanionBuilder =
+    RequestReviewersEditorsAssigmentCompanion Function({
       Value<int> id,
       required int requestId,
       required int editorId,
       required int reviewerId,
     });
-typedef $$AssigmentsTableUpdateCompanionBuilder =
-    AssigmentsCompanion Function({
+typedef $$RequestReviewersEditorsAssigmentTableUpdateCompanionBuilder =
+    RequestReviewersEditorsAssigmentCompanion Function({
       Value<int> id,
       Value<int> requestId,
       Value<int> editorId,
       Value<int> reviewerId,
     });
 
-final class $$AssigmentsTableReferences
-    extends BaseReferences<_$AppDatabase, $AssigmentsTable, Assigment> {
-  $$AssigmentsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+final class $$RequestReviewersEditorsAssigmentTableReferences
+    extends
+        BaseReferences<
+          _$AppDatabase,
+          $RequestReviewersEditorsAssigmentTable,
+          RequestReviewersEditorsAssigmentData
+        > {
+  $$RequestReviewersEditorsAssigmentTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
 
-  static $RequestsTable _requestIdTable(_$AppDatabase db) =>
-      db.requests.createAlias(
-        $_aliasNameGenerator(db.assigments.requestId, db.requests.id),
+  static $RequestTable _requestIdTable(_$AppDatabase db) =>
+      db.request.createAlias(
+        $_aliasNameGenerator(
+          db.requestReviewersEditorsAssigment.requestId,
+          db.request.id,
+        ),
       );
 
-  $$RequestsTableProcessedTableManager get requestId {
+  $$RequestTableProcessedTableManager get requestId {
     final $_column = $_itemColumn<int>('request_id')!;
 
-    final manager = $$RequestsTableTableManager(
+    final manager = $$RequestTableTableManager(
       $_db,
-      $_db.requests,
+      $_db.request,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_requestIdTable($_db));
     if (item == null) return manager;
@@ -9165,15 +9995,19 @@ final class $$AssigmentsTableReferences
     );
   }
 
-  static $EditorsTable _editorIdTable(_$AppDatabase db) => db.editors
-      .createAlias($_aliasNameGenerator(db.assigments.editorId, db.editors.id));
+  static $EditorTable _editorIdTable(_$AppDatabase db) => db.editor.createAlias(
+    $_aliasNameGenerator(
+      db.requestReviewersEditorsAssigment.editorId,
+      db.editor.id,
+    ),
+  );
 
-  $$EditorsTableProcessedTableManager get editorId {
+  $$EditorTableProcessedTableManager get editorId {
     final $_column = $_itemColumn<int>('editor_id')!;
 
-    final manager = $$EditorsTableTableManager(
+    final manager = $$EditorTableTableManager(
       $_db,
-      $_db.editors,
+      $_db.editor,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_editorIdTable($_db));
     if (item == null) return manager;
@@ -9182,17 +10016,20 @@ final class $$AssigmentsTableReferences
     );
   }
 
-  static $ReviewersTable _reviewerIdTable(_$AppDatabase db) =>
-      db.reviewers.createAlias(
-        $_aliasNameGenerator(db.assigments.reviewerId, db.reviewers.id),
+  static $ReviewerTable _reviewerIdTable(_$AppDatabase db) =>
+      db.reviewer.createAlias(
+        $_aliasNameGenerator(
+          db.requestReviewersEditorsAssigment.reviewerId,
+          db.reviewer.id,
+        ),
       );
 
-  $$ReviewersTableProcessedTableManager get reviewerId {
+  $$ReviewerTableProcessedTableManager get reviewerId {
     final $_column = $_itemColumn<int>('reviewer_id')!;
 
-    final manager = $$ReviewersTableTableManager(
+    final manager = $$ReviewerTableTableManager(
       $_db,
-      $_db.reviewers,
+      $_db.reviewer,
     ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_reviewerIdTable($_db));
     if (item == null) return manager;
@@ -9202,9 +10039,9 @@ final class $$AssigmentsTableReferences
   }
 }
 
-class $$AssigmentsTableFilterComposer
-    extends Composer<_$AppDatabase, $AssigmentsTable> {
-  $$AssigmentsTableFilterComposer({
+class $$RequestReviewersEditorsAssigmentTableFilterComposer
+    extends Composer<_$AppDatabase, $RequestReviewersEditorsAssigmentTable> {
+  $$RequestReviewersEditorsAssigmentTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -9216,20 +10053,20 @@ class $$AssigmentsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$RequestsTableFilterComposer get requestId {
-    final $$RequestsTableFilterComposer composer = $composerBuilder(
+  $$RequestTableFilterComposer get requestId {
+    final $$RequestTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.requestId,
-      referencedTable: $db.requests,
+      referencedTable: $db.request,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$RequestsTableFilterComposer(
+          }) => $$RequestTableFilterComposer(
             $db: $db,
-            $table: $db.requests,
+            $table: $db.request,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -9239,20 +10076,20 @@ class $$AssigmentsTableFilterComposer
     return composer;
   }
 
-  $$EditorsTableFilterComposer get editorId {
-    final $$EditorsTableFilterComposer composer = $composerBuilder(
+  $$EditorTableFilterComposer get editorId {
+    final $$EditorTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.editorId,
-      referencedTable: $db.editors,
+      referencedTable: $db.editor,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$EditorsTableFilterComposer(
+          }) => $$EditorTableFilterComposer(
             $db: $db,
-            $table: $db.editors,
+            $table: $db.editor,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -9262,20 +10099,20 @@ class $$AssigmentsTableFilterComposer
     return composer;
   }
 
-  $$ReviewersTableFilterComposer get reviewerId {
-    final $$ReviewersTableFilterComposer composer = $composerBuilder(
+  $$ReviewerTableFilterComposer get reviewerId {
+    final $$ReviewerTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.reviewerId,
-      referencedTable: $db.reviewers,
+      referencedTable: $db.reviewer,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ReviewersTableFilterComposer(
+          }) => $$ReviewerTableFilterComposer(
             $db: $db,
-            $table: $db.reviewers,
+            $table: $db.reviewer,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -9286,9 +10123,9 @@ class $$AssigmentsTableFilterComposer
   }
 }
 
-class $$AssigmentsTableOrderingComposer
-    extends Composer<_$AppDatabase, $AssigmentsTable> {
-  $$AssigmentsTableOrderingComposer({
+class $$RequestReviewersEditorsAssigmentTableOrderingComposer
+    extends Composer<_$AppDatabase, $RequestReviewersEditorsAssigmentTable> {
+  $$RequestReviewersEditorsAssigmentTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -9300,20 +10137,20 @@ class $$AssigmentsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$RequestsTableOrderingComposer get requestId {
-    final $$RequestsTableOrderingComposer composer = $composerBuilder(
+  $$RequestTableOrderingComposer get requestId {
+    final $$RequestTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.requestId,
-      referencedTable: $db.requests,
+      referencedTable: $db.request,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$RequestsTableOrderingComposer(
+          }) => $$RequestTableOrderingComposer(
             $db: $db,
-            $table: $db.requests,
+            $table: $db.request,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -9323,20 +10160,20 @@ class $$AssigmentsTableOrderingComposer
     return composer;
   }
 
-  $$EditorsTableOrderingComposer get editorId {
-    final $$EditorsTableOrderingComposer composer = $composerBuilder(
+  $$EditorTableOrderingComposer get editorId {
+    final $$EditorTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.editorId,
-      referencedTable: $db.editors,
+      referencedTable: $db.editor,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$EditorsTableOrderingComposer(
+          }) => $$EditorTableOrderingComposer(
             $db: $db,
-            $table: $db.editors,
+            $table: $db.editor,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -9346,20 +10183,20 @@ class $$AssigmentsTableOrderingComposer
     return composer;
   }
 
-  $$ReviewersTableOrderingComposer get reviewerId {
-    final $$ReviewersTableOrderingComposer composer = $composerBuilder(
+  $$ReviewerTableOrderingComposer get reviewerId {
+    final $$ReviewerTableOrderingComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.reviewerId,
-      referencedTable: $db.reviewers,
+      referencedTable: $db.reviewer,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ReviewersTableOrderingComposer(
+          }) => $$ReviewerTableOrderingComposer(
             $db: $db,
-            $table: $db.reviewers,
+            $table: $db.reviewer,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -9370,9 +10207,9 @@ class $$AssigmentsTableOrderingComposer
   }
 }
 
-class $$AssigmentsTableAnnotationComposer
-    extends Composer<_$AppDatabase, $AssigmentsTable> {
-  $$AssigmentsTableAnnotationComposer({
+class $$RequestReviewersEditorsAssigmentTableAnnotationComposer
+    extends Composer<_$AppDatabase, $RequestReviewersEditorsAssigmentTable> {
+  $$RequestReviewersEditorsAssigmentTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -9382,20 +10219,20 @@ class $$AssigmentsTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  $$RequestsTableAnnotationComposer get requestId {
-    final $$RequestsTableAnnotationComposer composer = $composerBuilder(
+  $$RequestTableAnnotationComposer get requestId {
+    final $$RequestTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.requestId,
-      referencedTable: $db.requests,
+      referencedTable: $db.request,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$RequestsTableAnnotationComposer(
+          }) => $$RequestTableAnnotationComposer(
             $db: $db,
-            $table: $db.requests,
+            $table: $db.request,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -9405,20 +10242,20 @@ class $$AssigmentsTableAnnotationComposer
     return composer;
   }
 
-  $$EditorsTableAnnotationComposer get editorId {
-    final $$EditorsTableAnnotationComposer composer = $composerBuilder(
+  $$EditorTableAnnotationComposer get editorId {
+    final $$EditorTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.editorId,
-      referencedTable: $db.editors,
+      referencedTable: $db.editor,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$EditorsTableAnnotationComposer(
+          }) => $$EditorTableAnnotationComposer(
             $db: $db,
-            $table: $db.editors,
+            $table: $db.editor,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -9428,20 +10265,20 @@ class $$AssigmentsTableAnnotationComposer
     return composer;
   }
 
-  $$ReviewersTableAnnotationComposer get reviewerId {
-    final $$ReviewersTableAnnotationComposer composer = $composerBuilder(
+  $$ReviewerTableAnnotationComposer get reviewerId {
+    final $$ReviewerTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.reviewerId,
-      referencedTable: $db.reviewers,
+      referencedTable: $db.reviewer,
       getReferencedColumn: (t) => t.id,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ReviewersTableAnnotationComposer(
+          }) => $$ReviewerTableAnnotationComposer(
             $db: $db,
-            $table: $db.reviewers,
+            $table: $db.reviewer,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -9452,43 +10289,57 @@ class $$AssigmentsTableAnnotationComposer
   }
 }
 
-class $$AssigmentsTableTableManager
+class $$RequestReviewersEditorsAssigmentTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $AssigmentsTable,
-          Assigment,
-          $$AssigmentsTableFilterComposer,
-          $$AssigmentsTableOrderingComposer,
-          $$AssigmentsTableAnnotationComposer,
-          $$AssigmentsTableCreateCompanionBuilder,
-          $$AssigmentsTableUpdateCompanionBuilder,
-          (Assigment, $$AssigmentsTableReferences),
-          Assigment,
+          $RequestReviewersEditorsAssigmentTable,
+          RequestReviewersEditorsAssigmentData,
+          $$RequestReviewersEditorsAssigmentTableFilterComposer,
+          $$RequestReviewersEditorsAssigmentTableOrderingComposer,
+          $$RequestReviewersEditorsAssigmentTableAnnotationComposer,
+          $$RequestReviewersEditorsAssigmentTableCreateCompanionBuilder,
+          $$RequestReviewersEditorsAssigmentTableUpdateCompanionBuilder,
+          (
+            RequestReviewersEditorsAssigmentData,
+            $$RequestReviewersEditorsAssigmentTableReferences,
+          ),
+          RequestReviewersEditorsAssigmentData,
           PrefetchHooks Function({
             bool requestId,
             bool editorId,
             bool reviewerId,
           })
         > {
-  $$AssigmentsTableTableManager(_$AppDatabase db, $AssigmentsTable table)
-    : super(
+  $$RequestReviewersEditorsAssigmentTableTableManager(
+    _$AppDatabase db,
+    $RequestReviewersEditorsAssigmentTable table,
+  ) : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$AssigmentsTableFilterComposer($db: db, $table: table),
+              $$RequestReviewersEditorsAssigmentTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
           createOrderingComposer: () =>
-              $$AssigmentsTableOrderingComposer($db: db, $table: table),
+              $$RequestReviewersEditorsAssigmentTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
           createComputedFieldComposer: () =>
-              $$AssigmentsTableAnnotationComposer($db: db, $table: table),
+              $$RequestReviewersEditorsAssigmentTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
                 Value<int> requestId = const Value.absent(),
                 Value<int> editorId = const Value.absent(),
                 Value<int> reviewerId = const Value.absent(),
-              }) => AssigmentsCompanion(
+              }) => RequestReviewersEditorsAssigmentCompanion(
                 id: id,
                 requestId: requestId,
                 editorId: editorId,
@@ -9500,7 +10351,7 @@ class $$AssigmentsTableTableManager
                 required int requestId,
                 required int editorId,
                 required int reviewerId,
-              }) => AssigmentsCompanion.insert(
+              }) => RequestReviewersEditorsAssigmentCompanion.insert(
                 id: id,
                 requestId: requestId,
                 editorId: editorId,
@@ -9510,125 +10361,136 @@ class $$AssigmentsTableTableManager
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$AssigmentsTableReferences(db, table, e),
+                  $$RequestReviewersEditorsAssigmentTableReferences(
+                    db,
+                    table,
+                    e,
+                  ),
                 ),
               )
               .toList(),
-          prefetchHooksCallback:
-              ({requestId = false, editorId = false, reviewerId = false}) {
-                return PrefetchHooks(
-                  db: db,
-                  explicitlyWatchedTables: [],
-                  addJoins:
-                      <
-                        T extends TableManagerState<
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic
-                        >
-                      >(state) {
-                        if (requestId) {
-                          state =
-                              state.withJoin(
-                                    currentTable: table,
-                                    currentColumn: table.requestId,
-                                    referencedTable: $$AssigmentsTableReferences
+          prefetchHooksCallback: ({requestId = false, editorId = false, reviewerId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (requestId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.requestId,
+                                referencedTable:
+                                    $$RequestReviewersEditorsAssigmentTableReferences
                                         ._requestIdTable(db),
-                                    referencedColumn:
-                                        $$AssigmentsTableReferences
-                                            ._requestIdTable(db)
-                                            .id,
-                                  )
-                                  as T;
-                        }
-                        if (editorId) {
-                          state =
-                              state.withJoin(
-                                    currentTable: table,
-                                    currentColumn: table.editorId,
-                                    referencedTable: $$AssigmentsTableReferences
+                                referencedColumn:
+                                    $$RequestReviewersEditorsAssigmentTableReferences
+                                        ._requestIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+                    if (editorId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.editorId,
+                                referencedTable:
+                                    $$RequestReviewersEditorsAssigmentTableReferences
                                         ._editorIdTable(db),
-                                    referencedColumn:
-                                        $$AssigmentsTableReferences
-                                            ._editorIdTable(db)
-                                            .id,
-                                  )
-                                  as T;
-                        }
-                        if (reviewerId) {
-                          state =
-                              state.withJoin(
-                                    currentTable: table,
-                                    currentColumn: table.reviewerId,
-                                    referencedTable: $$AssigmentsTableReferences
+                                referencedColumn:
+                                    $$RequestReviewersEditorsAssigmentTableReferences
+                                        ._editorIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+                    if (reviewerId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.reviewerId,
+                                referencedTable:
+                                    $$RequestReviewersEditorsAssigmentTableReferences
                                         ._reviewerIdTable(db),
-                                    referencedColumn:
-                                        $$AssigmentsTableReferences
-                                            ._reviewerIdTable(db)
-                                            .id,
-                                  )
-                                  as T;
-                        }
+                                referencedColumn:
+                                    $$RequestReviewersEditorsAssigmentTableReferences
+                                        ._reviewerIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
 
-                        return state;
-                      },
-                  getPrefetchedDataCallback: (items) async {
-                    return [];
+                    return state;
                   },
-                );
+              getPrefetchedDataCallback: (items) async {
+                return [];
               },
+            );
+          },
         ),
       );
 }
 
-typedef $$AssigmentsTableProcessedTableManager =
+typedef $$RequestReviewersEditorsAssigmentTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $AssigmentsTable,
-      Assigment,
-      $$AssigmentsTableFilterComposer,
-      $$AssigmentsTableOrderingComposer,
-      $$AssigmentsTableAnnotationComposer,
-      $$AssigmentsTableCreateCompanionBuilder,
-      $$AssigmentsTableUpdateCompanionBuilder,
-      (Assigment, $$AssigmentsTableReferences),
-      Assigment,
+      $RequestReviewersEditorsAssigmentTable,
+      RequestReviewersEditorsAssigmentData,
+      $$RequestReviewersEditorsAssigmentTableFilterComposer,
+      $$RequestReviewersEditorsAssigmentTableOrderingComposer,
+      $$RequestReviewersEditorsAssigmentTableAnnotationComposer,
+      $$RequestReviewersEditorsAssigmentTableCreateCompanionBuilder,
+      $$RequestReviewersEditorsAssigmentTableUpdateCompanionBuilder,
+      (
+        RequestReviewersEditorsAssigmentData,
+        $$RequestReviewersEditorsAssigmentTableReferences,
+      ),
+      RequestReviewersEditorsAssigmentData,
       PrefetchHooks Function({bool requestId, bool editorId, bool reviewerId})
     >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
   $AppDatabaseManager(this._db);
-  $$UsersTableTableManager get users =>
-      $$UsersTableTableManager(_db, _db.users);
+  $$UserTableTableManager get user => $$UserTableTableManager(_db, _db.user);
   $$OrganizationTableTableManager get organization =>
       $$OrganizationTableTableManager(_db, _db.organization);
-  $$AuthorsTableTableManager get authors =>
-      $$AuthorsTableTableManager(_db, _db.authors);
-  $$EditorsTableTableManager get editors =>
-      $$EditorsTableTableManager(_db, _db.editors);
-  $$ReviewersTableTableManager get reviewers =>
-      $$ReviewersTableTableManager(_db, _db.reviewers);
+  $$AuthorTableTableManager get author =>
+      $$AuthorTableTableManager(_db, _db.author);
+  $$EditorTableTableManager get editor =>
+      $$EditorTableTableManager(_db, _db.editor);
+  $$ReviewerTableTableManager get reviewer =>
+      $$ReviewerTableTableManager(_db, _db.reviewer);
   $$AdminTableTableManager get admin =>
       $$AdminTableTableManager(_db, _db.admin);
-  $$ConferencesTableTableManager get conferences =>
-      $$ConferencesTableTableManager(_db, _db.conferences);
-  $$SectionsTableTableManager get sections =>
-      $$SectionsTableTableManager(_db, _db.sections);
-  $$ChatsTableTableManager get chats =>
-      $$ChatsTableTableManager(_db, _db.chats);
-  $$RequestsTableTableManager get requests =>
-      $$RequestsTableTableManager(_db, _db.requests);
-  $$MessagesTableTableManager get messages =>
-      $$MessagesTableTableManager(_db, _db.messages);
-  $$AssigmentsTableTableManager get assigments =>
-      $$AssigmentsTableTableManager(_db, _db.assigments);
+  $$ConferenceTableTableManager get conference =>
+      $$ConferenceTableTableManager(_db, _db.conference);
+  $$SectionTableTableManager get section =>
+      $$SectionTableTableManager(_db, _db.section);
+  $$ChatTableTableManager get chat => $$ChatTableTableManager(_db, _db.chat);
+  $$RequestTableTableManager get request =>
+      $$RequestTableTableManager(_db, _db.request);
+  $$MessageTableTableManager get message =>
+      $$MessageTableTableManager(_db, _db.message);
+  $$RequestReviewersEditorsAssigmentTableTableManager
+  get requestReviewersEditorsAssigment =>
+      $$RequestReviewersEditorsAssigmentTableTableManager(
+        _db,
+        _db.requestReviewersEditorsAssigment,
+      );
 }

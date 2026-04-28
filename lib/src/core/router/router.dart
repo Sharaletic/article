@@ -4,6 +4,7 @@ import '../../app/widget/splash_screen.dart';
 import '../../feature/src/athor/author.dart';
 import '../../feature/src/authentication/authentication.dart';
 import '../../feature/src/navigation/navigation.dart';
+import '../../feature/src/request/request.dart';
 
 class AppRouter extends RootStackRouter {
   AppRouter();
@@ -49,7 +50,7 @@ class AppRouter extends RootStackRouter {
         NamedRouteDef(
           name: 'HomeRoute',
           initial: true,
-          builder: (_, _) => const AddInformation(),
+          builder: (_, _) => const Request(),
         ),
         NamedRouteDef(
           name: 'ArticleRoute',

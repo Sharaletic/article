@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:arcticle_app/src/core/core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -142,7 +141,6 @@ abstract base class BaseRestClient implements RestClient {
           json.decode(stringData) as Map<String, Object?>,
         BytesResponseBody(:final List<int> data) => _decodeBytes(data),
       };
-      log('##########$decodedBody');
 
       if (decodedBody case {'error': final Map<String, Object?> error}) {
         throw StructuredBackendException(error: error, statusCode: statusCode);

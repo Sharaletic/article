@@ -15,8 +15,8 @@ class SectionDto {
     return SectionEntity(id: id, title: title);
   }
 
-  SectionsCompanion toCompanion() {
-    return SectionsCompanion(id: Value(id), title: Value(title));
+  SectionCompanion toCompanion() {
+    return SectionCompanion(id: Value(id), title: Value(title));
   }
 
   factory SectionDto.fromJson(Map<String, Object> json) {

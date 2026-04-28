@@ -55,7 +55,7 @@ class RequestDto {
     createdAt: createdAt,
   );
 
-  RequestsCompanion toCompanion() => RequestsCompanion(
+  RequestCompanion toCompanion() => RequestCompanion(
     id: Value(id),
     authorId: Value(author.id!),
     conferenceId: Value(conference.id),

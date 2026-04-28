@@ -3,7 +3,6 @@ import 'package:logger/web.dart';
 import '../../core/rest_client/api_server.dart';
 import '../../features/auth/auth.dart';
 import '../../features/author/author.dart';
-import '../../features/organization/organization.dart';
 import '../../features/request/request.dart';
 import 'application_config.dart';
 

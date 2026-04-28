@@ -5,23 +5,19 @@ class AddInformationHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const .symmetric(horizontal: 24),
-      child: Column(
-        crossAxisAlignment: .start,
-        mainAxisSize: .min,
-        children: [
-          UiText.displaySmall(
-            'Добавьте\nинформацию\nо себе',
-            style: TextStyle(fontWeight: FontWeight.w800),
-          ),
-          const SizedBox(height: 16),
-          UiText.titleSmall(
-            'Пожалуйста, предоставьте свою\nинформацию, чтобы персонализировать\nсвой академический опыт',
-          ),
-          const SizedBox(height: 24),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: .start,
+      mainAxisSize: .min,
+      children: [
+        UiText.displaySmall(
+          'Добавьте\nинформацию\nо себе',
+          style: TextStyle(fontWeight: FontWeight.w800),
+        ),
+        const SizedBox(height: 16),
+        UiText.titleSmall(
+          'Пожалуйста, предоставьте свою\nинформацию, чтобы персонализировать\nсвой академический опыт',
+        ),
+      ],
     );
   }
 }

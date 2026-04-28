@@ -4,7 +4,7 @@ import 'package:drift/drift.dart';
 import '../../../../core/database/database.dart';
 import '../../../../core/rest_client/api_server.dart';
 import '../../domain/author_entity.dart';
-import '../../../organization/data/dtos/organization_dto.dart';
+import 'organization_dto.dart';
 
 AuthorStatus _authorStatusFromJson(String status) {
   final normalized = status.trim();
@@ -144,7 +144,7 @@ class AuthorDto {
     academicTitle: academicTitle,
   );
 
-  AuthorsCompanion toCompanion() => AuthorsCompanion(
+  AuthorCompanion toCompanion() => AuthorCompanion(
     uid: Value(user.uid),
     status: Value(status.value),
     lastNameRu: Value(lastNameRu),

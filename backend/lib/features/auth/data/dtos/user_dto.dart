@@ -35,7 +35,7 @@ class UserDto {
     'photoUrl': photoUrl,
   };
 
-  UsersCompanion toCompanion() => UsersCompanion(
+  UserCompanion toCompanion() => UserCompanion(
     uid: Value(uid),
     emailAddress: Value(emailAddress),
     role: Value(role.value),
@@ -79,7 +79,7 @@ class UserDto {
     }
   }
 
-  factory UserDto.fromDataBase(User user) => UserDto(
+  factory UserDto.fromDataBase(UserData user) => UserDto(
     uid: user.uid,
     emailAddress: user.emailAddress,
     role: _userRoleFromJson(user.role),

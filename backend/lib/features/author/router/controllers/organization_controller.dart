@@ -1,7 +1,7 @@
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 import '../../../../core/rest_client/api_server.dart';
-import '../../organization.dart';
+import '../../author.dart';
 
 class OrganizationController {
   OrganizationController({

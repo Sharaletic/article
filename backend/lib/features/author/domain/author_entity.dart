@@ -1,5 +1,5 @@
 import '../../../app/app.dart';
-import '../../organization/domain/organization_entity.dart';
+import 'organization_entity.dart';
 import '../../auth/domain/user_entity.dart';
 
 enum EducationLevel {

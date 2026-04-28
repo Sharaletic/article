@@ -13,7 +13,7 @@ class UserRepositoryImpl implements IUserRepository {
   @override
   Future<UserDto> createUser({required UserDto userDto}) async {
     final result = await _appDatabase
-        .into(_appDatabase.users)
+        .into(_appDatabase.user)
         .insertReturning(userDto.toCompanion());
 
     return UserDto.fromDataBase(result);

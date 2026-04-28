@@ -21,7 +21,7 @@ class AuthorRepositoryImpl implements IAuthorRepository {
   Future<void> createAuthor({required AuthorEntity author}) async {
     await _appDatabase.transaction(() async {
       await _appDatabase
-          .into(_appDatabase.users)
+          .into(_appDatabase.user)
           .insert(UserDto.fromEntity(author.user).toCompanion());
 
       await _claimsService.setUserRole(
@@ -30,7 +30,7 @@ class AuthorRepositoryImpl implements IAuthorRepository {
       );
 
       await _appDatabase
-          .into(_appDatabase.authors)
+          .into(_appDatabase.author)
           .insert(AuthorDto.fromEntity(author).toCompanion());
     });
   }
