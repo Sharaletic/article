@@ -1,5 +1,4 @@
 import 'package:drift/drift.dart';
-import 'package:logger/logger.dart';
 import '../../../../core/database/database.dart';
 import '../../../../core/rest_client/api_server.dart';
 import '../../domain/organization_entity.dart';
@@ -11,13 +10,10 @@ abstract interface class IOrganizationRepository {
 }
 
 class OrganizationRepositoryImpl implements IOrganizationRepository {
-  OrganizationRepositoryImpl({
-    required AppDatabase appDatabase,
-    required this.logger,
-  }) : _appDatabase = appDatabase;
+  OrganizationRepositoryImpl({required AppDatabase appDatabase})
+    : _appDatabase = appDatabase;
 
   final AppDatabase _appDatabase;
-  final Logger logger;
 
   @override
   Future<List<OrganizationEntity?>> getOrganizations() async {

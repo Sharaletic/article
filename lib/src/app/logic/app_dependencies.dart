@@ -1,4 +1,5 @@
 import 'package:arcticle_app/firebase_options.dart';
+import 'package:arcticle_app/src/feature/src/conference/conference.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:logger/logger.dart';
@@ -14,6 +15,7 @@ abstract interface class IAppDependencies {
   IAuthenticationRepository get authenticationRepository;
   IAuthorRepository get authorRepository;
   IOrganizationRepository get organizationRepository;
+  IConferenceRepository get conferenceRepository;
   Future<void> dispose();
 }
 
@@ -25,6 +27,7 @@ final class AppDependencies implements IAppDependencies {
     required this.authenticationRepository,
     required this.authorRepository,
     required this.organizationRepository,
+    required this.conferenceRepository,
   });
 
   @override
@@ -44,6 +47,9 @@ final class AppDependencies implements IAppDependencies {
 
   @override
   final IOrganizationRepository organizationRepository;
+
+  @override
+  final IConferenceRepository conferenceRepository;
 
   static Future<IAppDependencies> init({
     required Logger logger,
@@ -86,15 +92,21 @@ final class AppDependencies implements IAppDependencies {
 
     // Authentication
     final IAuthenticationRepository authenticationRepository =
-        AuthenticationRepositoryImpl(restClientHttp: restClientHttp);
+        AuthenticationRepositoryImpl();
 
     // Author
     final IAuthorRepository authorRepository = AuthorRepositoryImpl(
-      httpClient: restClientHttp,
+      restClient: restClientHttp,
     );
 
+    // Organization
     final IOrganizationRepository organizationRepository =
         OrganizationRepositoryImpl(httpClient: restClientHttp, logger: logger);
+
+    // Conference
+    final IConferenceRepository conferenceRepository = ConferenceRepositoryImpl(
+      restClient: restClientHttp,
+    );
 
     return AppDependencies._(
       logger: initLogger,
@@ -102,6 +114,7 @@ final class AppDependencies implements IAppDependencies {
       authenticationRepository: authenticationRepository,
       authorRepository: authorRepository,
       organizationRepository: organizationRepository,
+      conferenceRepository: conferenceRepository,
       router: initRouter,
     );
   }

@@ -1,4 +1,5 @@
 import '../../../app/app.dart';
+import '../../../core/rest_client/api_server.dart';
 import 'organization_entity.dart';
 import '../../auth/domain/user_entity.dart';
 
@@ -10,6 +11,25 @@ enum EducationLevel {
 
   const EducationLevel(this.value);
   final String value;
+
+  static EducationLevel fromString(String? value) {
+    if (value == null || value.isEmpty) {
+      throw ValidationException(
+        message: 'Education level cannot be null or empty',
+      );
+    }
+    final normalized = value.trim().toLowerCase();
+
+    return switch (normalized) {
+      'бакалавриат' => .bachelor,
+      'специалитет' => .specialist,
+      'магистратура' => .master,
+      'аспирантура' => .postgraduate,
+      _ => throw ValidationException(
+        message: 'Unknown education level: $value',
+      ),
+    };
+  }
 }
 
 enum AuthorStatus {
@@ -18,6 +38,19 @@ enum AuthorStatus {
 
   const AuthorStatus(this.value);
   final String value;
+
+  static AuthorStatus fromString(String? value) {
+    if (value == null || value.isEmpty) {
+      throw ValidationException(message: 'Status cannot be null or empty');
+    }
+    final normalized = value.trim().toLowerCase();
+
+    return switch (normalized) {
+      'студент' => .student,
+      'преподаватель' => .teacher,
+      _ => throw ValidationException(message: 'Unknown status: $value'),
+    };
+  }
 }
 
 enum Post {
@@ -26,6 +59,19 @@ enum Post {
 
   const Post(this.value);
   final String value;
+
+  static Post fromString(String? value) {
+    if (value == null || value.isEmpty) {
+      throw ValidationException(message: 'Post cannot be null or empty');
+    }
+    final normalized = value.trim().toLowerCase();
+
+    return switch (normalized) {
+      'студент' => .student,
+      'преподаватель' => .teacher,
+      _ => throw ValidationException(message: 'Unknown post: $value'),
+    };
+  }
 }
 
 enum AcademicDegree {
@@ -34,6 +80,23 @@ enum AcademicDegree {
 
   const AcademicDegree(this.value);
   final String value;
+
+  static AcademicDegree fromString(String? value) {
+    if (value == null || value.isEmpty) {
+      throw ValidationException(
+        message: 'Academic degree cannot be null or empty',
+      );
+    }
+    final normalized = value.trim().toLowerCase();
+
+    return switch (normalized) {
+      'студент' => .student,
+      'преподаватель' => .teacher,
+      _ => throw ValidationException(
+        message: 'Unknown academic degree: $value',
+      ),
+    };
+  }
 }
 
 enum AcademicTitle {
@@ -42,6 +105,21 @@ enum AcademicTitle {
 
   const AcademicTitle(this.value);
   final String value;
+
+  static AcademicTitle fromString(String? value) {
+    if (value == null || value.isEmpty) {
+      throw ValidationException(
+        message: 'Academic title cannot be null or empty',
+      );
+    }
+    final normalized = value.trim().toLowerCase();
+
+    return switch (normalized) {
+      'студент' => .student,
+      'преподаватель' => .teacher,
+      _ => throw ValidationException(message: 'Unknown academic title: $value'),
+    };
+  }
 }
 
 class AuthorEntity with EqualsMixin {

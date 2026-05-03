@@ -1,11 +1,9 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../../../../core/core.dart';
 import '../../authentication.dart';
 
 class AuthenticationRepositoryImpl implements IAuthenticationRepository {
-  AuthenticationRepositoryImpl({required this.restClientHttp});
-  final RestClient restClientHttp;
+  AuthenticationRepositoryImpl();
 
   @override
   Future<void> signup({

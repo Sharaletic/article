@@ -4,6 +4,7 @@ import '../../core/rest_client/api_server.dart';
 import '../../features/auth/auth.dart';
 import '../../features/author/author.dart';
 import '../../features/request/request.dart';
+import '../../features/conference/conference.dart';
 import 'application_config.dart';
 
 class DependenciesContainer {
@@ -16,6 +17,7 @@ class DependenciesContainer {
     required this.authorController,
     required this.organizationController,
     required this.requestController,
+    required this.conferenceController,
   });
   final Logger logger;
   final ApiServer apiServer;
@@ -25,4 +27,5 @@ class DependenciesContainer {
   final AuthorController authorController;
   final OrganizationController organizationController;
   final RequestController requestController;
+  final ConferenceController conferenceController;
 }

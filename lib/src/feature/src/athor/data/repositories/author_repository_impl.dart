@@ -2,13 +2,13 @@ import '../../../../../core/rest_client/rest_client.dart';
 import '../../author.dart';
 
 class AuthorRepositoryImpl implements IAuthorRepository {
-  AuthorRepositoryImpl({required RestClient httpClient})
-    : _httpClient = httpClient;
-  final RestClient _httpClient;
+  AuthorRepositoryImpl({required RestClient restClient})
+    : _restClient = restClient;
+  final RestClient _restClient;
 
   @override
   Future<void> createAthor({required AuthorEntity author}) async {
     final authorDto = AuthorDto.fromEntity(author);
-    await _httpClient.post(path: '/author', body: authorDto.toJson());
+    await _restClient.post(path: '/author', body: authorDto.toJson());
   }
 }

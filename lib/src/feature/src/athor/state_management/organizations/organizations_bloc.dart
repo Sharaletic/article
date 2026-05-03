@@ -17,10 +17,7 @@ class OrganizationsBloc extends Bloc<OrganizationsEvent, OrganizationsState> {
         .listen((String query) => add(.search(query: query)));
 
     on<OrganizationsEvent>((event, emit) async {
-      await event.map(
-        search: (event) => _search(event.query, emit),
-        load: (event) async => {},
-      );
+      await event.map(search: (event) => _search(event.query, emit));
     }, transformer: droppable());
 
     this.onTextChanged = onTextChanged;

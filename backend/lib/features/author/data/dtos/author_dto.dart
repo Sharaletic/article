@@ -6,56 +6,6 @@ import '../../../../core/rest_client/api_server.dart';
 import '../../domain/author_entity.dart';
 import 'organization_dto.dart';
 
-AuthorStatus _authorStatusFromJson(String status) {
-  final normalized = status.trim();
-  return switch (normalized) {
-    'Студент' => AuthorStatus.student,
-    'Преподаватель' => AuthorStatus.teacher,
-    _ => throw ValidationException(message: 'Unknown status: $status'),
-  };
-}
-
-EducationLevel? _educationLevelFromJson(String? educationLevel) {
-  if (educationLevel == null || educationLevel.isEmpty) return null;
-
-  final normalized = educationLevel.trim();
-  return switch (normalized) {
-    'Бакалавриат' => EducationLevel.bachelor,
-    'Специалитет' => EducationLevel.specialist,
-    'Магистратура' => EducationLevel.master,
-    'Аспирантура' => EducationLevel.postgraduate,
-    _ => throw ValidationException(
-      message: 'Unknown education level: $educationLevel',
-    ),
-  };
-}
-
-AcademicDegree? _academicDegreeFromJson(String? academicDegree) {
-  if (academicDegree == null || academicDegree.isEmpty) return null;
-
-  final normalized = academicDegree.trim();
-  return switch (normalized) {
-    'Студент' => AcademicDegree.student,
-    'Преподаватель' => AcademicDegree.teacher,
-    _ => throw ValidationException(
-      message: 'Unknown academic degree: $academicDegree',
-    ),
-  };
-}
-
-AcademicTitle? _academicTitleFromJson(String? academicTitle) {
-  if (academicTitle == null || academicTitle.isEmpty) return null;
-
-  final normalized = academicTitle.trim();
-  return switch (normalized) {
-    'Студент' => AcademicTitle.student,
-    'Преподаватель' => AcademicTitle.teacher,
-    _ => throw ValidationException(
-      message: 'Unknown academic title: $academicTitle',
-    ),
-  };
-}
-
 class PostConverter extends TypeConverter<List<Post>?, String?> {
   const PostConverter();
 
@@ -63,7 +13,7 @@ class PostConverter extends TypeConverter<List<Post>?, String?> {
   List<Post>? fromSql(String? fromDb) {
     if (fromDb == null || fromDb.isEmpty) return null;
     final list = jsonDecode(fromDb) as List<Object>;
-    return list.map((post) => _parsePost(post as String?)).toList();
+    return list.map((post) => Post.fromString(post as String?)).toList();
   }
 
   @override
@@ -74,19 +24,7 @@ class PostConverter extends TypeConverter<List<Post>?, String?> {
 
   List<Post>? fromJson(List<dynamic>? json) {
     if (json == null || json.isEmpty) return null;
-    return json
-        .where((e) => e != null && e.isNotEmpty)
-        .map((e) => _parsePost(e as String))
-        .toList();
-  }
-
-  Post _parsePost(String? value) {
-    final post = value?.trim();
-    return switch (post) {
-      'Студент' => Post.student,
-      'Преподаватель' => Post.teacher,
-      _ => throw ValidationException(message: 'Unknown post: $post'),
-    };
+    return json.whereType<String>().map(Post.fromString).toList();
   }
 
   List<String>? toJson(List<Post>? posts) {
@@ -182,7 +120,7 @@ class AuthorDto {
       return AuthorDto(
         id: json['id'] as int?,
         user: UserDto.fromJson(json['user'] as Map<String, Object?>),
-        status: _authorStatusFromJson(json['status'] as String),
+        status: AuthorStatus.fromString(json['status'] as String),
         lastNameRu: json['last_name_ru'] as String,
         lastNameEn: json['last_name_en'] as String,
         firstNameRu: json['first_name_ru'] as String,
@@ -192,14 +130,14 @@ class AuthorDto {
         organization: OrganizationDto.fromJson(
           json['organization'] as Map<String, Object?>,
         ),
-        educationLevel: _educationLevelFromJson(
+        educationLevel: EducationLevel.fromString(
           json['education_level'] as String?,
         ),
         posts: PostConverter().fromJson(json['posts'] as List<dynamic>?),
-        academicDegree: _academicDegreeFromJson(
+        academicDegree: AcademicDegree.fromString(
           json['academic_degree'] as String?,
         ),
-        academicTitle: _academicTitleFromJson(
+        academicTitle: AcademicTitle.fromString(
           json['academic_title'] as String?,
         ),
       );

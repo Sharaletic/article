@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:backend/core/database/database.dart';
 import 'package:drift/drift.dart';
 import '../../conference.dart';
 
@@ -9,7 +10,7 @@ class ConferenceFormatConverter
   @override
   List<ConferenceFormat>? fromSql(String? fromDb) {
     if (fromDb == null || fromDb.isEmpty) return null;
-    final list = jsonDecode(fromDb) as List<Object>;
+    final list = jsonDecode(fromDb) as List<dynamic>;
     return list
         .map((format) => ConferenceFormat.fromString(format as String))
         .toList();
@@ -25,7 +26,7 @@ class ConferenceFormatConverter
     if (json == null || json.isEmpty) return [];
     return json
         .whereType<String>()
-        .where((e) => e.isNotEmpty)
+        .where((e) => e.trim().isNotEmpty)
         .map(ConferenceFormat.fromString)
         .toList();
   }
@@ -41,7 +42,7 @@ class FileFormatConverter extends TypeConverter<List<FileFormat>?, String?> {
   @override
   List<FileFormat>? fromSql(String? fromDb) {
     if (fromDb == null || fromDb.isEmpty) return null;
-    final list = jsonDecode(fromDb) as List<Object>;
+    final list = jsonDecode(fromDb) as List<dynamic>;
     return list
         .map((format) => FileFormat.fromString(format as String))
         .toList();
@@ -110,6 +111,21 @@ class ConferenceDto {
     requirements: entity.requirements,
   );
 
+  factory ConferenceDto.fromDataBase(ConferenceData row) => ConferenceDto(
+    id: row.id,
+    title: row.title,
+    shortDescription: row.shortDescription,
+    startConferenceDate: row.startConferenceDate,
+    endConferenceDate: row.endConferenceDate,
+    address: row.address,
+    conferenceFormat: row.conferenceFormat ?? [],
+    submissionStartDate: row.submissionStartDate,
+    submissionEndDate: row.submissionEndDate,
+    quantityOfPages: row.quantityOfPages,
+    fileFormat: row.fileFormat ?? [],
+    requirements: row.requirements,
+  );
+
   ConferenceEntity toEntity() => ConferenceEntity(
     id: id,
     title: title,
@@ -125,11 +141,20 @@ class ConferenceDto {
     requirements: requirements,
   );
 
-  // ConferencesCompanion toCompanion() => ConferencesCompanion(
-  //   id: Value(id),
-  //   title: Value(title),
-  //   endDate: Value(endDate),
-  // );
+  ConferenceCompanion toCompanion() => ConferenceCompanion(
+    id: Value(id),
+    title: Value(title),
+    shortDescription: Value(shortDescription),
+    startConferenceDate: Value(startConferenceDate),
+    endConferenceDate: Value(endConferenceDate),
+    address: Value(address),
+    conferenceFormat: Value(conferenceFormat),
+    submissionStartDate: Value(submissionStartDate),
+    submissionEndDate: Value(submissionEndDate),
+    quantityOfPages: Value(quantityOfPages),
+    fileFormat: Value(fileFormat),
+    requirements: Value(requirements),
+  );
 
   factory ConferenceDto.fromJson(Map<String, Object?> json) => ConferenceDto(
     id: json['id'] as int,

@@ -1,5 +1,7 @@
 import 'package:ui_kit/ui_kit.dart';
 
+import '../../conference/conference.dart';
+
 class RequestForm extends StatefulWidget {
   const RequestForm({super.key});
 
@@ -18,7 +20,15 @@ class _RequestFormState extends State<RequestForm> {
           'Выберите конференцию',
           style: TextStyle(fontWeight: .w600),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
+        UiTextField.standard(
+          style: UiTextFieldStyle(hintText: 'Выберите конференцию'),
+          onTap: () => showModalBottomSheet(
+            backgroundColor: Colors.white,
+            context: context,
+            builder: (context) => ConferenceModalSheet(),
+          ),
+        ),
       ],
     );
   }

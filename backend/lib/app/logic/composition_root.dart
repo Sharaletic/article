@@ -5,6 +5,7 @@ import '../../core/rest_client/api_server.dart';
 import '../../features/auth/auth.dart';
 import '../../features/author/author.dart';
 import '../../features/request/request.dart';
+import '../../features/conference/conference.dart';
 import '../logging/logger.dart';
 import '../model/application_config.dart';
 import '../model/dependencies_container.dart';
@@ -97,7 +98,7 @@ Future<DependenciesContainer> createDependenciesContainer({
 
   // Organization
   final IOrganizationRepository organizationRepository =
-      OrganizationRepositoryImpl(appDatabase: appDatabase, logger: logger);
+      OrganizationRepositoryImpl(appDatabase: appDatabase);
 
   final organizationController = OrganizationController(
     organizationRepository: organizationRepository,
@@ -114,6 +115,16 @@ Future<DependenciesContainer> createDependenciesContainer({
     apiServer: apiServer,
   );
 
+  // Conference
+  final IConferenceRepository conferenceRepository = ConferenceRepositoryImpl(
+    appDatabase: appDatabase,
+  );
+
+  final conferenceController = ConferenceController(
+    conferenceRepository: conferenceRepository,
+    apiServer: apiServer,
+  );
+
   return DependenciesContainer(
     logger: logger,
     apiServer: apiServer,
@@ -123,5 +134,6 @@ Future<DependenciesContainer> createDependenciesContainer({
     authorController: authorController,
     organizationController: organizationController,
     requestController: requestController,
+    conferenceController: conferenceController,
   );
 }

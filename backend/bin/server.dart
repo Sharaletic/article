@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io' as io;
 import 'package:backend/app/app.dart';
 import 'package:backend/core/middleware/error_middleware.dart';
-import 'package:backend/features/auth/auth.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
 import 'package:shelf_cors_headers/shelf_cors_headers.dart';
@@ -18,18 +17,19 @@ void main([List<String>? args]) async {
           .add(composition.dependencies.authorController.handler)
           .add(composition.dependencies.organizationController.handler)
           .add(composition.dependencies.requestController.handler)
+          .add(composition.dependencies.conferenceController.handler)
           .handler;
 
       final pipeline = Pipeline()
           .addMiddleware(corsHeaders())
           .addMiddleware(logRequests())
-          .addMiddleware(
-            AuthenticationCheckMiddleware.createAuthenticationCheckMiddleware(
-              firebaseAdminSDKApp: di.firebaseAdminSDKApp,
-              apiServer: di.apiServer,
-              logger: logger,
-            ),
-          )
+          // .addMiddleware(
+          //   AuthenticationCheckMiddleware.createAuthenticationCheckMiddleware(
+          //     firebaseAdminSDKApp: di.firebaseAdminSDKApp,
+          //     apiServer: di.apiServer,
+          //     logger: logger,
+          //   ),
+          // )
           .addMiddleware(
             ErrorMiddleware.createErrorMiddleware(
               logger: logger,
