@@ -13,7 +13,7 @@ class AddInformationHeader extends StatelessWidget {
           'Добавьте\nинформацию\nо себе',
           style: TextStyle(fontWeight: FontWeight.w800),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 12),
         UiText.titleSmall(
           'Пожалуйста, предоставьте свою\nинформацию, чтобы персонализировать\nсвой академический опыт',
         ),

@@ -15,12 +15,10 @@ class ConferenceRepositoryImpl implements IConferenceRepository {
   Future<List<ConferenceEntity>> searchConferences({
     required String query,
   }) async {
-    final pattern = '%$query%';
-    final data =
-        await (_appDatabase.select(_appDatabase.conference)..where((row) {
-              return row.title.like(pattern);
-            }))
-            .get();
+    final pattern = '%$query%'.toLowerCase();
+    final data = await (_appDatabase.select(
+      _appDatabase.conference,
+    )..where((row) => row.titleNormalized.lower().like(pattern))).get();
 
     final result = data
         .map((row) => ConferenceDto.fromDataBase(row).toEntity())

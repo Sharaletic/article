@@ -51,7 +51,7 @@ enum FileFormat {
 
 class ConferenceEntity with EqualsMixin {
   ConferenceEntity({
-    required this.id,
+    this.id,
     required this.title,
     required this.shortDescription,
     required this.startConferenceDate,
@@ -64,7 +64,7 @@ class ConferenceEntity with EqualsMixin {
     required this.fileFormat,
     required this.requirements,
   });
-  final int id;
+  final int? id;
   final String title;
   final String shortDescription;
   final DateTime startConferenceDate;

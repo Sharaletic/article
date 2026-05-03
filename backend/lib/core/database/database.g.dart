@@ -2074,6 +2074,17 @@ class $ConferenceTable extends Conference
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _titleNormalizedMeta = const VerificationMeta(
+    'titleNormalized',
+  );
+  @override
+  late final GeneratedColumn<String> titleNormalized = GeneratedColumn<String>(
+    'title_normalized',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _shortDescriptionMeta = const VerificationMeta(
     'shortDescription',
   );
@@ -2189,6 +2200,7 @@ class $ConferenceTable extends Conference
   List<GeneratedColumn> get $columns => [
     id,
     title,
+    titleNormalized,
     shortDescription,
     startConferenceDate,
     endConferenceDate,
@@ -2222,6 +2234,17 @@ class $ConferenceTable extends Conference
       );
     } else if (isInserting) {
       context.missing(_titleMeta);
+    }
+    if (data.containsKey('title_normalized')) {
+      context.handle(
+        _titleNormalizedMeta,
+        titleNormalized.isAcceptableOrUnknown(
+          data['title_normalized']!,
+          _titleNormalizedMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_titleNormalizedMeta);
     }
     if (data.containsKey('short_description')) {
       context.handle(
@@ -2323,6 +2346,10 @@ class $ConferenceTable extends Conference
         DriftSqlType.string,
         data['${effectivePrefix}title'],
       )!,
+      titleNormalized: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title_normalized'],
+      )!,
       shortDescription: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}short_description'],
@@ -2384,6 +2411,7 @@ class $ConferenceTable extends Conference
 class ConferenceData extends DataClass implements Insertable<ConferenceData> {
   final int id;
   final String title;
+  final String titleNormalized;
   final String shortDescription;
   final DateTime startConferenceDate;
   final DateTime? endConferenceDate;
@@ -2397,6 +2425,7 @@ class ConferenceData extends DataClass implements Insertable<ConferenceData> {
   const ConferenceData({
     required this.id,
     required this.title,
+    required this.titleNormalized,
     required this.shortDescription,
     required this.startConferenceDate,
     this.endConferenceDate,
@@ -2413,6 +2442,7 @@ class ConferenceData extends DataClass implements Insertable<ConferenceData> {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['title'] = Variable<String>(title);
+    map['title_normalized'] = Variable<String>(titleNormalized);
     map['short_description'] = Variable<String>(shortDescription);
     map['start_conference_date'] = Variable<DateTime>(startConferenceDate);
     if (!nullToAbsent || endConferenceDate != null) {
@@ -2440,6 +2470,7 @@ class ConferenceData extends DataClass implements Insertable<ConferenceData> {
     return ConferenceCompanion(
       id: Value(id),
       title: Value(title),
+      titleNormalized: Value(titleNormalized),
       shortDescription: Value(shortDescription),
       startConferenceDate: Value(startConferenceDate),
       endConferenceDate: endConferenceDate == null && nullToAbsent
@@ -2467,6 +2498,7 @@ class ConferenceData extends DataClass implements Insertable<ConferenceData> {
     return ConferenceData(
       id: serializer.fromJson<int>(json['id']),
       title: serializer.fromJson<String>(json['title']),
+      titleNormalized: serializer.fromJson<String>(json['titleNormalized']),
       shortDescription: serializer.fromJson<String>(json['shortDescription']),
       startConferenceDate: serializer.fromJson<DateTime>(
         json['startConferenceDate'],
@@ -2495,6 +2527,7 @@ class ConferenceData extends DataClass implements Insertable<ConferenceData> {
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'title': serializer.toJson<String>(title),
+      'titleNormalized': serializer.toJson<String>(titleNormalized),
       'shortDescription': serializer.toJson<String>(shortDescription),
       'startConferenceDate': serializer.toJson<DateTime>(startConferenceDate),
       'endConferenceDate': serializer.toJson<DateTime?>(endConferenceDate),
@@ -2513,6 +2546,7 @@ class ConferenceData extends DataClass implements Insertable<ConferenceData> {
   ConferenceData copyWith({
     int? id,
     String? title,
+    String? titleNormalized,
     String? shortDescription,
     DateTime? startConferenceDate,
     Value<DateTime?> endConferenceDate = const Value.absent(),
@@ -2526,6 +2560,7 @@ class ConferenceData extends DataClass implements Insertable<ConferenceData> {
   }) => ConferenceData(
     id: id ?? this.id,
     title: title ?? this.title,
+    titleNormalized: titleNormalized ?? this.titleNormalized,
     shortDescription: shortDescription ?? this.shortDescription,
     startConferenceDate: startConferenceDate ?? this.startConferenceDate,
     endConferenceDate: endConferenceDate.present
@@ -2545,6 +2580,9 @@ class ConferenceData extends DataClass implements Insertable<ConferenceData> {
     return ConferenceData(
       id: data.id.present ? data.id.value : this.id,
       title: data.title.present ? data.title.value : this.title,
+      titleNormalized: data.titleNormalized.present
+          ? data.titleNormalized.value
+          : this.titleNormalized,
       shortDescription: data.shortDescription.present
           ? data.shortDescription.value
           : this.shortDescription,
@@ -2581,6 +2619,7 @@ class ConferenceData extends DataClass implements Insertable<ConferenceData> {
     return (StringBuffer('ConferenceData(')
           ..write('id: $id, ')
           ..write('title: $title, ')
+          ..write('titleNormalized: $titleNormalized, ')
           ..write('shortDescription: $shortDescription, ')
           ..write('startConferenceDate: $startConferenceDate, ')
           ..write('endConferenceDate: $endConferenceDate, ')
@@ -2599,6 +2638,7 @@ class ConferenceData extends DataClass implements Insertable<ConferenceData> {
   int get hashCode => Object.hash(
     id,
     title,
+    titleNormalized,
     shortDescription,
     startConferenceDate,
     endConferenceDate,
@@ -2616,6 +2656,7 @@ class ConferenceData extends DataClass implements Insertable<ConferenceData> {
       (other is ConferenceData &&
           other.id == this.id &&
           other.title == this.title &&
+          other.titleNormalized == this.titleNormalized &&
           other.shortDescription == this.shortDescription &&
           other.startConferenceDate == this.startConferenceDate &&
           other.endConferenceDate == this.endConferenceDate &&
@@ -2631,6 +2672,7 @@ class ConferenceData extends DataClass implements Insertable<ConferenceData> {
 class ConferenceCompanion extends UpdateCompanion<ConferenceData> {
   final Value<int> id;
   final Value<String> title;
+  final Value<String> titleNormalized;
   final Value<String> shortDescription;
   final Value<DateTime> startConferenceDate;
   final Value<DateTime?> endConferenceDate;
@@ -2644,6 +2686,7 @@ class ConferenceCompanion extends UpdateCompanion<ConferenceData> {
   const ConferenceCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
+    this.titleNormalized = const Value.absent(),
     this.shortDescription = const Value.absent(),
     this.startConferenceDate = const Value.absent(),
     this.endConferenceDate = const Value.absent(),
@@ -2658,6 +2701,7 @@ class ConferenceCompanion extends UpdateCompanion<ConferenceData> {
   ConferenceCompanion.insert({
     this.id = const Value.absent(),
     required String title,
+    required String titleNormalized,
     required String shortDescription,
     required DateTime startConferenceDate,
     this.endConferenceDate = const Value.absent(),
@@ -2669,6 +2713,7 @@ class ConferenceCompanion extends UpdateCompanion<ConferenceData> {
     this.fileFormat = const Value.absent(),
     required String requirements,
   }) : title = Value(title),
+       titleNormalized = Value(titleNormalized),
        shortDescription = Value(shortDescription),
        startConferenceDate = Value(startConferenceDate),
        address = Value(address),
@@ -2679,6 +2724,7 @@ class ConferenceCompanion extends UpdateCompanion<ConferenceData> {
   static Insertable<ConferenceData> custom({
     Expression<int>? id,
     Expression<String>? title,
+    Expression<String>? titleNormalized,
     Expression<String>? shortDescription,
     Expression<DateTime>? startConferenceDate,
     Expression<DateTime>? endConferenceDate,
@@ -2693,6 +2739,7 @@ class ConferenceCompanion extends UpdateCompanion<ConferenceData> {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (title != null) 'title': title,
+      if (titleNormalized != null) 'title_normalized': titleNormalized,
       if (shortDescription != null) 'short_description': shortDescription,
       if (startConferenceDate != null)
         'start_conference_date': startConferenceDate,
@@ -2711,6 +2758,7 @@ class ConferenceCompanion extends UpdateCompanion<ConferenceData> {
   ConferenceCompanion copyWith({
     Value<int>? id,
     Value<String>? title,
+    Value<String>? titleNormalized,
     Value<String>? shortDescription,
     Value<DateTime>? startConferenceDate,
     Value<DateTime?>? endConferenceDate,
@@ -2725,6 +2773,7 @@ class ConferenceCompanion extends UpdateCompanion<ConferenceData> {
     return ConferenceCompanion(
       id: id ?? this.id,
       title: title ?? this.title,
+      titleNormalized: titleNormalized ?? this.titleNormalized,
       shortDescription: shortDescription ?? this.shortDescription,
       startConferenceDate: startConferenceDate ?? this.startConferenceDate,
       endConferenceDate: endConferenceDate ?? this.endConferenceDate,
@@ -2746,6 +2795,9 @@ class ConferenceCompanion extends UpdateCompanion<ConferenceData> {
     }
     if (title.present) {
       map['title'] = Variable<String>(title.value);
+    }
+    if (titleNormalized.present) {
+      map['title_normalized'] = Variable<String>(titleNormalized.value);
     }
     if (shortDescription.present) {
       map['short_description'] = Variable<String>(shortDescription.value);
@@ -2795,6 +2847,7 @@ class ConferenceCompanion extends UpdateCompanion<ConferenceData> {
     return (StringBuffer('ConferenceCompanion(')
           ..write('id: $id, ')
           ..write('title: $title, ')
+          ..write('titleNormalized: $titleNormalized, ')
           ..write('shortDescription: $shortDescription, ')
           ..write('startConferenceDate: $startConferenceDate, ')
           ..write('endConferenceDate: $endConferenceDate, ')
@@ -7439,6 +7492,7 @@ typedef $$ConferenceTableCreateCompanionBuilder =
     ConferenceCompanion Function({
       Value<int> id,
       required String title,
+      required String titleNormalized,
       required String shortDescription,
       required DateTime startConferenceDate,
       Value<DateTime?> endConferenceDate,
@@ -7454,6 +7508,7 @@ typedef $$ConferenceTableUpdateCompanionBuilder =
     ConferenceCompanion Function({
       Value<int> id,
       Value<String> title,
+      Value<String> titleNormalized,
       Value<String> shortDescription,
       Value<DateTime> startConferenceDate,
       Value<DateTime?> endConferenceDate,
@@ -7505,6 +7560,11 @@ class $$ConferenceTableFilterComposer
 
   ColumnFilters<String> get title => $composableBuilder(
     column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get titleNormalized => $composableBuilder(
+    column: $table.titleNormalized,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -7609,6 +7669,11 @@ class $$ConferenceTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get titleNormalized => $composableBuilder(
+    column: $table.titleNormalized,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get shortDescription => $composableBuilder(
     column: $table.shortDescription,
     builder: (column) => ColumnOrderings(column),
@@ -7674,6 +7739,11 @@ class $$ConferenceTableAnnotationComposer
 
   GeneratedColumn<String> get title =>
       $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get titleNormalized => $composableBuilder(
+    column: $table.titleNormalized,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get shortDescription => $composableBuilder(
     column: $table.shortDescription,
@@ -7781,6 +7851,7 @@ class $$ConferenceTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 Value<String> title = const Value.absent(),
+                Value<String> titleNormalized = const Value.absent(),
                 Value<String> shortDescription = const Value.absent(),
                 Value<DateTime> startConferenceDate = const Value.absent(),
                 Value<DateTime?> endConferenceDate = const Value.absent(),
@@ -7795,6 +7866,7 @@ class $$ConferenceTableTableManager
               }) => ConferenceCompanion(
                 id: id,
                 title: title,
+                titleNormalized: titleNormalized,
                 shortDescription: shortDescription,
                 startConferenceDate: startConferenceDate,
                 endConferenceDate: endConferenceDate,
@@ -7810,6 +7882,7 @@ class $$ConferenceTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 required String title,
+                required String titleNormalized,
                 required String shortDescription,
                 required DateTime startConferenceDate,
                 Value<DateTime?> endConferenceDate = const Value.absent(),
@@ -7824,6 +7897,7 @@ class $$ConferenceTableTableManager
               }) => ConferenceCompanion.insert(
                 id: id,
                 title: title,
+                titleNormalized: titleNormalized,
                 shortDescription: shortDescription,
                 startConferenceDate: startConferenceDate,
                 endConferenceDate: endConferenceDate,

@@ -11,9 +11,9 @@ class RequestHeader extends StatelessWidget {
       children: [
         UiText.displaySmall(
           'Отправьте статью',
-          style: TextStyle(fontWeight: FontWeight.w800),
+          style: TextStyle(fontWeight: .w800),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 12),
         UiText.titleSmall('Заполните данные и загрузите файл '),
       ],
     );

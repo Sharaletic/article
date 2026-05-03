@@ -25,10 +25,7 @@ class ConferenceCard extends StatelessWidget {
             '${conference.startConferenceDate} - ${conference.endConferenceDate}',
           ),
           for (var format in conference.conferenceFormat)
-            UiText.bodySmall(
-              format.name,
-              style: TextStyle(color: palette.primary, fontWeight: .w600),
-            ),
+            UiText.bodySmall(format.value),
           UiText.bodySmall(conference.address),
         ],
       ),

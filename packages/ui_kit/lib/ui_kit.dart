@@ -10,6 +10,7 @@ export 'src/components/text_field.dart';
 export 'src/components/card.dart';
 export 'src/components/drop_down_menu.dart';
 export 'src/components/icons.dart';
+export 'src/components/modal_bottom_sheet.dart';
 
 /// Previews
 export 'src/previews/buttons_preview.dart';
@@ -18,6 +19,7 @@ export 'src/previews/text_fields_preview.dart';
 export 'src/previews/segmented_button_preview.dart';
 export 'src/previews/drop_down_menu_preview.dart';
 export 'src/previews/icons_preview.dart';
+export 'src/previews/modal_bottom_sheet_preview.dart';
 
 /// Theme
 export 'src/theme/theme_data.dart';

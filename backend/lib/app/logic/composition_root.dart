@@ -43,21 +43,19 @@ Future<DependenciesContainer> createDependenciesContainer({
   // appDatabase
   //     .into(appDatabase.conference)
   //     .insert(
-  //       ConferenceCompanion(
-  //         title: const Value('Конференция 1'),
-  //         shortDescription: const Value('Краткое описание конференции 1'),
-  //         startConferenceDate: Value(DateTime(2023, 10, 1)),
-  //         endConferenceDate: Value(DateTime(2023, 10, 5)),
-  //         address: const Value('Адрес конференции 1'),
-  //         conferenceFormat: const Value([ConferenceFormat.online]),
-  //         submissionStartDate: Value(DateTime(2023, 8, 1)),
-  //         submissionEndDate: Value(DateTime(2023, 8, 31)),
-  //         quantityOfPages: const Value(10),
-  //         fileFormat: const Value([FileFormat.pdf]),
-  //         requirements: const Value(
-  //           'Требования к заявкам на участие в конференции 1',
-  //         ),
-  //       ),
+  //       ConferenceDto(
+  //         title: 'Город, природа и человек: проблемы и возможности развития',
+  //         shortDescription: 'Краткое описание конференции 1',
+  //         startConferenceDate: DateTime(2023, 10, 1),
+  //         endConferenceDate: DateTime(2023, 10, 5),
+  //         address: 'Красноярский край, г Красноярск, пр-кт Мира, д 82',
+  //         conferenceFormat: [ConferenceFormat.online],
+  //         submissionStartDate: DateTime(2023, 8, 1),
+  //         submissionEndDate: DateTime(2023, 8, 31),
+  //         quantityOfPages: 10,
+  //         fileFormat: [FileFormat.pdf],
+  //         requirements: 'Требования к заявкам на участие в конференции 1',
+  //       ).toCompanion(),
   //     );
 
   // Firebase

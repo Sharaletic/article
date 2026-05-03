@@ -14,6 +14,7 @@ class UiTextField extends StatefulWidget {
     this.maxLength,
     this.restorationId,
     this.onTap,
+    this.readOnly,
     this.onChanged,
     this.onEditingComplete,
     this.textInputAction,
@@ -41,6 +42,7 @@ class UiTextField extends StatefulWidget {
   final bool obscureText;
   final String? restorationId;
   final VoidCallback? onTap;
+  final bool? readOnly;
   final Function(String)? onChanged;
   final VoidCallback? onEditingComplete;
   final TextInputAction? textInputAction;
@@ -77,6 +79,7 @@ class _UiTextFieldState extends State<UiTextField> {
       obscureText: widget.obscureText,
       restorationId: widget.restorationId,
       onTap: widget.onTap,
+      readOnly: widget.readOnly ?? false,
       onEditingComplete: widget.onEditingComplete,
       onChanged: widget.onChanged,
       expands: widget.expands,

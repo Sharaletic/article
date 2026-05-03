@@ -58,7 +58,7 @@ class RequestDto {
   RequestCompanion toCompanion() => RequestCompanion(
     id: Value(id),
     authorId: Value(author.id!),
-    conferenceId: Value(conference.id),
+    conferenceId: Value(conference.id!),
     sectionId: Value(section.id),
     coAuthors: Value(coAuthors),
     title: Value(title),

@@ -4,7 +4,6 @@ import 'package:drift/native.dart';
 
 import '../../features/author/author.dart';
 import '../../features/conference/conference.dart';
-import '../../features/conference/data/dtos/conference_dto.dart';
 part 'database.g.dart';
 
 class User extends Table {
@@ -74,6 +73,7 @@ class Request extends Table {
 class Conference extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get title => text()();
+  TextColumn get titleNormalized => text()();
   TextColumn get shortDescription => text().named('short_description')();
   Column<DateTime> get startConferenceDate =>
       dateTime().named('start_conference_date')();

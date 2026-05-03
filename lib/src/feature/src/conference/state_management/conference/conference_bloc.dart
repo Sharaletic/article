@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
@@ -12,7 +10,6 @@ class ConferenceBloc extends Bloc<ConferenceEvent, ConferenceState> {
     : _conferenceRepository = conferenceRepository,
       super(const .noSearched()) {
     final onTextChanged = PublishSubject<String>();
-    log('onTextChanged: ${onTextChanged.stream}');
     onTextChanged
         .distinct()
         .debounceTime(const Duration(milliseconds: 250))

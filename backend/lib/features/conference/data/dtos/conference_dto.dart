@@ -70,7 +70,7 @@ class FileFormatConverter extends TypeConverter<List<FileFormat>?, String?> {
 
 class ConferenceDto {
   ConferenceDto({
-    required this.id,
+    this.id,
     required this.title,
     required this.shortDescription,
     required this.startConferenceDate,
@@ -83,7 +83,7 @@ class ConferenceDto {
     required this.fileFormat,
     required this.requirements,
   });
-  final int id;
+  final int? id;
   final String title;
   final String shortDescription;
   final DateTime startConferenceDate;
@@ -142,8 +142,8 @@ class ConferenceDto {
   );
 
   ConferenceCompanion toCompanion() => ConferenceCompanion(
-    id: Value(id),
     title: Value(title),
+    titleNormalized: Value(title.toLowerCase()),
     shortDescription: Value(shortDescription),
     startConferenceDate: Value(startConferenceDate),
     endConferenceDate: Value(endConferenceDate),

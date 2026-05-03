@@ -58,7 +58,7 @@ class UiPreview extends StatelessWidget {
                   alignment: Alignment.center,
                   child: UiText.titleMedium(
                     'Typography',
-                    style: TextStyle(fontWeight: FontWeight.w600),
+                    style: TextStyle(fontWeight: .w600),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -68,7 +68,7 @@ class UiPreview extends StatelessWidget {
                   alignment: Alignment.center,
                   child: UiText.titleMedium(
                     'Buttons',
-                    style: TextStyle(fontWeight: FontWeight.w600),
+                    style: TextStyle(fontWeight: .w600),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -78,7 +78,7 @@ class UiPreview extends StatelessWidget {
                   alignment: Alignment.center,
                   child: UiText.titleMedium(
                     'Text Inputs',
-                    style: TextStyle(fontWeight: FontWeight.w600),
+                    style: TextStyle(fontWeight: .w600),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -88,7 +88,7 @@ class UiPreview extends StatelessWidget {
                   alignment: Alignment.center,
                   child: UiText.titleMedium(
                     'Segmented Button',
-                    style: TextStyle(fontWeight: FontWeight.w600),
+                    style: TextStyle(fontWeight: .w600),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -98,7 +98,7 @@ class UiPreview extends StatelessWidget {
                   alignment: Alignment.center,
                   child: UiText.titleMedium(
                     'Drop Down Menu',
-                    style: TextStyle(fontWeight: FontWeight.w600),
+                    style: TextStyle(fontWeight: .w600),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -108,11 +108,21 @@ class UiPreview extends StatelessWidget {
                   alignment: Alignment.center,
                   child: UiText.titleMedium(
                     'Icons',
-                    style: TextStyle(fontWeight: FontWeight.w600),
+                    style: TextStyle(fontWeight: .w600),
                   ),
                 ),
                 const SizedBox(height: 8),
                 const IconsPreview(),
+                const SizedBox(height: 24),
+                Align(
+                  alignment: Alignment.center,
+                  child: UiText.titleMedium(
+                    'Icons',
+                    style: TextStyle(fontWeight: .w600),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                ModalBottomSheetPreview(),
               ],
             ),
           ),

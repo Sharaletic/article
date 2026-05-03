@@ -25,7 +25,7 @@ class _SegmentedButtonPreviewState extends State<SegmentedButtonPreview> {
 
     return UiCard(
       child: Padding(
-        padding: EdgeInsets.all(16),
+        padding: .all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
