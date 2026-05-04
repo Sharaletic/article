@@ -14,7 +14,7 @@ class RequestHeader extends StatelessWidget {
           style: TextStyle(fontWeight: .w800),
         ),
         const SizedBox(height: 12),
-        UiText.titleSmall('Заполните данные и загрузите файл '),
+        UiText.titleSmall('Заполните данные и загрузите файл'),
       ],
     );
   }

@@ -79,11 +79,8 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>
     Emitter<AuthenticationState> emit,
   ) async {
     try {
-      final user = await _authenticationRepository.updateDisplayName(
-        name: event.name,
-      );
-      emit(.successfull(user: user));
-      emit(.authenticated(user: user));
+      await _authenticationRepository.updateDisplayName(name: event.name);
+      emit(.successfull(user: state.user));
     } on Object catch (error, stackTrace) {
       addError(error, stackTrace);
       emit(.error(user: state.user, error: error, stackTrace: stackTrace));

@@ -75,20 +75,40 @@ class _TeacherFormState extends State<TeacherForm> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthenticationBloc, AuthenticationState>(
-      listener: (context, state) => state.mapOrNull(
-        successfull: (authState) {
-          if (_authorFormCubit.state.status == AuthorStatus.teacher) {
-            final formState = context.read<AuthorFormCubit>().state;
-            AuthorEntity author = _createAuthor(authState, formState);
-            _authorFormCubit.submit(author: author);
-          }
-        },
-      ),
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<AuthenticationBloc, AuthenticationState>(
+          listener: (context, state) => state.mapOrNull(
+            successfull: (state) {
+              if (_authorFormCubit.state.isSubmitting &&
+                  _authorFormCubit.state.status == .teacher) {
+                final author = _createAuthor(
+                  state.user,
+                  _authorFormCubit.state,
+                );
+                context.read<AuthorBloc>().add(.createAuthor(author: author));
+              }
+            },
+            error: (_) =>
+                _authorFormCubit.setError('Ошибка при обновлении имени'),
+          ),
+        ),
+        BlocListener<AuthorBloc, AuthorState>(
+          listener: (context, state) => state.mapOrNull(
+            createdAthor: (_) {
+              if (_authorFormCubit.state.status == .teacher) {
+                _authorFormCubit.setSuccess();
+              }
+            },
+            error: (_) =>
+                _authorFormCubit.setError('Ошибка при создании автора'),
+          ),
+        ),
+      ],
       child: BlocConsumer<AuthorFormCubit, AuthorFormState>(
         bloc: _authorFormCubit,
         listener: (context, state) {
-          if (state.isSuccess) {
+          if (state.isSuccess && state.status == .teacher) {
             context.router.replace(NamedRoute('AddInformationRoute'));
           }
         },
@@ -179,7 +199,7 @@ class _TeacherFormState extends State<TeacherForm> {
               onSelected: _authorFormCubit.academicTitle,
             ),
             const SizedBox(height: 88),
-            AddInformationButton(state: state),
+            AddInformationButton(authorFormCubit: _authorFormCubit),
             const SizedBox(height: 60),
           ],
         ),
@@ -187,13 +207,10 @@ class _TeacherFormState extends State<TeacherForm> {
     );
   }
 
-  AuthorEntity _createAuthor(
-    AuthenticationState authState,
-    AuthorFormState formState,
-  ) {
+  AuthorEntity _createAuthor(UserEntity user, AuthorFormState formState) {
     final author = AuthorEntity(
-      user: authState.user as AuthenticatedUser,
-      status: AuthorStatus.student,
+      user: user as AuthenticatedUser,
+      status: .teacher,
       lastNameRu: formState.lastNameRu,
       lastNameEn: formState.lastNameEn,
       firstNameRu: formState.firstNameRu,

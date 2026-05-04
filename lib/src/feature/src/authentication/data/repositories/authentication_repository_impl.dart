@@ -91,17 +91,11 @@ class AuthenticationRepositoryImpl implements IAuthenticationRepository {
   }
 
   @override
-  Future<UserEntity> updateDisplayName({required String name}) async {
+  Future<void> updateDisplayName({required String name}) async {
     try {
       final user = FirebaseAuth.instance.currentUser;
       await user!.updateDisplayName(name);
       user.reload();
-      final newUser = FirebaseAuth.instance.currentUser;
-
-      return UserDto.fromFirebase(
-        user: newUser!,
-        role: UserRole.author,
-      ).toEntity();
     } catch (error) {
       throw Exception(error);
     }

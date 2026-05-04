@@ -116,6 +116,7 @@ class AuthorDto {
   );
 
   factory AuthorDto.fromJson(Map<String, Object?> json) {
+    print(json);
     try {
       return AuthorDto(
         id: json['id'] as int?,

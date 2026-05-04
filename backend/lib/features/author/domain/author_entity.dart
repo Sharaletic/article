@@ -12,11 +12,9 @@ enum EducationLevel {
   const EducationLevel(this.value);
   final String value;
 
-  static EducationLevel fromString(String? value) {
+  static EducationLevel? fromString(String? value) {
     if (value == null || value.isEmpty) {
-      throw ValidationException(
-        message: 'Education level cannot be null or empty',
-      );
+      return null;
     }
     final normalized = value.trim().toLowerCase();
 
@@ -81,11 +79,9 @@ enum AcademicDegree {
   const AcademicDegree(this.value);
   final String value;
 
-  static AcademicDegree fromString(String? value) {
+  static AcademicDegree? fromString(String? value) {
     if (value == null || value.isEmpty) {
-      throw ValidationException(
-        message: 'Academic degree cannot be null or empty',
-      );
+      return null;
     }
     final normalized = value.trim().toLowerCase();
 
@@ -106,11 +102,9 @@ enum AcademicTitle {
   const AcademicTitle(this.value);
   final String value;
 
-  static AcademicTitle fromString(String? value) {
+  static AcademicTitle? fromString(String? value) {
     if (value == null || value.isEmpty) {
-      throw ValidationException(
-        message: 'Academic title cannot be null or empty',
-      );
+      return null;
     }
     final normalized = value.trim().toLowerCase();
 

@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart';
 import 'package:firebase_admin/firebase_admin.dart';
 import 'package:logger/logger.dart';
 import '../../auth/claims_service.dart';

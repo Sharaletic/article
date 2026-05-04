@@ -4,26 +4,43 @@ import '../../../authentication/authentication.dart';
 import '../../author.dart';
 
 class AddInformationButton extends StatelessWidget {
-  const AddInformationButton({super.key, required this.state});
-  final AuthorFormState state;
+  const AddInformationButton({super.key, required this.authorFormCubit});
+  final AuthorFormCubit authorFormCubit;
 
   @override
   Widget build(BuildContext context) {
     return UiButton.filledPrimary(
-      onPressed: () => state.canStudentSubmit || state.canTeacherSubmit
-          ? context.read<AuthenticationBloc>().add(
-              AuthenticationEvent.updateDisplayName(
-                name: _createDisplayName(state),
+      onPressed: () {
+        authorFormCubit.setSubmiting(isSubmitting: true);
+        context.read<AuthenticationBloc>().add(
+          AuthenticationEvent.updateDisplayName(
+            name: _createDisplayName(authorFormCubit.state),
+          ),
+        );
+      },
+      label: authorFormCubit.state.isSubmitting
+          ? SizedBox.square(
+              dimension: 20,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: Theme.of(
+                  context,
+                ).colorPalette.primary.withValues(alpha: .38),
               ),
             )
-          : null,
-      label: const Text('Добавить'),
-      enabled: state.canStudentSubmit || state.canTeacherSubmit,
+          : const Text('Добавить'),
+      enabled:
+          authorFormCubit.state.canStudentSubmit ||
+          authorFormCubit.state.canTeacherSubmit,
     );
   }
 
   String _createDisplayName(AuthorFormState state) {
-    return '${state.lastNameRu} ${state.firstNameRu} ${state.middleNameRu}'
-        .trim();
+    var displayName = [
+      state.lastNameRu,
+      state.firstNameRu,
+      state.middleNameRu,
+    ].whereType<String>().where((name) => name.trim().isNotEmpty).join(' ');
+    return displayName;
   }
 }

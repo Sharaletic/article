@@ -11,14 +11,14 @@ class AddInformation extends StatefulWidget {
 
 class _AddInformationState extends State<AddInformation> {
   final ValueNotifier<AuthorStatus> _selectedStatus =
-      ValueNotifier<AuthorStatus>(AuthorStatus.student);
+      ValueNotifier<AuthorStatus>(.student);
 
   late final AuthorFormCubit _authorFormCubit;
 
   @override
   void initState() {
     super.initState();
-    _authorFormCubit = AuthorFormCubit(authorBloc: context.read<AuthorBloc>());
+    _authorFormCubit = AuthorFormCubit();
   }
 
   @override
@@ -63,13 +63,13 @@ class _AddInformationState extends State<AddInformation> {
                   child: Stack(
                     children: [
                       Visibility(
-                        visible: value == AuthorStatus.student,
+                        visible: value == .student,
                         maintainState: true,
                         maintainSize: false,
                         child: const StudentForm(),
                       ),
                       Visibility(
-                        visible: value == AuthorStatus.teacher,
+                        visible: value == .teacher,
                         maintainState: true,
                         maintainSize: false,
                         child: const TeacherForm(),

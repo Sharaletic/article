@@ -3,11 +3,7 @@ import '../../author.dart';
 part 'author_form_state.dart';
 
 class AuthorFormCubit extends Cubit<AuthorFormState> {
-  AuthorFormCubit({required AuthorBloc authorBloc})
-    : _authorBloc = authorBloc,
-      super(AuthorFormState());
-
-  final AuthorBloc _authorBloc;
+  AuthorFormCubit() : super(AuthorFormState());
 
   void statusChanged(AuthorStatus? value) =>
       emit(state.copyWith(status: value));
@@ -27,12 +23,12 @@ class AuthorFormCubit extends Cubit<AuthorFormState> {
       emit(state.copyWith(organization: value));
   void educationLevelChanged(EducationLevel? value) =>
       emit(state.copyWith(educationLevel: value));
-  void postChangedByAdd(Post? value) => emit(
-    state.copyWith(
-      posts: state.posts == null ? [value!] : state.posts!
-        ..add(value!),
-    ),
-  );
+  void postChangedByAdd(Post? value) {
+    final posts = List<Post>.from(state.posts ?? []);
+    posts.add(value!);
+    emit(state.copyWith(posts: posts));
+  }
+
   void postChanged(List<Post>? value) => emit(state.copyWith(posts: value));
   void postChangedByRemove(Post value) =>
       emit(state.copyWith(posts: state.posts?..remove(value)));
@@ -41,17 +37,12 @@ class AuthorFormCubit extends Cubit<AuthorFormState> {
   void academicTitle(AcademicTitle? value) =>
       emit(state.copyWith(academicTitle: value));
 
-  Future<void> submit({required AuthorEntity author}) async {
-    try {
-      if (state.isValidForStudent || state.isValidForTeacher) {
-        emit(state.copyWith(isSubmitting: true));
-        _authorBloc.add(AuthorEvent.createAuthor(author: author));
-        emit(state.copyWith(isSubmitting: false, isSuccess: true));
-      }
-    } on Object catch (e, stackTrace) {
-      addError(e, stackTrace);
-      emit(state.copyWith(isSubmitting: false, errorMessage: e.toString()));
-      rethrow;
-    }
-  }
+  void setSubmiting({required bool isSubmitting}) =>
+      emit(state.copyWith(isSubmitting: isSubmitting));
+
+  void setSuccess() =>
+      emit(state.copyWith(isSubmitting: false, isSuccess: true));
+
+  void setError(String message) =>
+      emit(state.copyWith(isSubmitting: false, errorMessage: message));
 }

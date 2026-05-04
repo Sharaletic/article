@@ -7,7 +7,7 @@ abstract interface class IAuthenticationRepository {
 
   Stream<UserEntity> getAuthState();
 
-  Future<UserEntity> updateDisplayName({required String name});
+  Future<void> updateDisplayName({required String name});
 
   Future<void> logout();
 }

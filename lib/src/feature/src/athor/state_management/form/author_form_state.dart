@@ -2,7 +2,7 @@ part of 'author_form_cubit.dart';
 
 class AuthorFormState {
   const AuthorFormState({
-    this.status = AuthorStatus.student,
+    this.status = .student,
     this.lastNameRu = '',
     this.lastNameEn = '',
     this.firstNameRu = '',
@@ -56,10 +56,10 @@ class AuthorFormState {
       academicTitle != null;
 
   bool get canStudentSubmit =>
-      status == AuthorStatus.student && isValidForStudent && !isSubmitting;
+      status == .student && isValidForStudent && !isSubmitting;
 
   bool get canTeacherSubmit =>
-      status == AuthorStatus.teacher && isValidForTeacher && !isSubmitting;
+      status == .teacher && isValidForTeacher && !isSubmitting;
 
   AuthorFormState copyWith({
     AuthorStatus? status,
@@ -79,7 +79,6 @@ class AuthorFormState {
     bool? isSuccess,
     String? errorMessage,
   }) {
-    // log(posts == null ? 'null' : posts.map((e) => e.value).toList().toString());
     return AuthorFormState(
       status: status ?? this.status,
       lastNameRu: lastNameRu ?? this.lastNameRu,
@@ -90,9 +89,6 @@ class AuthorFormState {
       middleNameEn: middleNameEn ?? this.middleNameEn,
       organization: organization ?? this.organization,
       educationLevel: educationLevel ?? this.educationLevel,
-      // posts: post != null
-      //     ? (posts != null ? [...posts!.map((e) => e), post] : [post])
-      //     : posts,
       posts: posts ?? this.posts,
       academicDegree: academicDegree ?? this.academicDegree,
       academicTitle: academicTitle ?? this.academicTitle,

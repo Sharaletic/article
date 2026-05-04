@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ui_kit/ui_kit.dart';
 import '../../../../authentication/authentication.dart';
@@ -21,20 +22,48 @@ class _StudentFormState extends State<StudentForm> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthenticationBloc, AuthenticationState>(
-      listener: (context, state) => state.mapOrNull(
-        successfull: (authState) {
-          if (_authorFormCubit.state.status == AuthorStatus.student) {
-            final formState = context.read<AuthorFormCubit>().state;
-            AuthorEntity author = _createAuthor(authState, formState);
-            _authorFormCubit.submit(author: author);
-          }
-        },
-      ),
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<AuthenticationBloc, AuthenticationState>(
+          listener: (context, state) {
+            state.mapOrNull(
+              successfull: (state) {
+                if (_authorFormCubit.state.isSubmitting &&
+                    _authorFormCubit.state.status == .student) {
+                  final author = _createAuthor(
+                    state.user,
+                    _authorFormCubit.state,
+                  );
+                  context.read<AuthorBloc>().add(.createAuthor(author: author));
+                }
+              },
+              error: (_) =>
+                  _authorFormCubit.setError('Ошибка при обновлении имени'),
+            );
+          },
+        ),
+        BlocListener<AuthorBloc, AuthorState>(
+          listener: (context, state) {
+            state.mapOrNull(
+              createdAthor: (_) {
+                if (_authorFormCubit.state.status == .student) {
+                  _authorFormCubit.setSuccess();
+                }
+              },
+              error: (_) =>
+                  _authorFormCubit.setError('Ошибка при создании автора'),
+            );
+          },
+        ),
+      ],
       child: BlocConsumer<AuthorFormCubit, AuthorFormState>(
         bloc: _authorFormCubit,
         listener: (context, state) {
-          if (state.isSuccess) {}
+          if (state.isSuccess &&
+              !state.isSubmitting &&
+              state.status == .student) {
+            context.router.replace(NamedRoute('AddInformationRoute'));
+          }
         },
         builder: (context, state) => Column(
           crossAxisAlignment: .stretch,
@@ -100,7 +129,7 @@ class _StudentFormState extends State<StudentForm> {
               onSelected: _authorFormCubit.educationLevelChanged,
             ),
             const SizedBox(height: 88),
-            AddInformationButton(state: state),
+            AddInformationButton(authorFormCubit: _authorFormCubit),
             const SizedBox(height: 60),
           ],
         ),
@@ -108,13 +137,10 @@ class _StudentFormState extends State<StudentForm> {
     );
   }
 
-  AuthorEntity _createAuthor(
-    AuthenticationState authState,
-    AuthorFormState formState,
-  ) {
+  AuthorEntity _createAuthor(UserEntity user, AuthorFormState formState) {
     final author = AuthorEntity(
-      user: authState.user as AuthenticatedUser,
-      status: AuthorStatus.student,
+      user: user as AuthenticatedUser,
+      status: .student,
       lastNameRu: formState.lastNameRu,
       lastNameEn: formState.lastNameEn,
       firstNameRu: formState.firstNameRu,
