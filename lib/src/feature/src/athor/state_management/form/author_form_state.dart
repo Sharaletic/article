@@ -1,5 +1,11 @@
 part of 'author_form_cubit.dart';
 
+class PostFieldState {
+  PostFieldState(this.selectedPost) : id = UniqueKey().toString();
+  final String id;
+  final Post? selectedPost;
+}
+
 class AuthorFormState {
   const AuthorFormState({
     this.status = .student,
@@ -28,7 +34,7 @@ class AuthorFormState {
   final String? middleNameEn;
   final OrganizationEntity? organization;
   final EducationLevel? educationLevel;
-  final List<Post>? posts;
+  final List<PostFieldState>? posts;
   final AcademicDegree? academicDegree;
   final AcademicTitle? academicTitle;
   final bool isSubmitting;
@@ -72,7 +78,7 @@ class AuthorFormState {
     OrganizationEntity? organization,
     EducationLevel? educationLevel,
     Post? post,
-    List<Post>? posts,
+    List<PostFieldState>? posts,
     AcademicDegree? academicDegree,
     AcademicTitle? academicTitle,
     bool? isSubmitting,

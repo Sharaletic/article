@@ -26,3 +26,5 @@ export 'presentation/widget/teacher/teacher_form.dart';
 export 'presentation/widget/teacher/post_drop_down_menu.dart';
 export 'presentation/widget/teacher/add_post_button.dart';
 export 'presentation/widget/student/student_form.dart';
+export 'presentation/widget/text_field_for_form.dart';
+export 'presentation/widget/education_level_drop_down_menu.dart';

@@ -56,7 +56,7 @@ class _StudentFormState extends State<StudentForm> {
           },
         ),
       ],
-      child: BlocConsumer<AuthorFormCubit, AuthorFormState>(
+      child: BlocListener<AuthorFormCubit, AuthorFormState>(
         bloc: _authorFormCubit,
         listener: (context, state) {
           if (state.isSuccess &&
@@ -65,31 +65,35 @@ class _StudentFormState extends State<StudentForm> {
             context.router.replace(NamedRoute('AddInformationRoute'));
           }
         },
-        builder: (context, state) => Column(
+        child: Column(
           crossAxisAlignment: .stretch,
           mainAxisSize: .min,
           children: [
             UiText.titleMedium('Фамилия', style: TextStyle(fontWeight: .w600)),
             const SizedBox(height: 8),
-            UiTextField.standard(
-              style: UiTextFieldStyle(hintText: 'Фамилия на русском'),
+            TextFieldForForm(
+              title: 'Фамилия на русском',
+              selector: (state) => state.lastNameRu,
               onChanged: _authorFormCubit.lastNameRuChanged,
             ),
             const SizedBox(height: 8),
-            UiTextField.standard(
-              style: UiTextFieldStyle(hintText: 'Фамилия на английском'),
+            TextFieldForForm(
+              title: 'Фамилия на английском',
+              selector: (state) => state.lastNameEn,
               onChanged: _authorFormCubit.lastNameEnChanged,
             ),
             const SizedBox(height: 16),
             UiText.titleMedium('Имя', style: TextStyle(fontWeight: .w600)),
             const SizedBox(height: 8),
-            UiTextField.standard(
-              style: UiTextFieldStyle(hintText: 'Имя на русском'),
+            TextFieldForForm(
+              title: 'Имя на русском',
+              selector: (state) => state.firstNameRu,
               onChanged: _authorFormCubit.firstNameRuChanged,
             ),
             const SizedBox(height: 8),
-            UiTextField.standard(
-              style: UiTextFieldStyle(hintText: 'Имя на английском'),
+            TextFieldForForm(
+              title: 'Имя на английском',
+              selector: (state) => state.firstNameEn,
               onChanged: _authorFormCubit.firstNameEnChanged,
             ),
             const SizedBox(height: 16),
@@ -98,13 +102,15 @@ class _StudentFormState extends State<StudentForm> {
               style: TextStyle(fontWeight: .w600),
             ),
             const SizedBox(height: 8),
-            UiTextField.standard(
-              style: UiTextFieldStyle(hintText: 'Отчество на русском'),
+            TextFieldForForm(
+              title: 'Отчество на русском',
+              selector: (state) => state.middleNameRu ?? '',
               onChanged: _authorFormCubit.middleNameRuChanged,
             ),
             const SizedBox(height: 8),
-            UiTextField.standard(
-              style: UiTextFieldStyle(hintText: 'Отчество на английском'),
+            TextFieldForForm(
+              title: 'Отчество на английском',
+              selector: (state) => state.middleNameEn ?? '',
               onChanged: _authorFormCubit.middleNameEnChanged,
             ),
             const SizedBox(height: 16),
@@ -120,12 +126,7 @@ class _StudentFormState extends State<StudentForm> {
               style: TextStyle(fontWeight: .w600),
             ),
             const SizedBox(height: 8),
-            UiDropDownMenu.standard(
-              hintText: 'Выберите курс',
-              requestFocusOnTap: false,
-              dropdownMenuEntries: EducationLevel.values,
-              itemLabelMenuBuilder: (el) => el.value,
-              itemValueMenuBuilder: (el) => el,
+            EducationLevelDropDownMenu(
               onSelected: _authorFormCubit.educationLevelChanged,
             ),
             const SizedBox(height: 88),

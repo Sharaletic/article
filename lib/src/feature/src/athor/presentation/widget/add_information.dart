@@ -10,9 +10,6 @@ class AddInformation extends StatefulWidget {
 }
 
 class _AddInformationState extends State<AddInformation> {
-  final ValueNotifier<AuthorStatus> _selectedStatus =
-      ValueNotifier<AuthorStatus>(.student);
-
   late final AuthorFormCubit _authorFormCubit;
 
   @override
@@ -42,40 +39,40 @@ class _AddInformationState extends State<AddInformation> {
               SliverToBoxAdapter(child: const AddInformationHeader()),
               SliverToBoxAdapter(child: const SizedBox(height: 24)),
               SliverToBoxAdapter(
-                child: ValueListenableBuilder<AuthorStatus>(
-                  valueListenable: _selectedStatus,
-                  builder: (_, value, _) => UiSegmentedButton(
-                    selected: value,
-                    onSelected: (selected) {
-                      _selectedStatus.value = selected;
-                      _authorFormCubit.statusChanged(selected);
-                    },
-                    items: AuthorStatus.values,
-                    itemLabelBuilder: (status) =>
-                        UiText.titleSmall(status.value),
-                  ),
-                ),
-              ),
-              SliverToBoxAdapter(child: const SizedBox(height: 16)),
-              ValueListenableBuilder<AuthorStatus>(
-                valueListenable: _selectedStatus,
-                builder: (_, value, _) => SliverToBoxAdapter(
-                  child: Stack(
-                    children: [
-                      Visibility(
-                        visible: value == .student,
-                        maintainState: true,
-                        maintainSize: false,
-                        child: const StudentForm(),
-                      ),
-                      Visibility(
-                        visible: value == .teacher,
-                        maintainState: true,
-                        maintainSize: false,
-                        child: const TeacherForm(),
-                      ),
-                    ],
-                  ),
+                child: BlocBuilder<AuthorFormCubit, AuthorFormState>(
+                  builder: (context, state) {
+                    return Column(
+                      children: [
+                        UiSegmentedButton(
+                          selected: state.status,
+                          onSelected: (selected) =>
+                              _authorFormCubit.statusChanged(selected),
+                          items: AuthorStatus.values,
+                          itemLabelBuilder: (status) =>
+                              UiText.titleSmall(status.value),
+                        ),
+                        const SizedBox(height: 16),
+                        Stack(
+                          children: [
+                            Visibility(
+                              visible:
+                                  _authorFormCubit.state.status == .student,
+                              maintainState: true,
+                              maintainSize: false,
+                              child: const StudentForm(),
+                            ),
+                            Visibility(
+                              visible:
+                                  _authorFormCubit.state.status == .teacher,
+                              maintainState: true,
+                              maintainSize: false,
+                              child: const TeacherForm(),
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
             ],

@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ui_kit/ui_kit.dart';
 import '../../../../../app/app.dart';
+import '../../../../../core/core.dart';
 import '../../author.dart';
 
 class OrganizationDropDownMenu extends StatefulWidget {
@@ -43,25 +44,36 @@ class _OrganizationDropDownMenuState extends State<OrganizationDropDownMenu> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<OrganizationsBloc, OrganizationsState>(
-      bloc: _organizationBloc,
-      builder: (context, state) {
-        List<OrganizationEntity> organizations = state.maybeMap(
-          loaded: (state) => state.organizations ?? <OrganizationEntity>[],
-          orElse: () => <OrganizationEntity>[],
-        );
-        return UiDropDownMenu.standard(
-          controller: _organizationController,
-          enableFilter: false,
-          enableSearch: false,
-          hintText: 'Поиск организации',
-          selectedTrailingIcon: null,
-          menuHeight: organizations.isEmpty ? 0 : null,
-          dropdownMenuEntries: organizations,
-          itemLabelMenuBuilder: (org) => '${org.titleRu} - ${org.titleEn}',
-          itemValueMenuBuilder: (org) => org,
-          onSelected: widget._authorFormCubit.organizationChanged,
-          enabled: state.maybeMap(error: (_) => false, orElse: () => true),
+    return BlocSelector<AuthorFormCubit, AuthorFormState, OrganizationEntity?>(
+      selector: (state) => state.organization,
+      builder: (context, organization) {
+        return BlocConsumer<OrganizationsBloc, OrganizationsState>(
+          bloc: _organizationBloc,
+          listener: (context, state) => state.mapOrNull(
+            error: (state) => ErrorUtil.displayErrorSnackBar(
+              context,
+              state.error,
+              state.stackTrace,
+            ),
+          ),
+          builder: (context, state) {
+            List<OrganizationEntity> organizations = state.maybeMap(
+              loaded: (state) => state.organizations ?? <OrganizationEntity>[],
+              orElse: () => <OrganizationEntity>[],
+            );
+            return UiDropDownMenu.standard(
+              controller: _organizationController,
+              enableFilter: false,
+              enableSearch: false,
+              hintText: 'Поиск организации',
+              menuHeight: organizations.isEmpty ? 0 : null,
+              dropdownMenuEntries: organizations,
+              itemLabelMenuBuilder: (org) => '${org.titleRu} - ${org.titleEn}',
+              itemValueMenuBuilder: (org) => org,
+              onSelected: widget._authorFormCubit.organizationChanged,
+              enabled: state.maybeMap(error: (_) => false, orElse: () => true),
+            );
+          },
         );
       },
     );

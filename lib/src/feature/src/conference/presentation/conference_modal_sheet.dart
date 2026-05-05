@@ -2,6 +2,7 @@ import 'package:arcticle_app/src/app/widget/dependencies_scope.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ui_kit/ui_kit.dart';
 
+import '../../../../core/core.dart';
 import '../conference.dart';
 
 class ConferenceModalSheet extends StatefulWidget {
@@ -40,8 +41,15 @@ class _ConferenceModalSheetState extends State<ConferenceModalSheet> {
           onChanged: _conferenceBloc.onTextChanged.add,
         ),
         Flexible(
-          child: BlocBuilder<ConferenceBloc, ConferenceState>(
+          child: BlocConsumer<ConferenceBloc, ConferenceState>(
             bloc: _conferenceBloc,
+            listener: (context, state) => state.mapOrNull(
+              error: (state) => ErrorUtil.displayErrorSnackBar(
+                context,
+                state.message,
+                state.stackTrace,
+              ),
+            ),
             builder: (context, state) =>
                 state.mapOrNull(
                   loading: (_) => const CircularProgressIndicator(),

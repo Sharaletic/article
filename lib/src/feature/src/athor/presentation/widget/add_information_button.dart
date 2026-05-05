@@ -8,32 +8,33 @@ class AddInformationButton extends StatelessWidget {
   final AuthorFormCubit authorFormCubit;
 
   @override
-  Widget build(BuildContext context) {
-    return UiButton.filledPrimary(
-      onPressed: () {
-        authorFormCubit.setSubmiting(isSubmitting: true);
-        context.read<AuthenticationBloc>().add(
-          AuthenticationEvent.updateDisplayName(
-            name: _createDisplayName(authorFormCubit.state),
-          ),
-        );
-      },
-      label: authorFormCubit.state.isSubmitting
-          ? SizedBox.square(
-              dimension: 20,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: Theme.of(
-                  context,
-                ).colorPalette.primary.withValues(alpha: .38),
+  Widget build(BuildContext context) =>
+      BlocBuilder<AuthorFormCubit, AuthorFormState>(
+        builder: (context, state) => UiButton.filledPrimary(
+          onPressed: () {
+            authorFormCubit.setSubmiting(isSubmitting: true);
+            context.read<AuthenticationBloc>().add(
+              AuthenticationEvent.updateDisplayName(
+                name: _createDisplayName(authorFormCubit.state),
               ),
-            )
-          : const Text('Добавить'),
-      enabled:
-          authorFormCubit.state.canStudentSubmit ||
-          authorFormCubit.state.canTeacherSubmit,
-    );
-  }
+            );
+          },
+          label: authorFormCubit.state.isSubmitting
+              ? SizedBox.square(
+                  dimension: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Theme.of(
+                      context,
+                    ).colorPalette.primary.withValues(alpha: .38),
+                  ),
+                )
+              : const Text('Добавить'),
+          enabled:
+              authorFormCubit.state.canStudentSubmit ||
+              authorFormCubit.state.canTeacherSubmit,
+        ),
+      );
 
   String _createDisplayName(AuthorFormState state) {
     var displayName = [

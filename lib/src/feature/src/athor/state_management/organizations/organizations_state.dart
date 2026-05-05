@@ -76,5 +76,5 @@ final class _LoadedOrganizationsState extends OrganizationsState {
 final class _ErrorOrganizationsState extends OrganizationsState {
   const _ErrorOrganizationsState({required this.error, this.stackTrace});
   final Object error;
-  final Object? stackTrace;
+  final StackTrace? stackTrace;
 }

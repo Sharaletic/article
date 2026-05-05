@@ -25,7 +25,7 @@ class UiSegmentedButton<T> extends StatelessWidget {
         color: colors.secondary,
         borderRadius: const .all(.circular(16)),
       ),
-      padding: const .all(4.0),
+      padding: const .all(4),
       child: Row(
         children: List.generate(items.length, (i) {
           final item = items[i];
@@ -39,7 +39,7 @@ class UiSegmentedButton<T> extends StatelessWidget {
               icon: icon,
               style: ButtonStyle(
                 padding: const WidgetStatePropertyAll(
-                  .symmetric(horizontal: 4.0, vertical: 4.0),
+                  .symmetric(horizontal: 4, vertical: 4),
                 ),
                 backgroundColor: isSelected
                     ? WidgetStatePropertyAll(colors.background)
